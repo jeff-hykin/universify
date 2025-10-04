@@ -26,9 +26,11 @@ import { version } from "./version.js"
         examples:
             deno-guillotine ./your_file.js
             deno-guillotine ./your_file.js ${Deno.version.deno}
+            deno-guillotine ./your_file.js --deno-version ${Deno.version.deno}
             deno-guillotine --version
             deno-guillotine --file ./your_file.js
             deno-guillotine --file ./your_file.js --deno-version ${Deno.version.deno}
+            deno-guillotine --file ./your_file.js --disable-url-run
             deno-guillotine --file ./your_file.js \\
                 --add-arg '--no-npm' \\
                 --add-arg '--unstable'
@@ -54,6 +56,8 @@ import { version } from "./version.js"
             [[0, "--file",], required ],
             [[1, "--deno-version"], initialValue(`${Deno.version.deno}`), ],
             [["--no-default-args"], flag, ],
+            [["--disable-url-run"], flag, ],
+            [["--single-file"], flag, ],
             [["--add-arg"], initialValue([]), ],
             [["--add-unix-arg"], initialValue([]), ],
             [["--add-windows-arg"], initialValue([]), ],
@@ -80,6 +84,7 @@ import { version } from "./version.js"
         addUnixArg: additionalArgsForUnix,
         addWindowsArg: additionalArgsForWindows, 
         noDefaultArgs,
+        disableUrlRun,
     } = output.simplifiedNames
 
 // 
@@ -115,6 +120,7 @@ import { version } from "./version.js"
             // NOTE: no lock is given because differnt versions of deno can have different lock file formats
             //       meaning the script will fail to run with the spcified version of deno
             //       if another version of deno is installed
+        disableUrlRun,
     })
 
     // 

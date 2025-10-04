@@ -7,7 +7,7 @@ const shellEscape = (arg)=>`'${arg.replace(/'/g,`'"'"'`)}'`
 
 export { generateHeader }
 
-export function enhanceScript({filePath, jsFileContent, denoVersion, additionalArgs, additionalArgsForUnix, additionalArgsForWindows, baseArgs=["-q", "-A", "--no-lock", "--no-config"], }) {
+export function enhanceScript({filePath, jsFileContent, denoVersion, additionalArgs, additionalArgsForUnix, additionalArgsForWindows, baseArgs=["-q", "-A", "--no-lock", "--no-config"], disableUrlRun=false}) {
     // 
     // validate parameters
     // 
@@ -59,7 +59,7 @@ export function enhanceScript({filePath, jsFileContent, denoVersion, additionalA
     // 
     // header
     // 
-    const newHeader = generateHeader({denoVersion, argsForUnix, argsForWindows})
+    const newHeader = generateHeader({denoVersion, argsForUnix, argsForWindows, disableUrlRun})
     
     // 
     // modify contents

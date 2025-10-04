@@ -1,17 +1,30 @@
 #!/usr/bin/env sh
-"\"",`$(echo --% ' |out-null)" >$null;function :{};function dv{<#${/*'>/dev/null )` 2>/dev/null;dv() { #>
+"\"",`$(echo --% ' |out-null)" >$null;function :{};function getDenoVersion{<#${/*'>/dev/null )` 2>/dev/null;getDenoVersion() { #>
         echo "DENO_VERSION_HERE"; : --% ' |out-null <#';
     };
-    deno_version="$(dv)";
+    # getDenoVersion exists as both a bash and powershell function so that DENO_VERSION_HERE is only mentioned in one place (no duplication)
+    deno_version="$(getDenoVersion)";
     deno="$HOME/.deno/$deno_version/bin/deno";
+    target_script="$0";
+    disable_url_run="DISABLE_URL_RUN_HERE";
+    
+    # if using the universal one-liner runner, e.g. 
+    #       function u { echo URL_TO_THIS_SCRIPT; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh
+    # then the u env var will be set, and we NEED that env var because
+    # $0 will NOT be the path to this script, because there is no path to this script in that case 
+    # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
+    # so if that var is set, that becomes the new target_script
+    if [ -n "$_u" ] && ! [ -z "$disable_url_run" ]; then
+        target_script="$_u";
+    fi;
     # 
     # try to run immediately
     # 
     if [ -x "$deno" ];then 
-        exec "$deno" run UNIX_DENO_ARGS_HERE "$0" "$@"; 
+        exec "$deno" run UNIX_DENO_ARGS_HERE "$target_script" "$@"; 
     # if not executable, try to make it executable then run ASAP
     elif [ -f "$deno" ]; then 
-        chmod +x "$deno" && exec "$deno" run UNIX_DENO_ARGS_HERE "$0" "$@";
+        chmod +x "$deno" && exec "$deno" run UNIX_DENO_ARGS_HERE "$target_script" "$@";
     fi;
     # 
     # if the user doesn't have it, install deno
@@ -133,7 +146,10 @@
     rm "$exe.zip";
     
     exec "$deno" run UNIX_DENO_ARGS_HERE "$0" "$@";
-
+    
+    
+    # commented out below because we don't want to modify the user's env/path (no side effects)
+    
     # echo "Deno was installed successfully to $exe";
 
     # run_shell_setup() {
@@ -162,12 +178,25 @@
     # powershell portion
     # 
 #>};
-    $DenoInstall = "${HOME}/.deno/$(dv)";
+    $DenoInstall = "${HOME}/.deno/$(getDenoVersion)";
     $BinDir = "$DenoInstall/bin";
     $DenoExe = "$BinDir/deno.exe";
+    $TargetScript = "$PSCommandPath";
+    $DisableUrlRun = "DISABLE_URL_RUN_HERE";
+    
+    # if using the universal one-liner runner, e.g. 
+    #       function u { echo URL_TO_THIS_SCRIPT; };$Env:u=$(u) || export u=$(u); irm "$(u)"|iex || curl -fsSL "$u" | sh
+    # then the u env var will be set, and we NEED that env var because
+    # $0 will NOT be the path to this script, because there is no path to this script in that case 
+    # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
+    # so if that var is set, that becomes the new target_script
+    if ($Env:_u -and $DisableUrlRun) {
+        $TargetScript = "$Env:_u";
+    };
+    
     if (-not(Test-Path -Path "$DenoExe" -PathType Leaf)) {
         $DenoZip = "$BinDir/deno.zip";
-        $DenoUri = "https://github.com/denoland/deno/releases/download/v$(dv)/deno-x86_64-pc-windows-msvc.zip";
+        $DenoUri = "https://github.com/denoland/deno/releases/download/v$(getDenoVersion)/deno-x86_64-pc-windows-msvc.zip";
 
         # GitHub requires TLS 1.2
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
@@ -198,14 +227,16 @@
         };
         
         Remove-Item $DenoZip;
-
-        $User = [EnvironmentVariableTarget]::User;
-        $Path = [Environment]::GetEnvironmentVariable('Path', $User);
-        if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) {
-            [Environment]::SetEnvironmentVariable('Path', "$Path;$BinDir", $User);
-            $Env:Path += ";$BinDir";
-        }
-    }; & "$DenoExe" run DENO_WINDOWS_ARGS_HERE "$PSCommandPath" @args; Exit $LastExitCode; <#
+        
+        # commented out below because we don't want to modify the user's path (no side effects)
+        
+        # $User = [EnvironmentVariableTarget]::User;
+        # $Path = [Environment]::GetEnvironmentVariable('Path', $User);
+        # if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) {
+        #     [Environment]::SetEnvironmentVariable('Path', "$Path;$BinDir", $User);
+        #     $Env:Path += ";$BinDir";
+        # }
+    }; & "$DenoExe" run DENO_WINDOWS_ARGS_HERE "$TargetScript" @args; Exit $LastExitCode; <#
 # */0}`;
 console.log("Hello World")
 // #>
