@@ -27,26 +27,26 @@ import { version } from "./version.js"
     }
     if (showHelp) {
         console.log(`
-    Deno Universify
+    Universify
         examples:
-            universify ./your_file.js
-            universify ./your_file.js ${Deno.version.deno}
-            universify ./your_file.js --deno-version ${Deno.version.deno}
-            universify --version
-            universify --file ./your_file.js
-            universify --file ./your_file.js --deno-version ${Deno.version.deno}
-            universify --file ./your_file.js --disable-url-run
-            universify --file ./your_file.js --single-file
-            universify --file ./your_file.js --no-ps1
-            universify --file ./your_file.js \\
+            uni ./your_file.js
+            uni ./your_file.js ${Deno.version.deno}
+            uni ./your_file.js --deno-version ${Deno.version.deno}
+            uni --version
+            uni --file ./your_file.js
+            uni --file ./your_file.js --deno-version ${Deno.version.deno}
+            uni --file ./your_file.js --disable-url-run
+            uni --file ./your_file.js --single-file
+            uni --file ./your_file.js --no-ps1
+            uni --file ./your_file.js \\
                 --add-arg '--no-npm' \\
                 --add-arg '--unstable'
             
-            universify --file ./your_file.js \\
+            uni --file ./your_file.js \\
                 --add-unix-arg '--unstable-ffi' \\
                 --add-windows-arg '--unstable-cron'
             
-            universify --file ./your_file.js \\
+            uni --file ./your_file.js \\
                 --no-default-args \\
                 --add-arg '--quiet' \\
                 --add-arg '--allow-read'

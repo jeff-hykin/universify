@@ -35,18 +35,18 @@ deno run --allow-all ./your_script.js
 
 3. Install this tool (universify) so it can modify your scripts to make them portable<br>
 ```shell
-deno install -n universify -Afgr https://raw.githubusercontent.com/jeff-hykin/universify/master/main/universify.js
+deno install -n uni -Afgr https://raw.githubusercontent.com/jeff-hykin/universify/master/main/universify.js
 ```
 
 4. Use it:<br>
 ```shell
 # basic example
-universify ./your_script.js
+uni ./your_script.js
 
 # if you have a particular version of deno you want to use, include it as the second argument
-universify ./your_script.js 1.44.4
+uni ./your_script.js 1.44.4
 # if you want to add a deno-run argument like --no-npm do it like this:
-universify ./your_script.js --add-arg '--no-npm' --add-arg '--unstable'
+uni ./your_script.js --add-arg '--no-npm' --add-arg '--unstable'
 ```
 
 5. Profit<br>
