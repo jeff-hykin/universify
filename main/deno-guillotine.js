@@ -201,15 +201,17 @@ import { version } from "./version.js"
             }
         }
     }
-    console.log(`\nDone! ✅\n`)
+    console.log(`\n\nDone! ✅\n\n`)
     if (disableUrlRun) {
-        console.log(`try doing:`)
-        console.log(yellow`    cd ${FileSystem.pwd}`)
-        console.log(yellow(`    .${normalPath}`.replace(/^    \.\/\.\//, "    ./")))
+        console.log(`Run locally with:`)
+        const parentFolder = FileSystem.makeRelativePath({ from: FileSystem.pwd, to: FileSystem.dirname(normalPath) })
+        console.log(yellow`    cd ${parentFolder}`)
+        console.log(yellow(`    ./${FileSystem.basename(normalPath)}`.replace(/^    \.\/\.\//, "    ./")))
     } else {
         console.log(`Run locally with:`)
-        console.log(yellow`    cd ${FileSystem.pwd}`)
-        console.log(yellow(`    .${normalPath}`.replace(/^    \.\/\.\//, "    ./")))
+        const parentFolder = FileSystem.makeRelativePath({ from: FileSystem.pwd, to: FileSystem.dirname(normalPath) })
+        console.log(yellow`    cd ${parentFolder}`)
+        console.log(yellow(`    ./${FileSystem.basename(normalPath)}`.replace(/^    \.\/\.\//, "    ./")))
 
         console.log(`\nRun from anywhere with:`)
         console.log(yellow`    function u { echo URL_TO_THAT_FILE; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh`)
@@ -253,6 +255,8 @@ import { version } from "./version.js"
         }
 
         console.log(``)
-        console.log(`   NOTE1: if you are NOT using the run-from-url, please disable by rerunning with the --disable-url-run flag`)
-        console.log(`   NOTE2: unfortunately there is no practical way to pass arguments when running from a url (just FYI)`)
+        console.log(`   NOTE1: if you are NOT using the run-from-url`)
+        console.log(`          please disable by rerunning with the --disable-url-run flag`)
+        console.log(`   NOTE2: when running from a url unfortunately`)
+        console.log(`          there is no practical way to pass arguments`)
     }
