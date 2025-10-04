@@ -246,7 +246,7 @@ import { version } from "./version.js"
                     console.log(``)
                     console.log(dim`    If you're using github your one-liner will look like this:`)
                     const url = `https://raw.githubusercontent.com/${githubUsername}/${repoName}/${gitBranchOrTagOrCommitHash}/${relativePath}`
-                    console.log(yellow.dim`    function u { echo '${url}'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh`)
+                    console.log(yellow.dim`    function u { echo '${url}'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh`)
                 }
             }
         } catch (error) {
