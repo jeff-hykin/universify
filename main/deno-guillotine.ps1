@@ -3,7 +3,7 @@
 echo "2.5.3"; : --% ' |out-null <#'; }; deno_version="$(getDenoVersion)"; deno="$HOME/.deno/$deno_version/bin/deno"; target_script="$0"; disable_url_run="";  if [ -n "$_u" ] && [ -z "$disable_url_run" ]; then target_script="$_u"; fi; if [ -x "$deno" ];then  exec "$deno" run -q -A --no-lock --no-config "$target_script" "$@";  elif [ -f "$deno" ]; then  chmod +x "$deno" && exec "$deno" run -q -A --no-lock --no-config "$target_script" "$@"; fi; has () { command -v "$1" >/dev/null; };  set -e;  if ! has unzip && ! has 7z; then echo "Can I try to install unzip for you? (its required for this command to work) ";read ANSWER;echo;  if [ "$ANSWER" =~ ^[Yy] ]; then  if ! has brew; then  brew install unzip; elif has apt-get; then if [ "$(whoami)" = "root" ]; then  apt-get install unzip -y; elif has sudo; then  echo "I'm going to try sudo apt install unzip";read ANSWER;echo;  sudo apt-get install unzip -y;  elif has doas; then  echo "I'm going to try doas apt install unzip";read ANSWER;echo;  doas apt-get install unzip -y;  else apt-get install unzip -y;  fi;  fi;  fi;   if ! has unzip; then  echo ""; echo "So I couldn't find an 'unzip' command"; echo "And I tried to auto install it, but it seems that failed"; echo "(This script needs unzip and either curl or wget)"; echo "Please install the unzip command manually then re-run this script"; exit 1;  fi;  fi;   if ! has unzip && ! has 7z; then echo "Error: either unzip or 7z is required to install Deno (see: https://github.com/denoland/deno_install#either-unzip-or-7z-is-required )." 1>&2; exit 1; fi;  if [ "$OS" = "Windows_NT" ]; then target="x86_64-pc-windows-msvc"; else case $(uname -sm) in "Darwin x86_64") target="x86_64-apple-darwin" ;; "Darwin arm64") target="aarch64-apple-darwin" ;; "Linux aarch64") target="aarch64-unknown-linux-gnu" ;; *) target="x86_64-unknown-linux-gnu" ;; esac fi;  print_help_and_exit() { echo "Setup script for installing deno  Options: -y, --yes Skip interactive prompts and accept defaults --no-modify-path Don't add deno to the PATH environment variable -h, --help Print help " echo "Note: Deno was not installed"; exit 0; };  for arg in "$@"; do case "$arg" in "-h") print_help_and_exit ;; "--help") print_help_and_exit ;; "-"*) ;; *) if [ -z "$deno_version" ]; then deno_version="$arg"; fi ;; esac done; if [ -z "$deno_version" ]; then deno_version="$(curl -s https://dl.deno.land/release-latest.txt)"; fi;  deno_uri="https://dl.deno.land/release/v${deno_version}/deno-${target}.zip"; deno_install="${DENO_INSTALL:-$HOME/.deno/$deno_version}"; bin_dir="$deno_install/bin"; exe="$bin_dir/deno";  if [ ! -d "$bin_dir" ]; then mkdir -p "$bin_dir"; fi;  if has curl; then curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri"; elif has wget; then wget --output-document="$exe.zip" "$deno_uri"; else echo "Error: curl or wget is required to download Deno (see: https://github.com/denoland/deno_install )." 1>&2; fi;  if has unzip; then unzip -d "$bin_dir" -o "$exe.zip"; else 7z x -o"$bin_dir" -y "$exe.zip"; fi; chmod +x "$exe"; rm "$exe.zip";  exec "$deno" run -q -A --no-lock --no-config "$0" "$@";       #>}; $DenoInstall = "${HOME}/.deno/$(getDenoVersion)"; $BinDir = "$DenoInstall/bin"; $DenoExe = "$BinDir/deno.exe"; $TargetScript = "$PSCommandPath"; $DisableUrlRun = "";  if ($Env:_u -and $DisableUrlRun) { $TargetScript = "$Env:_u"; };  if (-not(Test-Path -Path "$DenoExe" -PathType Leaf)) { $DenoZip = "$BinDir/deno.zip"; $DenoUri = "https://github.com/denoland/deno/releases/download/v$(getDenoVersion)/deno-x86_64-pc-windows-msvc.zip";  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;  if (!(Test-Path $BinDir)) { New-Item $BinDir -ItemType Directory | Out-Null; };  Function Test-CommandExists { Param ($command); $oldPreference = $ErrorActionPreference; $ErrorActionPreference = "stop"; try {if(Get-Command "$command"){RETURN $true}} Catch {Write-Host "$command does not exist"; RETURN $false}; Finally {$ErrorActionPreference=$oldPreference}; };  if (Test-CommandExists curl) { curl -Lo $DenoZip $DenoUri; } else { curl.exe -Lo $DenoZip $DenoUri; };  if (Test-CommandExists curl) { tar xf $DenoZip -C $BinDir; } else { tar -Lo $DenoZip $DenoUri; };  Remove-Item $DenoZip;   }; & "$DenoExe" run -q -A --no-lock --no-config "$TargetScript" @args; Exit $LastExitCode; <# 
 # */0}`;
 import { Console, cyan, green, magenta, yellow, dim } from "https://deno.land/x/quickr@0.8.4/main/console.js"
-import { FileSystem } from "https://deno.land/x/quickr@0.6.67/main/file_system.js"
+import { FileSystem } from "https://deno.land/x/quickr@0.8.4/main/file_system.js"
 import { parseArgs, flag, required, initialValue } from "https://deno.land/x/good@1.7.1.0/flattened/parse_args.js"
 import { toCamelCase } from "https://deno.land/x/good@1.7.1.0/flattened/to_camel_case.js"
 import { didYouMean } from "https://deno.land/x/good@1.7.1.0/flattened/did_you_mean.js"
@@ -36,6 +36,8 @@ import { version } from "./version.js"
             deno-guillotine --file ./your_file.js
             deno-guillotine --file ./your_file.js --deno-version ${Deno.version.deno}
             deno-guillotine --file ./your_file.js --disable-url-run
+            deno-guillotine --file ./your_file.js --single-file
+            deno-guillotine --file ./your_file.js --no-ps1
             deno-guillotine --file ./your_file.js \\
                 --add-arg '--no-npm' \\
                 --add-arg '--unstable'
@@ -63,6 +65,7 @@ import { version } from "./version.js"
             [["--no-default-args"], flag, ],
             [["--disable-url-run"], flag, ],
             [["--single-file"], flag, ],
+            [["--no-ps1"], flag, ],
             [["--add-arg"], initialValue([]), ],
             [["--add-unix-arg"], initialValue([]), ],
             [["--add-windows-arg"], initialValue([]), ],
@@ -82,7 +85,7 @@ import { version } from "./version.js"
         autoThrow: true,
     })
 
-    const {
+    let {
         file: path,
         denoVersion,
         addArg : additionalArgs,
@@ -90,6 +93,8 @@ import { version } from "./version.js"
         addWindowsArg: additionalArgsForWindows, 
         noDefaultArgs,
         disableUrlRun,
+        singleFile,
+        noPs1,
     } = output.simplifiedNames
 
 // 
@@ -110,11 +115,14 @@ import { version } from "./version.js"
     // setup
     // 
     const contents = Deno.readTextFileSync(path)
+    if (noPs1) {
+        singleFile = true
+    }
 
     // 
     // enhance script
     // 
-    const { newContents, symlinkPath, normalPath, ps1Path } = enhanceScript({
+    let { newContents, symlinkPath, normalPath, ps1Path } = enhanceScript({
         filePath: path,
         jsFileContent: contents,
         denoVersion,
@@ -126,11 +134,13 @@ import { version } from "./version.js"
             //       meaning the script will fail to run with the spcified version of deno
             //       if another version of deno is installed
         disableUrlRun,
+        noPs1,
     })
 
     // 
     // make sure ps1 version exists
     // 
+    // note: if noPs1 is true, then ps1Path will be a bit of a misnomer (no .ps1 extension)
     console.log(`Creating ${ps1Path}`)
     await FileSystem.write({
         data: newContents,
@@ -163,45 +173,49 @@ import { version } from "./version.js"
     // 
     // link the other version to it
     // 
-    console.log(`Creating ${normalPath}`)
-    FileSystem.sync.remove(normalPath)
-    Deno.symlinkSync(
-        symlinkPath,
-        normalPath,
-        {
-            type: "file",
-        }
-    )
-    console.log(`Setting ${normalPath} permissions`)
-    try {
-        await FileSystem.addPermissions({
-            path: normalPath,
-            permissions: {
-                owner:{
-                    canExecute: true,
-                },
-                group:{
-                    canExecute: true,
-                },
-                others:{
-                    canExecute: true,
-                }
+    if (!singleFile) {
+        console.log(`Creating ${normalPath}`)
+        FileSystem.sync.remove(normalPath)
+        Deno.symlinkSync(
+            symlinkPath,
+            normalPath,
+            {
+                type: "file",
             }
-        })
-    } catch (error) {
-        if (Deno.build.os != 'windows') {
-            console.warn(`I was unable to make this file an executable, just fyi: ${normalPath}`)
+        )
+        console.log(`Setting ${normalPath} permissions`)
+        try {
+            await FileSystem.addPermissions({
+                path: normalPath,
+                permissions: {
+                    owner:{
+                        canExecute: true,
+                    },
+                    group:{
+                        canExecute: true,
+                    },
+                    others:{
+                        canExecute: true,
+                    }
+                }
+            })
+        } catch (error) {
+            if (Deno.build.os != 'windows') {
+                console.warn(`I was unable to make this file an executable, just fyi: ${normalPath}`)
+            }
         }
     }
-    console.log(`\nDone! ✅\n`)
+    console.log(`\n\nDone! ✅\n\n`)
     if (disableUrlRun) {
-        console.log(`try doing:`)
-        console.log(yellow`    cd ${FileSystem.pwd}`)
-        console.log(yellow(`    .${normalPath}`.replace(/^    \.\/\.\//, "    ./")))
+        console.log(`Run locally with:`)
+        const parentFolder = FileSystem.makeRelativePath({ from: FileSystem.pwd, to: FileSystem.dirname(normalPath) })
+        console.log(yellow`    cd ${parentFolder}`)
+        console.log(yellow(`    ./${FileSystem.basename(normalPath)}`.replace(/^    \.\/\.\//, "    ./")))
     } else {
         console.log(`Run locally with:`)
-        console.log(yellow`    cd ${FileSystem.pwd}`)
-        console.log(yellow(`    .${normalPath}`.replace(/^    \.\/\.\//, "    ./")))
+        const parentFolder = FileSystem.makeRelativePath({ from: FileSystem.pwd, to: FileSystem.dirname(normalPath) })
+        console.log(yellow`    cd ${parentFolder}`)
+        console.log(yellow(`    ./${FileSystem.basename(normalPath)}`.replace(/^    \.\/\.\//, "    ./")))
 
         console.log(`\nRun from anywhere with:`)
         console.log(yellow`    function u { echo URL_TO_THAT_FILE; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh`)
@@ -245,7 +259,10 @@ import { version } from "./version.js"
         }
 
         console.log(``)
-        console.log(`   NOTE: if you are NOT using the run-from-url, please disable by rerunning with the --disable-url-run flag`)
+        console.log(`   NOTE1: if you are NOT using the run-from-url`)
+        console.log(`          please disable by rerunning with the --disable-url-run flag`)
+        console.log(`   NOTE2: when running from a url unfortunately`)
+        console.log(`          there is no practical way to pass arguments`)
     }
 
 // (this comment is part of deno-guillotine, dont remove) #>
