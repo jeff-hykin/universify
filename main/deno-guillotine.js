@@ -200,7 +200,7 @@ import { version } from "./version.js"
         console.log(yellow(`    .${normalPath}`.replace(/^    \.\/\.\//, "    ./")))
 
         console.log(`\nRun from anywhere with:`)
-        console.log(yellow`    function u { echo URL_TO_THAT_FILE; };$Env:u=$(u) || export u=$(u); irm "$(u)"|iex || curl -fsSL "$u" | sh`)
+        console.log(yellow`    function u { echo URL_TO_THAT_FILE; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh`)
         // 
         // try to be helpful by pre-calculating the url for those using github
         // 
@@ -208,7 +208,7 @@ import { version } from "./version.js"
             const gitParentFolderOrNull = await FileSystem.walkUpUntil(".git/config")
             if (gitParentFolderOrNull) {
                 const gitParentFolder = gitParentFolderOrNull
-                const gitBranchOrTagOrCommitHash = (await FileSystem.read(`${gitParentFolder}/.git/HEAD`)).trim().replace(/^(ref: )?refs\/heads\//,"")
+                const gitBranchOrTagOrCommitHash = (await FileSystem.read(`${gitParentFolder}/.git/HEAD`)).trim().replace(/^(ref: )?/,"")
                 const configString = (await FileSystem.read(`${gitParentFolder}/.git/config`))
                 let originUrlProbably
                 for (let each of configString.split(/\n/g)) {
@@ -231,13 +231,13 @@ import { version } from "./version.js"
                     const relativePath = FileSystem.makeRelativePath({ from: gitParentFolderOrNull, to: ps1Path })
                     console.log(``)
                     console.log(dim`    If you're using github your one-liner will look like this:`)
-                    const url = `https://github.com/${githubUsername}/${repoName}/blob/${gitBranchOrTagOrCommitHash}/${relativePath}`
-                    console.log(yellow.dim`    function u { echo ${url}; };$Env:u=$(u) || export u=$(u); irm "$(u)"|iex || curl -fsSL "$u" | sh`)
+                    const url = `https://raw.githubusercontent.com/${githubUsername}/${repoName}/${gitBranchOrTagOrCommitHash}/${relativePath}`
+                    console.log(yellow.dim`    function u { echo '${url}'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh`)
                 }
             }
         } catch (error) {
             console.log(dim`    If your script is part of a github repo, the url will follow this format:`)
-            console.log(dim`    https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/blob/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT`)
+            console.log(dim`    https://raw.githubusercontent.com/GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT`)
         }
 
         console.log(``)
