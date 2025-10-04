@@ -7,7 +7,7 @@ const shellEscape = (arg)=>`'${arg.replace(/'/g,`'"'"'`)}'`
 
 export { generateHeader }
 
-export function enhanceScript({filePath, jsFileContent, denoVersion, additionalArgs, additionalArgsForUnix, additionalArgsForWindows, baseArgs=["-q", "-A", "--no-lock", "--no-config"], disableUrlRun=false}) {
+export function enhanceScript({filePath, jsFileContent, denoVersion, additionalArgs, additionalArgsForUnix, additionalArgsForWindows, baseArgs=["-q", "-A", "--no-lock", "--no-config"], disableUrlRun=false, noPs1=false}) {
     // 
     // validate parameters
     // 
@@ -39,7 +39,12 @@ export function enhanceScript({filePath, jsFileContent, denoVersion, additionalA
     }
     const [ folders, itemName, itemExtensionWithDot ] = pathPieces(filePath)
     const normalPath = `${folders.join('/')}/${itemName}`
-    const ps1Path = `${folders.join('/')}/${itemName}.ps1`
+    let ps1Path 
+    if (noPs1) {
+        ps1Path = `${folders.join('/')}/${itemName}`
+    } else {
+        ps1Path = `${folders.join('/')}/${itemName}.ps1`
+    }
     
     // 
     // setup CLI args
