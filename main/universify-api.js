@@ -17,7 +17,7 @@ export function enhanceScript({filePath, jsFileContent, denoVersion, additionalA
         ([name, arg])=>name
     )
     if (nonStringArgs.length > 0) {
-        throw new Error(`\n\nFor Deno Guillotine, I got arguments ${JSON.stringify(nonStringArgs)} that needed to be strings but were not`)
+        throw new Error(`\n\nFor Universify, I got arguments ${JSON.stringify(nonStringArgs)} that needed to be strings but were not`)
     }
     
     // 
@@ -26,7 +26,7 @@ export function enhanceScript({filePath, jsFileContent, denoVersion, additionalA
     for (const each of [...additionalArgs, ...baseArgs]) {
         let match = each.match(specialCharPattern)
         if (match) {
-            throw new Error(`\n\nFor Deno Guillotine, I got a CLI argument for the script that contains a special character: ${match[0]}\nThis is a problem because the character behaves differently on windows/non-windows.\n\nHowever, you can still add the argument. You'll simply need to specify both the --additionalArgsForUnix and --additionalArgsForWindows individually.\n\nNOTE! On unix/not-windows, args will be be passed as strings. But on windows, the arguments are passed as-is to powershell (AKA they are evaled as code). %THING for windows would expand the THING variable, while on unix it would simply be the string "%THING". \nThis is because its impossible to reliably/generically escape arguments on windows.`)
+            throw new Error(`\n\nFor Universify, I got a CLI argument for the script that contains a special character: ${match[0]}\nThis is a problem because the character behaves differently on windows/non-windows.\n\nHowever, you can still add the argument. You'll simply need to specify both the --additionalArgsForUnix and --additionalArgsForWindows individually.\n\nNOTE! On unix/not-windows, args will be be passed as strings. But on windows, the arguments are passed as-is to powershell (AKA they are evaled as code). %THING for windows would expand the THING variable, while on unix it would simply be the string "%THING". \nThis is because its impossible to reliably/generically escape arguments on windows.`)
         }
     }
     
@@ -71,7 +71,7 @@ export function enhanceScript({filePath, jsFileContent, denoVersion, additionalA
     // 
     let newContents = jsFileContent
     // remove the tail if any
-    newContents = newContents.replace(/\n\/\/ \(this comment is part of deno-guillotine, dont remove\) #>/g,"")
+    newContents = newContents.replace(/\n\/\/ \(this comment is part of universify, dont remove\) #>/g,"")
     // remove normal shebang if needed 
     newContents = newContents.replace(/^#!\/usr\/bin\/env -S deno.+\n/,"")
     // remove the old head if any
@@ -79,7 +79,7 @@ export function enhanceScript({filePath, jsFileContent, denoVersion, additionalA
     // escape the body
     newContents = newContents.replace(/#>/g,"#\\>") // escape any uses of "#>"
     // add back head and tail
-    newContents = newHeader + newContents + "\n// (this comment is part of deno-guillotine, dont remove) #>"    
+    newContents = newHeader + newContents + "\n// (this comment is part of universify, dont remove) #>"    
 
     return {
         symlinkPath: `./${filePathNameNoExt}.ps1`,
