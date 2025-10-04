@@ -24,32 +24,28 @@ This is only possible because of some rare builtin tools that allow for a single
 console.log("Hello World")
 ```
 
-2. Test it with deno.<br>
+2. Install universify.<br>
 ```sh
 # install deno
 irm https://deno.land/install.ps1 | iex || curl -fsSL https://deno.land/install.sh | sh
-
-# make sure your script runs normally
-deno run --allow-all ./your_script.js
-```
-
-3. Install this tool (universify) so it can modify your scripts to make them portable<br>
-```shell
+# install universify
 deno install -n uni -Afgr https://raw.githubusercontent.com/jeff-hykin/universify/master/main/universify.js
 ```
 
-4. Use it:<br>
-```shell
+3. Use it:<br>
+```sh
+# make sure your script universal
+uni ./your_script.js
 # basic example
 uni ./your_script.js
 
 # if you have a particular version of deno you want to use, include it as the second argument
-uni ./your_script.js 1.44.4
+uni ./your_script.js 2.4.3
 # if you want to add a deno-run argument like --no-npm do it like this:
 uni ./your_script.js --add-arg '--no-npm' --add-arg '--unstable'
 ```
 
-5. Profit<br>
+4. Profit<br>
 - Typing `./your_script` (if thats the name of your script) will now run your script! Even if you uninstalled Deno!
 - There are some things to discuss though:
   - On Linux/Mac and other half-decent operating systems supported by Deno (including Arm Linux) there is no catch.
@@ -126,7 +122,7 @@ import { enhanceScript } from "https://raw.githubusercontent.com/jeff-hykin/univ
 const { newContents, symlinkPath, normalPath, ps1Path } = enhanceScript({
     filePath: "./my_cli_scipt.js",
     jsFileContent: `console.log("Hello World")`,
-    denoVersion: "1.44.4",
+    denoVersion: "2.4.3",
     additionalArgs: [ "--no-npm", "--unstable" ],
     additionalArgsForUnix: [ ],
     additionalArgsForWindows: [ ],
