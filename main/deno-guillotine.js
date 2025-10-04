@@ -1,3 +1,4 @@
+import { Console, cyan, green, magenta, yellow, dim } from "https://deno.land/x/quickr@0.8.4/main/console.js"
 import { FileSystem } from "https://deno.land/x/quickr@0.6.67/main/file_system.js"
 import { parseArgs, flag, required, initialValue } from "https://deno.land/x/good@1.7.1.0/flattened/parse_args.js"
 import { toCamelCase } from "https://deno.land/x/good@1.7.1.0/flattened/to_camel_case.js"
@@ -188,7 +189,57 @@ import { version } from "./version.js"
             console.warn(`I was unable to make this file an executable, just fyi: ${normalPath}`)
         }
     }
-    console.log(`Done! ✅`)
-    console.log(`try doing:`)
-    console.log(`    cd ${FileSystem.pwd}`)
-    console.log(`    ./${normalPath}`.replace(/^    \.\/\.\//, "    ./"))
+    console.log(`\nDone! ✅\n`)
+    if (disableUrlRun) {
+        console.log(`try doing:`)
+        console.log(yellow`    cd ${FileSystem.pwd}`)
+        console.log(yellow(`    .${normalPath}`.replace(/^    \.\/\.\//, "    ./")))
+    } else {
+        console.log(`Run locally with:`)
+        console.log(yellow`    cd ${FileSystem.pwd}`)
+        console.log(yellow(`    .${normalPath}`.replace(/^    \.\/\.\//, "    ./")))
+
+        console.log(`\nRun from anywhere with:`)
+        console.log(yellow`    function u { echo URL_TO_THAT_FILE; };$Env:u=$(u) || export u=$(u); irm "$(u)"|iex || curl -fsSL "$u" | sh`)
+        // 
+        // try to be helpful by pre-calculating the url for those using github
+        // 
+        try {
+            const gitParentFolderOrNull = await FileSystem.walkUpUntil(".git/config")
+            if (gitParentFolderOrNull) {
+                const gitParentFolder = gitParentFolderOrNull
+                const gitBranchOrTagOrCommitHash = (await FileSystem.read(`${gitParentFolder}/.git/HEAD`)).trim().replace(/^(ref: )?refs\/heads\//,"")
+                const configString = (await FileSystem.read(`${gitParentFolder}/.git/config`))
+                let originUrlProbably
+                for (let each of configString.split(/\n/g)) {
+                    if (each.match(/^\s*url = /)) {
+                        originUrlProbably = each.split("=")[1].trim()
+                        break
+                    }
+                }
+                let match, githubUsername, repoName
+                // ex: git@github.com:jeff-hykin/deno-guillotine.git
+                if (match=originUrlProbably.match(/^git@github\.com:([^\/]+)\/([^\/]+)\.git$/)) {
+                    githubUsername = match[1]
+                    repoName = match[2]
+                // ex: https://github.com/jeff-hykin/deno-guillotine.git
+                } else if (match=originUrlProbably.match(/^https:\/\/github\.com\/([^\/]+)\/([^\/]+)(\.git)?$/)) {
+                    githubUsername = match[1]
+                    repoName = match[2]
+                }
+                if (githubUsername && repoName) {
+                    const relativePath = FileSystem.makeRelativePath({ from: gitParentFolderOrNull, to: ps1Path })
+                    console.log(``)
+                    console.log(dim`    If you're using github your one-liner will look like this:`)
+                    const url = `https://github.com/${githubUsername}/${repoName}/blob/${gitBranchOrTagOrCommitHash}/${relativePath}`
+                    console.log(yellow.dim`    function u { echo ${url}; };$Env:u=$(u) || export u=$(u); irm "$(u)"|iex || curl -fsSL "$u" | sh`)
+                }
+            }
+        } catch (error) {
+            console.log(dim`    If your script is part of a github repo, the url will follow this format:`)
+            console.log(dim`    https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/blob/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT`)
+        }
+
+        console.log(``)
+        console.log(`   NOTE: if you are NOT using the run-from-url, please disable by rerunning with the --disable-url-run flag`)
+    }

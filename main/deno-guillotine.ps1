@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
-"\"",`$(echo --% ' |out-null)" >$null;function :{};function dv{<#${/*'>/dev/null )` 2>/dev/null;dv() { #>
-echo "1.44.2"; : --% ' |out-null <#'; }; deno_version="$(dv)"; deno="$HOME/.deno/$deno_version/bin/deno"; if [ -x "$deno" ];then  exec "$deno" run -q -A --no-lock --no-config "$0" "$@";  elif [ -f "$deno" ]; then  chmod +x "$deno" && exec "$deno" run -q -A --no-lock --no-config "$0" "$@"; fi; has () { command -v "$1" >/dev/null; };  set -e;  if ! has unzip && ! has 7z; then echo "Can I try to install unzip for you? (its required for this command to work) ";read ANSWER;echo;  if [ "$ANSWER" =~ ^[Yy] ]; then  if ! has brew; then  brew install unzip; elif has apt-get; then if [ "$(whoami)" = "root" ]; then  apt-get install unzip -y; elif has sudo; then  echo "I'm going to try sudo apt install unzip";read ANSWER;echo;  sudo apt-get install unzip -y;  elif has doas; then  echo "I'm going to try doas apt install unzip";read ANSWER;echo;  doas apt-get install unzip -y;  else apt-get install unzip -y;  fi;  fi;  fi;   if ! has unzip; then  echo ""; echo "So I couldn't find an 'unzip' command"; echo "And I tried to auto install it, but it seems that failed"; echo "(This script needs unzip and either curl or wget)"; echo "Please install the unzip command manually then re-run this script"; exit 1;  fi;  fi;   if ! has unzip && ! has 7z; then echo "Error: either unzip or 7z is required to install Deno (see: https://github.com/denoland/deno_install#either-unzip-or-7z-is-required )." 1>&2; exit 1; fi;  if [ "$OS" = "Windows_NT" ]; then target="x86_64-pc-windows-msvc"; else case $(uname -sm) in "Darwin x86_64") target="x86_64-apple-darwin" ;; "Darwin arm64") target="aarch64-apple-darwin" ;; "Linux aarch64") target="aarch64-unknown-linux-gnu" ;; *) target="x86_64-unknown-linux-gnu" ;; esac fi;  print_help_and_exit() { echo "Setup script for installing deno  Options: -y, --yes Skip interactive prompts and accept defaults --no-modify-path Don't add deno to the PATH environment variable -h, --help Print help " echo "Note: Deno was not installed"; exit 0; };  for arg in "$@"; do case "$arg" in "-h") print_help_and_exit ;; "--help") print_help_and_exit ;; "-"*) ;; *) if [ -z "$deno_version" ]; then deno_version="$arg"; fi ;; esac done; if [ -z "$deno_version" ]; then deno_version="$(curl -s https://dl.deno.land/release-latest.txt)"; fi;  deno_uri="https://dl.deno.land/release/v${deno_version}/deno-${target}.zip"; deno_install="${DENO_INSTALL:-$HOME/.deno/$deno_version}"; bin_dir="$deno_install/bin"; exe="$bin_dir/deno";  if [ ! -d "$bin_dir" ]; then mkdir -p "$bin_dir"; fi;  if has curl; then curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri"; elif has wget; then wget --output-document="$exe.zip" "$deno_uri"; else echo "Error: curl or wget is required to download Deno (see: https://github.com/denoland/deno_install )." 1>&2; fi;  if has unzip; then unzip -d "$bin_dir" -o "$exe.zip"; else 7z x -o"$bin_dir" -y "$exe.zip"; fi; chmod +x "$exe"; rm "$exe.zip";  exec "$deno" run -q -A --no-lock --no-config "$0" "$@";     #>}; $DenoInstall = "${HOME}/.deno/$(dv)"; $BinDir = "$DenoInstall/bin"; $DenoExe = "$BinDir/deno.exe"; if (-not(Test-Path -Path "$DenoExe" -PathType Leaf)) { $DenoZip = "$BinDir/deno.zip"; $DenoUri = "https://github.com/denoland/deno/releases/download/v$(dv)/deno-x86_64-pc-windows-msvc.zip";  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;  if (!(Test-Path $BinDir)) { New-Item $BinDir -ItemType Directory | Out-Null; };  Function Test-CommandExists { Param ($command); $oldPreference = $ErrorActionPreference; $ErrorActionPreference = "stop"; try {if(Get-Command "$command"){RETURN $true}} Catch {Write-Host "$command does not exist"; RETURN $false}; Finally {$ErrorActionPreference=$oldPreference}; };  if (Test-CommandExists curl) { curl -Lo $DenoZip $DenoUri; } else { curl.exe -Lo $DenoZip $DenoUri; };  if (Test-CommandExists curl) { tar xf $DenoZip -C $BinDir; } else { tar -Lo $DenoZip $DenoUri; };  Remove-Item $DenoZip;  $User = [EnvironmentVariableTarget]::User; $Path = [Environment]::GetEnvironmentVariable('Path', $User); if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) { [Environment]::SetEnvironmentVariable('Path', "$Path;$BinDir", $User); $Env:Path += ";$BinDir"; } }; & "$DenoExe" run -q -A --no-lock --no-config "$PSCommandPath" @args; Exit $LastExitCode; <# 
+"\"",`$(echo --% ' |out-null)" >$null;function :{};function getDenoVersion{<#${/*'>/dev/null )` 2>/dev/null;getDenoVersion() { #>
+echo "2.5.3"; : --% ' |out-null <#'; }; deno_version="$(getDenoVersion)"; deno="$HOME/.deno/$deno_version/bin/deno"; target_script="$0"; disable_url_run="";  if [ -n "$_u" ] && ! [ -z "$disable_url_run" ]; then target_script="$_u"; fi; if [ -x "$deno" ];then  exec "$deno" run -q -A --no-lock --no-config "$target_script" "$@";  elif [ -f "$deno" ]; then  chmod +x "$deno" && exec "$deno" run -q -A --no-lock --no-config "$target_script" "$@"; fi; has () { command -v "$1" >/dev/null; };  set -e;  if ! has unzip && ! has 7z; then echo "Can I try to install unzip for you? (its required for this command to work) ";read ANSWER;echo;  if [ "$ANSWER" =~ ^[Yy] ]; then  if ! has brew; then  brew install unzip; elif has apt-get; then if [ "$(whoami)" = "root" ]; then  apt-get install unzip -y; elif has sudo; then  echo "I'm going to try sudo apt install unzip";read ANSWER;echo;  sudo apt-get install unzip -y;  elif has doas; then  echo "I'm going to try doas apt install unzip";read ANSWER;echo;  doas apt-get install unzip -y;  else apt-get install unzip -y;  fi;  fi;  fi;   if ! has unzip; then  echo ""; echo "So I couldn't find an 'unzip' command"; echo "And I tried to auto install it, but it seems that failed"; echo "(This script needs unzip and either curl or wget)"; echo "Please install the unzip command manually then re-run this script"; exit 1;  fi;  fi;   if ! has unzip && ! has 7z; then echo "Error: either unzip or 7z is required to install Deno (see: https://github.com/denoland/deno_install#either-unzip-or-7z-is-required )." 1>&2; exit 1; fi;  if [ "$OS" = "Windows_NT" ]; then target="x86_64-pc-windows-msvc"; else case $(uname -sm) in "Darwin x86_64") target="x86_64-apple-darwin" ;; "Darwin arm64") target="aarch64-apple-darwin" ;; "Linux aarch64") target="aarch64-unknown-linux-gnu" ;; *) target="x86_64-unknown-linux-gnu" ;; esac fi;  print_help_and_exit() { echo "Setup script for installing deno  Options: -y, --yes Skip interactive prompts and accept defaults --no-modify-path Don't add deno to the PATH environment variable -h, --help Print help " echo "Note: Deno was not installed"; exit 0; };  for arg in "$@"; do case "$arg" in "-h") print_help_and_exit ;; "--help") print_help_and_exit ;; "-"*) ;; *) if [ -z "$deno_version" ]; then deno_version="$arg"; fi ;; esac done; if [ -z "$deno_version" ]; then deno_version="$(curl -s https://dl.deno.land/release-latest.txt)"; fi;  deno_uri="https://dl.deno.land/release/v${deno_version}/deno-${target}.zip"; deno_install="${DENO_INSTALL:-$HOME/.deno/$deno_version}"; bin_dir="$deno_install/bin"; exe="$bin_dir/deno";  if [ ! -d "$bin_dir" ]; then mkdir -p "$bin_dir"; fi;  if has curl; then curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri"; elif has wget; then wget --output-document="$exe.zip" "$deno_uri"; else echo "Error: curl or wget is required to download Deno (see: https://github.com/denoland/deno_install )." 1>&2; fi;  if has unzip; then unzip -d "$bin_dir" -o "$exe.zip"; else 7z x -o"$bin_dir" -y "$exe.zip"; fi; chmod +x "$exe"; rm "$exe.zip";  exec "$deno" run -q -A --no-lock --no-config "$0" "$@";       #>}; $DenoInstall = "${HOME}/.deno/$(getDenoVersion)"; $BinDir = "$DenoInstall/bin"; $DenoExe = "$BinDir/deno.exe"; $TargetScript = "$PSCommandPath"; $DisableUrlRun = "";  if ($Env:_u -and $DisableUrlRun) { $TargetScript = "$Env:_u"; };  if (-not(Test-Path -Path "$DenoExe" -PathType Leaf)) { $DenoZip = "$BinDir/deno.zip"; $DenoUri = "https://github.com/denoland/deno/releases/download/v$(getDenoVersion)/deno-x86_64-pc-windows-msvc.zip";  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;  if (!(Test-Path $BinDir)) { New-Item $BinDir -ItemType Directory | Out-Null; };  Function Test-CommandExists { Param ($command); $oldPreference = $ErrorActionPreference; $ErrorActionPreference = "stop"; try {if(Get-Command "$command"){RETURN $true}} Catch {Write-Host "$command does not exist"; RETURN $false}; Finally {$ErrorActionPreference=$oldPreference}; };  if (Test-CommandExists curl) { curl -Lo $DenoZip $DenoUri; } else { curl.exe -Lo $DenoZip $DenoUri; };  if (Test-CommandExists curl) { tar xf $DenoZip -C $BinDir; } else { tar -Lo $DenoZip $DenoUri; };  Remove-Item $DenoZip;   }; & "$DenoExe" run -q -A --no-lock --no-config "$TargetScript" @args; Exit $LastExitCode; <# 
 # */0}`;
+import { Console, cyan, green, magenta, yellow, dim } from "https://deno.land/x/quickr@0.8.4/main/console.js"
 import { FileSystem } from "https://deno.land/x/quickr@0.6.67/main/file_system.js"
 import { parseArgs, flag, required, initialValue } from "https://deno.land/x/good@1.7.1.0/flattened/parse_args.js"
 import { toCamelCase } from "https://deno.land/x/good@1.7.1.0/flattened/to_camel_case.js"
@@ -30,9 +31,11 @@ import { version } from "./version.js"
         examples:
             deno-guillotine ./your_file.js
             deno-guillotine ./your_file.js ${Deno.version.deno}
+            deno-guillotine ./your_file.js --deno-version ${Deno.version.deno}
             deno-guillotine --version
             deno-guillotine --file ./your_file.js
             deno-guillotine --file ./your_file.js --deno-version ${Deno.version.deno}
+            deno-guillotine --file ./your_file.js --disable-url-run
             deno-guillotine --file ./your_file.js \\
                 --add-arg '--no-npm' \\
                 --add-arg '--unstable'
@@ -58,6 +61,8 @@ import { version } from "./version.js"
             [[0, "--file",], required ],
             [[1, "--deno-version"], initialValue(`${Deno.version.deno}`), ],
             [["--no-default-args"], flag, ],
+            [["--disable-url-run"], flag, ],
+            [["--single-file"], flag, ],
             [["--add-arg"], initialValue([]), ],
             [["--add-unix-arg"], initialValue([]), ],
             [["--add-windows-arg"], initialValue([]), ],
@@ -84,6 +89,7 @@ import { version } from "./version.js"
         addUnixArg: additionalArgsForUnix,
         addWindowsArg: additionalArgsForWindows, 
         noDefaultArgs,
+        disableUrlRun,
     } = output.simplifiedNames
 
 // 
@@ -119,6 +125,7 @@ import { version } from "./version.js"
             // NOTE: no lock is given because differnt versions of deno can have different lock file formats
             //       meaning the script will fail to run with the spcified version of deno
             //       if another version of deno is installed
+        disableUrlRun,
     })
 
     // 
@@ -186,9 +193,59 @@ import { version } from "./version.js"
             console.warn(`I was unable to make this file an executable, just fyi: ${normalPath}`)
         }
     }
-    console.log(`Done! ✅`)
-    console.log(`try doing:`)
-    console.log(`    cd ${FileSystem.pwd}`)
-    console.log(`    ./${normalPath}`.replace(/^    \.\/\.\//, "    ./"))
+    console.log(`\nDone! ✅\n`)
+    if (disableUrlRun) {
+        console.log(`try doing:`)
+        console.log(yellow`    cd ${FileSystem.pwd}`)
+        console.log(yellow(`    .${normalPath}`.replace(/^    \.\/\.\//, "    ./")))
+    } else {
+        console.log(`Run locally with:`)
+        console.log(yellow`    cd ${FileSystem.pwd}`)
+        console.log(yellow(`    .${normalPath}`.replace(/^    \.\/\.\//, "    ./")))
+
+        console.log(`\nRun from anywhere with:`)
+        console.log(yellow`    function u { echo URL_TO_THAT_FILE; };$Env:u=$(u) || export u=$(u); irm "$(u)"|iex || curl -fsSL "$u" | sh`)
+        // 
+        // try to be helpful by pre-calculating the url for those using github
+        // 
+        try {
+            const gitParentFolderOrNull = await FileSystem.walkUpUntil(".git/config")
+            if (gitParentFolderOrNull) {
+                const gitParentFolder = gitParentFolderOrNull
+                const gitBranchOrTagOrCommitHash = (await FileSystem.read(`${gitParentFolder}/.git/HEAD`)).trim().replace(/^(ref: )?refs\/heads\//,"")
+                const configString = (await FileSystem.read(`${gitParentFolder}/.git/config`))
+                let originUrlProbably
+                for (let each of configString.split(/\n/g)) {
+                    if (each.match(/^\s*url = /)) {
+                        originUrlProbably = each.split("=")[1].trim()
+                        break
+                    }
+                }
+                let match, githubUsername, repoName
+                // ex: git@github.com:jeff-hykin/deno-guillotine.git
+                if (match=originUrlProbably.match(/^git@github\.com:([^\/]+)\/([^\/]+)\.git$/)) {
+                    githubUsername = match[1]
+                    repoName = match[2]
+                // ex: https://github.com/jeff-hykin/deno-guillotine.git
+                } else if (match=originUrlProbably.match(/^https:\/\/github\.com\/([^\/]+)\/([^\/]+)(\.git)?$/)) {
+                    githubUsername = match[1]
+                    repoName = match[2]
+                }
+                if (githubUsername && repoName) {
+                    const relativePath = FileSystem.makeRelativePath({ from: gitParentFolderOrNull, to: ps1Path })
+                    console.log(``)
+                    console.log(dim`    If you're using github your one-liner will look like this:`)
+                    const url = `https://github.com/${githubUsername}/${repoName}/blob/${gitBranchOrTagOrCommitHash}/${relativePath}`
+                    console.log(yellow.dim`    function u { echo ${url}; };$Env:u=$(u) || export u=$(u); irm "$(u)"|iex || curl -fsSL "$u" | sh`)
+                }
+            }
+        } catch (error) {
+            console.log(dim`    If your script is part of a github repo, the url will follow this format:`)
+            console.log(dim`    https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/blob/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT`)
+        }
+
+        console.log(``)
+        console.log(`   NOTE: if you are NOT using the run-from-url, please disable by rerunning with the --disable-url-run flag`)
+    }
 
 // (this comment is part of deno-guillotine, dont remove) #>
