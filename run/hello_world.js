@@ -3,6 +3,7 @@
         echo "2.5.3"; : --% ' |out-null <#';
     };
     # getDenoVersion exists as both a bash and powershell function so that 2.5.3 is only mentioned in one place (no duplication)
+    clear
     deno_version="$(getDenoVersion)";
     deno="$HOME/.deno/$deno_version/bin/deno";
     target_script="$0";
