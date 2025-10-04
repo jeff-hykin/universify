@@ -27,7 +27,8 @@ console.log("Hello World")
 2. Test it with deno.<br>
 ```sh
 # install deno
-curl -fsSL https://deno.land/install.sh | sh
+irm https://deno.land/install.ps1 | iex || curl -fsSL https://deno.land/install.sh | sh
+
 # run your script
 deno run --allow-all ./your_script.js
 ```
