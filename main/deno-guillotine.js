@@ -241,5 +241,6 @@ import { version } from "./version.js"
         }
 
         console.log(``)
-        console.log(`   NOTE: if you are NOT using the run-from-url, please disable by rerunning with the --disable-url-run flag`)
+        console.log(`   NOTE1: if you are NOT using the run-from-url, please disable by rerunning with the --disable-url-run flag`)
+        console.log(`   NOTE2: unfortunately there is no practical way to pass arguments when running from a url (just FYI)`)
     }

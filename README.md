@@ -4,11 +4,11 @@ This tool is:
 1. A showcase of something that should be impossible.
 2. A surprisingly practical tool for making installers/bootstrapping scripts.
 
-This tool allows us to take a script, and generate a modified version of it (one file). 
+This tool converts existing scripts into a universally runnable versions of themselves (one generated file).
 - That one generated file runs out-of-the-box for every major OS (Windows, MacOS, and Linux). No "first install curl" or "Windows users do this, Linux users do this". One file that runs every time everywhere.
--  That file is able to import/use any JavaScript package because all imports are auto installed (no package json or npm install necessary)
--  That file is readable and editable (not mangled)
--  That file, even with imports, does not modify the user's environment (e.g. no side effects)
+- That file is readable and editable (not mangled)
+- That file is able to import/use any JavaScript package because all imports are auto installed (no package json or npm install necessary)
+- That file, even with imports, does not modify the user's environment (e.g. no side effects)
 
 
 When executed, the file auto-downloads a specific version of Deno (you pick the version) to an isolated folder, and then runs itself using that exact version of Deno. This makes for extremely consistent/reproducible script behavior across machines. To use npm packages, just import a url with the following format `import thing from "https://esm.sh/NPM_PACKAGE_NAME@VERSION"`. You can also import your own code directly from github `import thing from "https://esm.sh/gh/GITHUB_USERNAME/REPO@BRANCH_OR_TAG/path/to/your/code.js`. Not only is the import auto downloaded, its cached (courtesy of [Deno](https://deno.com/) and [Esm.sh](https://esm.sh)) which makes re-runs of the same script very fast.
@@ -17,7 +17,7 @@ When executed, the file auto-downloads a specific version of Deno (you pick the 
 
 This is only possible because of some rare builtin tools that allow for a single file to be valid bash, and valid powershell, AND valid JavaScript (based on this StackOverflow answer [Is it possible to write one script that runs in bash/shell and PowerShell?](https://stackoverflow.com/questions/39421131/is-it-possible-to-write-one-script-that-runs-in-bash-shell-and-powershell))
 
-# How do I make my own universal  installer script?
+# How do I make my own universal installer script?
 
 1. Write a Deno script, lets call it `your_script.js`<br>
 ```js
@@ -29,7 +29,7 @@ console.log("Hello World")
 # install deno
 irm https://deno.land/install.ps1 | iex || curl -fsSL https://deno.land/install.sh | sh
 
-# run your script
+# make sure your script runs normally
 deno run --allow-all ./your_script.js
 ```
 
@@ -52,7 +52,7 @@ universify ./your_script.js --add-arg '--no-npm' --add-arg '--unstable'
 5. Profit<br>
 - typing `./your_script` (if thats the name of your script) will now run your script! Even if you uninstalled Deno!
 - There are some things to discuss though:
-  - On Linux/Mac and other half-decent operating systems supported by Deno (incuding Arm Linux) there is no catch.
+  - On Linux/Mac and other half-decent operating systems supported by Deno (including Arm Linux) there is no catch.
   - On Windows there is one catch; **a fresh Windows install will block execution of all powershell scripts by default**.<br>`Set-ExecutionPolicy unrestricted` will need to be run in an admin terminal before powershell scripts can be executed. After that, it follows the same process as the other operating systems (downloads the specific version of Deno if needed, and executes itself using that version).
 
 - Two files are generated, but one is just a symlink, the other is the "real" file. We can get away with a single file with some compromises:
