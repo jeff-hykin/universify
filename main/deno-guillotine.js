@@ -1,5 +1,5 @@
 import { Console, cyan, green, magenta, yellow, dim } from "https://deno.land/x/quickr@0.8.4/main/console.js"
-import { FileSystem } from "https://deno.land/x/quickr@0.6.67/main/file_system.js"
+import { FileSystem } from "https://deno.land/x/quickr@0.8.4/main/file_system.js"
 import { parseArgs, flag, required, initialValue } from "https://deno.land/x/good@1.7.1.0/flattened/parse_args.js"
 import { toCamelCase } from "https://deno.land/x/good@1.7.1.0/flattened/to_camel_case.js"
 import { didYouMean } from "https://deno.land/x/good@1.7.1.0/flattened/did_you_mean.js"
@@ -32,6 +32,8 @@ import { version } from "./version.js"
             deno-guillotine --file ./your_file.js
             deno-guillotine --file ./your_file.js --deno-version ${Deno.version.deno}
             deno-guillotine --file ./your_file.js --disable-url-run
+            deno-guillotine --file ./your_file.js --single-file
+            deno-guillotine --file ./your_file.js --no-ps1
             deno-guillotine --file ./your_file.js \\
                 --add-arg '--no-npm' \\
                 --add-arg '--unstable'
@@ -59,6 +61,7 @@ import { version } from "./version.js"
             [["--no-default-args"], flag, ],
             [["--disable-url-run"], flag, ],
             [["--single-file"], flag, ],
+            [["--no-ps1"], flag, ],
             [["--add-arg"], initialValue([]), ],
             [["--add-unix-arg"], initialValue([]), ],
             [["--add-windows-arg"], initialValue([]), ],
@@ -78,7 +81,7 @@ import { version } from "./version.js"
         autoThrow: true,
     })
 
-    const {
+    let {
         file: path,
         denoVersion,
         addArg : additionalArgs,
@@ -86,6 +89,8 @@ import { version } from "./version.js"
         addWindowsArg: additionalArgsForWindows, 
         noDefaultArgs,
         disableUrlRun,
+        singleFile,
+        noPs1,
     } = output.simplifiedNames
 
 // 
@@ -106,11 +111,14 @@ import { version } from "./version.js"
     // setup
     // 
     const contents = Deno.readTextFileSync(path)
+    if (noPs1) {
+        singleFile = true
+    }
 
     // 
     // enhance script
     // 
-    const { newContents, symlinkPath, normalPath, ps1Path } = enhanceScript({
+    let { newContents, symlinkPath, normalPath, ps1Path } = enhanceScript({
         filePath: path,
         jsFileContent: contents,
         denoVersion,
@@ -122,11 +130,13 @@ import { version } from "./version.js"
             //       meaning the script will fail to run with the spcified version of deno
             //       if another version of deno is installed
         disableUrlRun,
+        noPs1,
     })
 
     // 
     // make sure ps1 version exists
     // 
+    // note: if noPs1 is true, then ps1Path will be a bit of a misnomer (no .ps1 extension)
     console.log(`Creating ${ps1Path}`)
     await FileSystem.write({
         data: newContents,
@@ -159,34 +169,36 @@ import { version } from "./version.js"
     // 
     // link the other version to it
     // 
-    console.log(`Creating ${normalPath}`)
-    FileSystem.sync.remove(normalPath)
-    Deno.symlinkSync(
-        symlinkPath,
-        normalPath,
-        {
-            type: "file",
-        }
-    )
-    console.log(`Setting ${normalPath} permissions`)
-    try {
-        await FileSystem.addPermissions({
-            path: normalPath,
-            permissions: {
-                owner:{
-                    canExecute: true,
-                },
-                group:{
-                    canExecute: true,
-                },
-                others:{
-                    canExecute: true,
-                }
+    if (!singleFile) {
+        console.log(`Creating ${normalPath}`)
+        FileSystem.sync.remove(normalPath)
+        Deno.symlinkSync(
+            symlinkPath,
+            normalPath,
+            {
+                type: "file",
             }
-        })
-    } catch (error) {
-        if (Deno.build.os != 'windows') {
-            console.warn(`I was unable to make this file an executable, just fyi: ${normalPath}`)
+        )
+        console.log(`Setting ${normalPath} permissions`)
+        try {
+            await FileSystem.addPermissions({
+                path: normalPath,
+                permissions: {
+                    owner:{
+                        canExecute: true,
+                    },
+                    group:{
+                        canExecute: true,
+                    },
+                    others:{
+                        canExecute: true,
+                    }
+                }
+            })
+        } catch (error) {
+            if (Deno.build.os != 'windows') {
+                console.warn(`I was unable to make this file an executable, just fyi: ${normalPath}`)
+            }
         }
     }
     console.log(`\nDone! ✅\n`)
