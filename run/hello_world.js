@@ -8,7 +8,7 @@
     deno_version="v$(getDenoVersion)";
     deno="$DENO_INSTALL/bin/deno";
     target_script="$0";
-    disable_url_run="DISABLE_URL_RUN_HERE";
+    disable_url_run="";
     
     # if using the universal one-liner runner, e.g. 
     #       function u { echo URL_TO_THIS_SCRIPT; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh
