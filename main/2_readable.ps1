@@ -231,7 +231,7 @@
     #
     
     # run self with deno (exec takes over, so no need to Exit)
-    exec "$deno" run UNIX_DENO_ARGS_HERE "$0" "$@";
+    exec "$deno" run UNIX_DENO_ARGS_HERE "$target_script" "$@";
 
     # 
     # powershell portion
