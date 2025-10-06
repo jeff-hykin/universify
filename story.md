@@ -356,7 +356,7 @@ What if we could just have one command that ran on both operating systems?
 <!-- function iex { alias irm='curl -fsSL $_u | sh ;: ';iex(){ cat;};eval "${1#?}";};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/072ee86790581669ea91be01bbc7ab381b619020/run/hello_world.js";irm $_u|iex' -->
 
 ```sh
-function iex { alias irm='curl -fsSL $_u|sh';t=${1#?};eval export ${t%|*};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/eae24c36f943428640671c54949264a79c71e1f6/run/hello_world.js";irm $_u|iex'
+function iex { alias irm='curl -fsSL $_u|sh';t=${1#?};eval export ${t%|*};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/150bc93afb82fb418dd818b7bfdf3a4948317cbf/run/hello_world.js";irm $_u|iex'
 ```
 <!-- function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; }
 function iex { alias irm='curl -fsSL $_u|sh;:';iex(){ cat;};eval export ${1#?};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/eae24c36f943428640671c54949264a79c71e1f6/run/hello_world.js";irm $_u|iex'
