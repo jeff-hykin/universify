@@ -26,8 +26,11 @@ console.log("Hello World")
 
 2. Install universify.<br>
 ```sh
-# install deno
-irm https://deno.land/install.ps1 | iex || curl -fsSL https://deno.land/install.sh | sh
+# install deno (command works on all OS's)
+function iex { curl -fsSL https://deno.land/install.sh|sh;};iex 'irm https://deno.land/install.ps1|iex'
+# Linux/MacOS specific: curl -fsSL https://deno.land/install.sh|sh
+# Windows specific: irm https://deno.land/install.ps1 | iex
+    
 # install universify
 deno install -n uni -Afgr https://raw.githubusercontent.com/jeff-hykin/universify/master/main/universify.js
 ```

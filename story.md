@@ -292,7 +292,7 @@ If we expand it for readability though, it looks like this:
     $DisableUrlRun = "DISABLE_URL_RUN_HERE";
     
     # if using the universal one-liner runner, e.g. 
-    #       function u { echo URL_TO_THIS_SCRIPT; };$Env:u=$(u) || export u=$(u); irm "$(u)"|iex || curl -fsSL "$u" | sh
+    #           function iex { alias irm='curl -fsSL $_u|sh';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THAT_FILE";irm $_u|iex'
     # then the u env var will be set, and we NEED that env var because
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
@@ -424,8 +424,9 @@ To make it run anywhere:
 
 1. Install Universify<br>
 ```sh
-# install deno if you don't have it
-irm https://deno.land/install.ps1 | iex || curl -fsSL https://deno.land/install.sh | sh
+# install deno (command works on all OS's)
+function iex { curl -fsSL https://deno.land/install.sh|sh;};iex 'irm https://deno.land/install.ps1|iex'
+
 # install universify
 deno install -n uni -Afgr https://raw.githubusercontent.com/jeff-hykin/universify/master/main/universify.js
 ```
@@ -441,7 +442,7 @@ uni ./your_script.ts --deno-version 2.4.3
 ./your_script 
 
 # run remotely (replace the URL with your own)
-function u { echo 'https://raw.githubusercontent.com/GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
+function iex { alias irm='curl -fsSL $_u|sh';t=\${1#?};eval export \${t%|*};};iex '$_u="https://raw.githubusercontent.com/GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT";irm $_u|iex'
 ```
 
 # Part 8: More To The Story

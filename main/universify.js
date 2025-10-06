@@ -214,7 +214,7 @@ import { version } from "./version.js"
         console.log(yellow(`    ./${FileSystem.basename(normalPath)}`.replace(/^    \.\/\.\//, "    ./")))
 
         console.log(`\nRun from anywhere with:`)
-        console.log(yellow`    function u { echo URL_TO_THAT_FILE; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh`)
+        console.log(yellow`    function iex { alias irm='curl -fsSL $_u|sh';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THAT_FILE";irm $_u|iex'`)
         // 
         // try to be helpful by pre-calculating the url for those using github
         // 
@@ -245,8 +245,10 @@ import { version } from "./version.js"
                     const relativePath = FileSystem.makeRelativePath({ from: gitParentFolderOrNull, to: ps1Path })
                     console.log(``)
                     console.log(dim`    If you're using github your one-liner will look like this:`)
-                    const url = `https://raw.githubusercontent.com/${githubUsername}/${repoName}/${gitBranchOrTagOrCommitHash}/${relativePath}`
-                    console.log(yellow.dim`    function u { echo '${url}'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh`)
+                    const escapedFileNames = relativePath.split(`/`).map(encodeURIComponent).join(`/`)
+                    const url = `https://raw.githubusercontent.com/${githubUsername}/${repoName}/${gitBranchOrTagOrCommitHash}/${escapedFileNames}`
+                    // TODO: might need to escape the url. I don't think github allows stuff thats too weird though
+                    console.log(yellow.dim`        function iex { alias irm='curl -fsSL $_u|sh';t=\${1#?};eval export \${t%|*};};iex '$_u="${url}";irm $_u|iex'`)
                 }
             }
         } catch (error) {
