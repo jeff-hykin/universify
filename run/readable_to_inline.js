@@ -6,12 +6,17 @@ const firstLine = content.split(/\n/g)[0]
 const lastRealLine = content.split(/\n/g).slice(-3)[0]
 content = content.split(/\n/g).slice(1,-2).join("\n")
 // remove comments
-content = content.replace(/^( |\t)*#(\n| ).*\n?/gm,"")
+content = content.replace(/^( |\t)*#(\n| +).*\n?/gm,"")
 // remove newlines
-content = content.replace(/\n( |\t)*/g," ")
+content = content.replace(/( |\t)*\n( |\t)*/g," ")
+// remove extra spacing
+content = content.replace(/; +/g,";")
 
 if (content.match(/\\\n/)) {
     console.warn(`Looks like there's an escaped newline, which will break this script.\nEx:\n    echo hi && \\\n        echo other`)
+}
+if (content.match(/else\s+if/)) {
+    console.warn(`Looks like there's an "else" followed by an if, which will cause a problem if there is not a semicolon between them (for some reason)`)
 }
 
 await FileSystem.write({
