@@ -191,7 +191,7 @@
         # Write-Output "Stuck? Join our Discord https://discord.gg/deno"
     
     # run self with deno
-    }; echo "TargetScript" is $TargetScript; & "$DenoExe" run -A -q --no-lock --no-config "$TargetScript" @args; Exit $LastExitCode; <#
+    }; & "$DenoExe" run -A -q --no-lock --no-config "$TargetScript" @args; Exit $LastExitCode; <#
 # */0}`;
 
     console.log("Hello World")
