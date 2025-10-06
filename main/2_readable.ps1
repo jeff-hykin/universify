@@ -16,7 +16,7 @@
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
     # so if that var is set, that becomes the new target_script
-    if [ -n "$_u" ] && [ -z "$disable_url_run" ]; then
+    if [ -n "$_u" ] && [ -z "$disable_url_run" ];then
         target_script="$_u";
     fi;
     # 
@@ -25,7 +25,7 @@
     if [ -x "$deno" ];then 
         exec "$deno" run UNIX_DENO_ARGS_HERE "$target_script" "$@"; 
     # if not executable, try to make it executable then run ASAP
-    elif [ -f "$deno" ]; then 
+    elif [ -f "$deno" ];then 
         chmod +x "$deno" && exec "$deno" run UNIX_DENO_ARGS_HERE "$target_script" "$@";
     fi;
     
@@ -50,8 +50,8 @@
     }; 
     
     # using wget as curl
-    if ! has curl; then
-        if ! has wget; then
+    if ! has curl;then
+        if ! has wget;then
             curl () {
                 # use $5 and $6 because deno uses curl below as:
                 #      curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri";
@@ -64,7 +64,7 @@
     fi;
     
     # using MacOS/OpenBSD's tar command as unzip
-    if [ "$(uname)" = "Darwin" ]; then
+    if [ "$(uname)" = "Darwin" ];then
         unzip () {
             # use $4 and $2 because deno uses unzip below as:
             #      unzip -d "$bin_dir" -o "$exe.zip"
@@ -73,21 +73,21 @@
     fi;
     
     # check for an unzip tool (most common problem)
-    if ! has unzip && ! has 7z; then
+    if ! has unzip && ! has 7z;then
         echo "Either the unzip or 7z command are needed for this script";
         echo "Should I try to install unzip for you?";read ANSWER;echo;
-        if [ "$ANSWER" =~ ^[Yy] ]; then
+        if [ "$ANSWER" =~ ^[Yy] ];then
             # if nix is available, use it becuase it won't require modifying the user's environment or sudo
-            if has nix-shell; then
+            if has nix-shell;then
                 # this gets unzip without modifying the user's environment
                 unzip_path="$(NIX_PATH='nixpkgs=https://github.com/NixOS/nixpkgs/archive/release-25.05.tar.gz' nix-shell -p unzip which --run "which unzip")"
                 alias unzip="$unzip_path"
             else;
-                if has apt-get; then
+                if has apt-get;then
                     _install="apt-get install unzip -y";
-                elif has dnf; then
+                elif has dnf;then
                     _install="dnf install unzip -y";
-                elif has pacman; then
+                elif has pacman;then
                     _install="pacman -S --noconfirm unzip";
                 else
                     echo "Sorry, I don't know how to install unzip on this system";
@@ -96,13 +96,13 @@
                 fi;
                 
                 # run the install command according to context/user
-                if [ "$(whoami)" = "root" ]; then 
+                if [ "$(whoami)" = "root" ];then 
                     # Note: many systems (ex: docker) default to root user
                     # trying to use sudo as root will usually cause "sudo command not found"
                     "$_install";
-                elif has sudo; then 
+                elif has sudo;then 
                     sudo "$_install"; 
-                elif has doas; then 
+                elif has doas;then 
                     doas "$_install"; 
                 else
                     # just try, even if no sudo/doas
@@ -112,7 +112,7 @@
         fi;
         
         # if still doesn't have unzip somehow
-        if ! has unzip; then
+        if ! has unzip;then
             echo "";
             echo "So I couldn't find an 'unzip' or '7z' command";
             echo "And I tried to auto install unzip, but it seems that failed";
@@ -126,12 +126,12 @@
     #
     set -e;
 
-    if ! command -v unzip >/dev/null && ! command -v 7z >/dev/null; then
+    if ! command -v unzip >/dev/null && ! command -v 7z >/dev/null;then
         echo "Error: either unzip or 7z is required to install Deno (see: https://github.com/denoland/deno_install#either-unzip-or-7z-is-required )." 1>&2;
         exit 1;
     fi;
 
-    if [ "$OS" = "Windows_NT" ]; then
+    if [ "$OS" = "Windows_NT" ];then
         target="x86_64-pc-windows-msvc";
     else
         case $(uname -sm) in
@@ -172,13 +172,13 @@
     #         ;;
     #     "-"*) ;;
     #     *)
-    #         if [ -z "$deno_version" ]; then
+    #         if [ -z "$deno_version" ];then
     #             deno_version="$arg"
     #         fi
     #         ;;
     #     esac
     # done
-    # if [ -z "$deno_version" ]; then
+    # if [ -z "$deno_version" ];then
     #     deno_version="$(curl -s https://dl.deno.land/release-latest.txt)"
     # fi
 
@@ -187,12 +187,12 @@
     bin_dir="$deno_install/bin";
     exe="$bin_dir/deno";
 
-    if [ ! -d "$bin_dir" ]; then
+    if [ ! -d "$bin_dir" ];then
         mkdir -p "$bin_dir";
     fi;
 
     curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri";
-    if command -v unzip >/dev/null; then
+    if command -v unzip >/dev/null;then
         unzip -d "$bin_dir" -o "$exe.zip";
     else
         7z x -o"$bin_dir" -y "$exe.zip";
@@ -209,8 +209,8 @@
     # }
 
     # # If stdout is a terminal, see if we can run shell setup script (which includes interactive prompts)
-    # if [ -z "$CI" ] && [ -t 1 ] && $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
-    #     if [ -t 0 ]; then
+    # if [ -z "$CI" ] && [ -t 1 ] && $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)';then
+    #     if [ -t 0 ];then
     #         run_shell_setup "$@"
     #     else
     #         # This script is probably running piped into sh, so we don't have direct access to stdin.
@@ -218,7 +218,7 @@
     #         run_shell_setup "$@" </dev/tty
     #     fi
     # fi
-    # if command -v deno >/dev/null; then
+    # if command -v deno >/dev/null;then
     #     echo "Run 'deno --help' to get started"
     # else
     #     echo "Run '$exe --help' to get started"
