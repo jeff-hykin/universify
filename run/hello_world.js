@@ -16,13 +16,9 @@
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
     # so if that var is set, that becomes the new target_script
-    echo "disable_url_run is $disable_url_run";
-    echo "_u is $_u";
     if [ -n "$_u" ] && [ -z "$disable_url_run" ];then
-        echo "setting target_script";
         target_script="$_u";
     fi;
-    echo "TargetScript is $target_script";
     
     # 
     # try to run immediately
