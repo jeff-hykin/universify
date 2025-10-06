@@ -292,7 +292,7 @@ If we expand it for readability though, it looks like this:
     $DisableUrlRun = "DISABLE_URL_RUN_HERE";
     
     # if using the universal one-liner runner, e.g. 
-    #           function iex { alias irm='curl -fsSL $_u|sh';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THAT_FILE";irm $_u|iex'
+    #           function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THAT_FILE";irm $_u|iex'
     # then the u env var will be set, and we NEED that env var because
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
@@ -356,13 +356,19 @@ What if we could just have one command that ran on both operating systems?
 <!-- function iex { alias irm='curl -fsSL $_u | sh ;: ';iex(){ cat;};eval "${1#?}";};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/072ee86790581669ea91be01bbc7ab381b619020/run/hello_world.js";irm $_u|iex' -->
 
 ```sh
-function iex { alias irm='curl -fsSL $_u|sh';t=${1#?};eval export ${t%|*};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/150bc93afb82fb418dd818b7bfdf3a4948317cbf/run/hello_world.js";irm $_u|iex'
+function iex { alias irm='curl -fsSL $url|sh;:';t=${1#?};eval export ${t%|*};};iex '$url="tinyurl.com/jprntjbb";irm $url|iex'
+# note the url is a shorted version of:
+# https://raw.githubusercontent.com/jeff-hykin/universify/150bc93afb82fb418dd818b7bfdf3a4948317cbf/run/hello_world.js
 ```
+
+Look, I know its not the most beautiful, and I accept PR's BTW. More elegant solutions will be possible as soon as Powershell 7 (instead of 5.1) becomes the out-of-the-box version on Windows. 
+
 <!-- function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; }
+function iex { irm() { curl -fsSL $_u|sh;};t=${1#?};eval export ${t%|*};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/150bc93afb82fb418dd818b7bfdf3a4948317cbf/run/hello_world.js";irm $_u|iex'
 function iex { alias irm='curl -fsSL $_u|sh;:';iex(){ cat;};eval export ${1#?};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/eae24c36f943428640671c54949264a79c71e1f6/run/hello_world.js";irm $_u|iex'
 function iex { alias irm='curl -fsSL $_u|sh;:';t=${1#?};eval export ${t%|*};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/eae24c36f943428640671c54949264a79c71e1f6/run/hello_world.js";irm $_u|iex'
 function iex { irm(){ curl -fsSL $_u|sh; } irm=';:';iex(){ cat;};eval export ${1#?};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/eae24c36f943428640671c54949264a79c71e1f6/run/hello_world.js";irm $_u|iex'
-function iex { alias irm='curl -fsSL $_u|sh';iex(){ cat;};eval ${1#?};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js";irm $_u|iex'
+function iex { alias irm='curl -fsSL $_u|sh;:';iex(){ cat;};eval ${1#?};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js";irm $_u|iex'
 function irm { alias iex=:;curl -fsSL "$1"|_u="$(u)" sh;};iex "$(irm "$(iex '$_u=')")"
 function iex { irm () {  }; }; iex "iex ''; $(irm "$(iex '$_u=')")"
 
@@ -442,7 +448,7 @@ uni ./your_script.ts --deno-version 2.4.3
 ./your_script 
 
 # run remotely (replace the URL with your own)
-function iex { alias irm='curl -fsSL $_u|sh';t=\${1#?};eval export \${t%|*};};iex '$_u="https://raw.githubusercontent.com/GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT";irm $_u|iex'
+function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};iex '$_u="https://raw.githubusercontent.com/GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT";irm $_u|iex'
 ```
 
 # Part 8: More To The Story

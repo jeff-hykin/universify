@@ -11,7 +11,7 @@
     disable_url_run="DISABLE_URL_RUN_HERE";
     
     # if using the universal one-liner runner, e.g. 
-    #           function iex { alias irm='curl -fsSL $_u|sh';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THIS_SCRIPT";irm $_u|iex'
+    #           function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THIS_SCRIPT";irm $_u|iex'
     # then the u env var will be set, and we NEED that env var because
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
@@ -244,7 +244,7 @@
     $DisableUrlRun = "DISABLE_URL_RUN_HERE";
     
     # if using the universal one-liner runner, e.g. 
-    #           function iex { alias irm='curl -fsSL $_u|sh';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THIS_SCRIPT";irm $_u|iex'
+    #           function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THIS_SCRIPT";irm $_u|iex'
     # then the u env var will be set, and we NEED that env var because
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
