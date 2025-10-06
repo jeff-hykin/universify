@@ -8,6 +8,17 @@
     deno_version="v$(getDenoVersion)";
     deno="$DENO_INSTALL/bin/deno";
     target_script="$0";
+    disable_url_run="DISABLE_URL_RUN_HERE";
+    
+    # if using the universal one-liner runner, e.g. 
+    #       function u { echo URL_TO_THIS_SCRIPT; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh
+    # then the u env var will be set, and we NEED that env var because
+    # $0 will NOT be the path to this script, because there is no path to this script in that case 
+    # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
+    # so if that var is set, that becomes the new target_script
+    if [ -n "$_u" ] && [ -z "$disable_url_run" ];then
+        target_script="$_u";
+    fi;
     
     # 
     # try to run immediately
@@ -144,8 +155,6 @@
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
     # so if that var is set, that becomes the new target_script
-    echo "Env:_u is $Env:_u"
-    echo "if $($Env:_u -and $DisableUrlRun)"
     if ($Env:_u -and -not($DisableUrlRun)) {
         $TargetScript = "$Env:_u";
     };
