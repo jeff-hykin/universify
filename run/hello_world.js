@@ -11,7 +11,7 @@
     disable_url_run="";
     
     # if using the universal one-liner runner, e.g. 
-    #       function u { echo URL_TO_THIS_SCRIPT; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh
+    #       function u { echo URL_TO_THIS_SCRIPT; };$_u=$(u) || export _u=$(u); irm "$(u)"|iex || curl -fsSL "$_u" | sh
     # then the u env var will be set, and we NEED that env var because
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
@@ -155,8 +155,8 @@
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
     # so if that var is set, that becomes the new target_script
-    if ($Env:_u -and -not($DisableUrlRun)) {
-        $TargetScript = "$Env:_u";
+    if ($_u -and -not($DisableUrlRun)) {
+        $TargetScript = "$_u";
     };
     
     # if this deno version doesn't exist, get it
