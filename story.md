@@ -356,7 +356,7 @@ What if we could just have one command that ran on both operating systems?
 <!-- function iex { alias irm='curl -fsSL $_u | sh ;: ';iex(){ cat;};eval "${1#?}";};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/072ee86790581669ea91be01bbc7ab381b619020/run/hello_world.js";irm $_u|iex' -->
 
 ```sh
-function iex { alias irm='curl -fsSL $url|sh;:';t=${1#?};eval export ${t%|*};};iex '$url="tinyurl.com/jprntjbb";irm $url|iex'
+function iex { alias irm='curl -fsSL $_u|sh;:';t=${1#?};eval export ${t%|*};};iex '$_u="tinyurl.com/jprntjbb";irm $url|iex'
 # note the url is a shorted version of:
 # https://raw.githubusercontent.com/jeff-hykin/universify/150bc93afb82fb418dd818b7bfdf3a4948317cbf/run/hello_world.js
 ```
