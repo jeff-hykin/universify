@@ -61,7 +61,7 @@ const stringToBacktickRepresentation = (string) => {
 
 let string = stringToBacktickRepresentation(firstLine+"\n"+content+"\n"+lastRealLine+"\n")
 string = string.replace(/DENO_VERSION_HERE/g,"${denoVersion}")
-string = string.replace(/UNIX_DENO_ARGS_HERE/g, "${argsForUnix}")
+string = string.replace(/DENO_UNIX_ARGS_HERE/g, "${argsForUnix}")
 string = string.replace(/DENO_WINDOWS_ARGS_HERE/g, "${argsForWindows}")
 string = string.replace(/DISABLE_URL_RUN_HERE/g, "${disableUrlRun?'1':''}")
 string = string.replace('#> echo "${denoVersion}"', '#>\necho "${denoVersion}"')

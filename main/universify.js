@@ -80,7 +80,7 @@ import { version } from "./version.js"
         possibleWords: Object.keys(output.explicitArgsByName).filter(each=>each.startsWith(`-`)),
         autoThrow: true,
     })
-
+    
     let {
         file: path,
         denoVersion,
@@ -101,8 +101,8 @@ import { version } from "./version.js"
     // 
     // validate
     // 
-    const fileDoenstExist = await Deno.lstat(path).catch(()=>({doesntExist: true})).doesntExist
-    if (fileDoenstExist) {
+    const fileDoesntExist = await Deno.lstat(path).catch(()=>({doesntExist: true})).doesntExist
+    if (fileDoesntExist) {
         console.log(`Hey! the file you gave me doesn't seem to exist: ${path}`)
         Deno.exit(1)
     }
@@ -126,8 +126,8 @@ import { version } from "./version.js"
         additionalArgsForUnix:    typeof additionalArgsForUnix    === "string" ? [ additionalArgsForUnix ] : additionalArgsForUnix,
         additionalArgsForWindows: typeof additionalArgsForWindows === "string" ? [ additionalArgsForWindows ] : additionalArgsForWindows,
         baseArgs: noDefaultArgs ? [] : [ "-q", "-A", "--no-lock", "--no-config", ],
-            // NOTE: no lock is given because differnt versions of deno can have different lock file formats
-            //       meaning the script will fail to run with the spcified version of deno
+            // NOTE: no lock is given because different versions of deno can have different lock file formats
+            //       meaning the script will fail to run with the specified version of deno
             //       if another version of deno is installed
         disableUrlRun,
         noPs1,

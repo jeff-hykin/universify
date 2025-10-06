@@ -23,10 +23,10 @@
     # try to run immediately
     # 
     if [ -x "$deno" ];then 
-        exec "$deno" run UNIX_DENO_ARGS_HERE "$target_script" "$@"; 
+        exec "$deno" run DENO_UNIX_ARGS_HERE "$target_script" "$@"; 
     # if not executable, try to make it executable then run ASAP
     elif [ -f "$deno" ];then 
-        chmod +x "$deno" && exec "$deno" run UNIX_DENO_ARGS_HERE "$target_script" "$@";
+        chmod +x "$deno" && exec "$deno" run DENO_UNIX_ARGS_HERE "$target_script" "$@";
     fi;
     
     # 
@@ -231,7 +231,7 @@
     #
     
     # run self with deno (exec takes over, so no need to Exit)
-    exec "$deno" run UNIX_DENO_ARGS_HERE "$target_script" "$@";
+    exec "$deno" run DENO_UNIX_ARGS_HERE "$target_script" "$@";
 
     # 
     # powershell portion

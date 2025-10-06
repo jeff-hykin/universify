@@ -81,7 +81,7 @@ Glad you asked! The largest step is verifying that those first three lines (the 
     - There's four stages. Stage 1 is "literally the installer straight from deno official" and it gradually becomes stage 4 "a js function that generates a compressed modified installer"
     - stage one is under `./main/1_deno_installer.sh`
         - verify it by comparing it to the official Deno install script [https://deno.land/install.sh](https://deno.land/install.sh). Note it does change over time, so my version will lag behind. 
-    - Then compare that to `./main/2_readable.ps1`
+    - Then compare that line by line to `./main/2_readable.ps1`
         - Read the commits to see explanations of changes (it has to be changed manually)
         - ex:
             - We don't want to affect the user's system, so the PATH modification that deno usually performs is commented out 
@@ -94,12 +94,13 @@ Glad you asked! The largest step is verifying that those first three lines (the 
         - reads stage 2
         - deletes comments
         - deletes newlines
-        - generates `./main/3_inlined.ps1` which is the shell + powershell aspect
-        - puts all that into a JavaScript string
-        - makes a JavaScript function that accepts the deno version and the args (like `--allow-all` or `--unstable`)
-        - puts that JavaScript code inside of `./main/4_inlined.js` 
+        - generates `./main/3_inlined.ps1`
+        - escapes `./main/3_inlined.ps1` into a JavaScript string
+        - makes a JavaScript function that accepts args like denoVersion and `--allow-all` or `--unstable`
+        - puts that JavaScript code inside of `./main/4_inlined.js`
     - Once those have been verified, open up `universify-api.js` (which imports `./main/4_inlined.js`)
-    - Finally `universify.js` imports `enhanceScript` from `universify-api.js`
+    - Finally `universify.js` imports the function from `universify-api.js`
+    - `universify.js` is the main CLI script that gets executed by anyone
 3. Verify the main JavaScript
     - Look at `universify-api.js` (no permissions needed by that code)
     - Look at `universify.js` (needs file permissions because its the CLI script)
