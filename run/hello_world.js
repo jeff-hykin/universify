@@ -144,8 +144,9 @@
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
     # so if that var is set, that becomes the new target_script
-    echo '$Env:_u is' $Env:_u
-    if ($Env:_u -and $DisableUrlRun) {
+    echo "Env:_u is $Env:_u"
+    echo "if $($Env:_u -and $DisableUrlRun)"
+    if ($Env:_u -and -not($DisableUrlRun)) {
         $TargetScript = "$Env:_u";
     };
     
