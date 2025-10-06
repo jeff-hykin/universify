@@ -145,6 +145,7 @@
     chmod +x "$exe";
     rm "$exe.zip";
     
+    # run self with deno (exec takes over, so no need to Exit)
     exec "$deno" run UNIX_DENO_ARGS_HERE "$0" "$@";
     
     
@@ -194,6 +195,7 @@
         $TargetScript = "$Env:_u";
     };
     
+    # if this deno version doesn't exist, get it
     if (-not(Test-Path -Path "$DenoExe" -PathType Leaf)) {
         $DenoZip = "$BinDir/deno.zip";
         $DenoUri = "https://github.com/denoland/deno/releases/download/v$(getDenoVersion)/deno-x86_64-pc-windows-msvc.zip";
@@ -205,37 +207,26 @@
             New-Item $BinDir -ItemType Directory | Out-Null;
         };
         
-        Function Test-CommandExists {
-            Param ($command);
-            $oldPreference = $ErrorActionPreference;
-            $ErrorActionPreference = "stop";
-            try {if(Get-Command "$command"){RETURN $true}}
-            Catch {Write-Host "$command does not exist"; RETURN $false};
-            Finally {$ErrorActionPreference=$oldPreference};
-        };
+        curl.exe --ssl-revoke-best-effort -Lo $DenoZip $DenoUri;
         
-        if (Test-CommandExists curl) {
-            curl -Lo $DenoZip $DenoUri;
-        } else {
-            curl.exe -Lo $DenoZip $DenoUri;
-        };
-        
-        if (Test-CommandExists curl) {
-            tar xf $DenoZip -C $BinDir;
-        } else {
-            tar -Lo $DenoZip $DenoUri;
-        };
+        tar.exe xf $DenoZip -C $BinDir;
         
         Remove-Item $DenoZip;
         
         # commented out below because we don't want to modify the user's path (no side effects)
         
-        # $User = [EnvironmentVariableTarget]::User;
-        # $Path = [Environment]::GetEnvironmentVariable('Path', $User);
-        # if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) {
-        #     [Environment]::SetEnvironmentVariable('Path', "$Path;$BinDir", $User);
-        #     $Env:Path += ";$BinDir";
+        # $User = [System.EnvironmentVariableTarget]::User
+        # $Path = [System.Environment]::GetEnvironmentVariable('Path', $User)
+        # if (!(";${Path};".ToLower() -like "*;${BinDir};*".ToLower())) {
+        # [System.Environment]::SetEnvironmentVariable('Path', "${Path};${BinDir}", $User)
+        # $Env:Path += ";${BinDir}"
         # }
+
+        # Write-Output "Deno was installed successfully to ${DenoExe}"
+        # Write-Output "Run 'deno --help' to get started"
+        # Write-Output "Stuck? Join our Discord https://discord.gg/deno"
+    
+    # run self with deno
     }; & "$DenoExe" run DENO_WINDOWS_ARGS_HERE "$TargetScript" @args; Exit $LastExitCode; <#
 # */0}`;
 console.log("Hello World")
