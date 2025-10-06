@@ -351,7 +351,7 @@ Speaking of remote code, what is the point of a universal script if we need two 
 What if we could just have one command that ran on both operating systems?
 
 ```sh
-function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/84436cdc65e38ddfe0da275541075575fde88dfe/run/hello_world.js'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
+function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/b8271566b9b859bb41d1f47c9e47d26df74c1ac0/run/hello_world.js'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
 ```
 
 # Part 7: Universify Your Scripts
