@@ -4,8 +4,8 @@
     };
     # getDenoVersion exists as both a bash and powershell function so that DENO_VERSION_HERE is only mentioned in one place (no duplication)
     # NOTE: semicolons at the end of lines are important for when this script is crushed into a one-liner
-    deno_version="$(getDenoVersion)";
-    DENO_INSTALL="$HOME/.deno/$deno_version";
+    DENO_INSTALL="$HOME/.deno/$(getDenoVersion)";
+    deno_version="v$(getDenoVersion)";
     deno="$DENO_INSTALL/bin/deno";
     target_script="$0";
     disable_url_run="DISABLE_URL_RUN_HERE";
@@ -68,7 +68,7 @@
         unzip () {
             # use $4 and $2 because deno uses unzip below as:
             #      unzip -d "$bin_dir" -o "$exe.zip"
-            /usr/bin/tar xvf "$4" -C "$2";
+            /usr/bin/tar xvf "$4" -C "$2" 2>&1 1>/dev/null;
         };
     fi;
     
@@ -85,11 +85,11 @@
             else
                 # select the base install command (all of these need root by default)
                 if has apt-get; then
-                    _install="apt-get install unzip -y"
+                    _install="apt-get install unzip -y";
                 elif has dnf; then
-                    _install="dnf install unzip -y"
+                    _install="dnf install unzip -y";
                 elif has pacman; then
-                    _install="pacman -S --noconfirm unzip"
+                    _install="pacman -S --noconfirm unzip";
                 else
                     echo "Sorry, I don't know how to install unzip on this system";
                     echo "Please install unzip manually and re-run this script";
