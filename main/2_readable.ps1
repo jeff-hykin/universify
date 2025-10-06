@@ -68,7 +68,7 @@
         unzip () {
             # use $4 and $2 because deno uses unzip below as:
             #      unzip -d "$bin_dir" -o "$exe.zip"
-            /usr/bin/tar xvf "$4" -C "$2" 2>&1 1>/dev/null;
+            /usr/bin/tar xvf "$4" -C "$2" 2>/dev/null 1>/dev/null;
         };
     fi;
     
