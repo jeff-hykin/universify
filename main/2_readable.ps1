@@ -82,8 +82,7 @@
                 # this gets unzip without modifying the user's environment
                 unzip_path="$(NIX_PATH='nixpkgs=https://github.com/NixOS/nixpkgs/archive/release-25.05.tar.gz' nix-shell -p unzip which --run "which unzip")"
                 alias unzip="$unzip_path"
-            else
-                # select the base install command (all of these need root by default)
+            else;
                 if has apt-get; then
                     _install="apt-get install unzip -y";
                 elif has dnf; then
