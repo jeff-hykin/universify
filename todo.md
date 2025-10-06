@@ -1,0 +1,2 @@
+- add --watch flag
+- add --env, ex: `--env DENO_DIR=/tmp`
