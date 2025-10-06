@@ -105,7 +105,7 @@ This is the second catastrophic problem:
 1. The world's first universal script should not have side effects.
 2. JavaScript is, obviously, completely and utterly useless without modules.
 
-How is a universal script supposed to figure out if a number is even or odd? Well we may never know, because Deno not only supports everyone's favorite supply chain attack vector, but also does so without an `install` command, bundling, or a `node_modules` side effect. For reliability and security -- if you're into that sort of thing -- it can also easily pin versions:
+How is a universal script supposed to figure out if a number is even or odd without a module? Well we may never know, because Deno not only supports everyone's favorite supply chain attack vector, but also does so without an `install` command, bundling, or a `node_modules` side effect. For reliability and security -- if you're into that sort of thing -- it can also easily pin versions:
 
 ```js
 import malware from "https://esm.sh/chalk"
