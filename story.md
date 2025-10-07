@@ -100,7 +100,7 @@ Hold on to your seat, because we are still just getting started. There some obvi
 
 # Part 3: The Runtime Problem
 
-The minor issue: the host system might not have a runtime like NodeJS. With a mix of dread, excitement, and guilt please consider: What if the entire NodeJS installer -- both the bash installer and powershell installer -- was embedded into the script? Meaning, when the script tries to run itself, if the system doesn't have NodeJS, the script *just gets NodeJS* and tries to run itself again.
+The minor issue: the host system might not have a runtime like NodeJS. With a mix of dread, excitement, and guilt please consider: what if the entire NodeJS installer -- both the bash installer and powershell installer -- was embedded into the script? Meaning, when the script tries to run itself, if the system doesn't have NodeJS, the script *just gets NodeJS* and tries to run itself again.
 
 Before we consider which clauses of the Geneva Convention that idea violates, lets consider the first of the catastrophic problems. That problem can be summarized as:
 1. The world's first universal script should be reliable.
