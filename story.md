@@ -84,7 +84,7 @@ exit #>
 
 *Yes, the bash syntax highlighting on Github is a bit off. My bad, I'm supposed to be [maintaining that](https://github.com/jeff-hykin/better-shell-syntax) (its hard).*
 
-Procrastination aside, we are about to start moving fast, so hold on tight. There some obvious and less-obvious problems with the script above.
+Hold on to your seat, because we are still just getting started. There some obvious and less-obvious problems with the script above.
 
 1. There are new escaping caveats. Soon these caveats won't matter, but just FYI pasting powershell, bash, or JS may not work 100% as-is.
 2. The main issue: the JavaScript code exists, but is not executed. This is where things get fun. The script can just run itself. Both bash and powershell have a way to get the filepath of the currently-being-executed script. So, yes, the world's first universal script involves cross-language recursion, albeit shallow recursion.
