@@ -46,11 +46,11 @@ I don't know. Thankfully it doesn't matter. The universal script only needs one 
 
 So why I am beating around the bush?
 
-The truth is the world's first universal script could only ever be one language. Maybe it is dawning on you what language I am about to mention. We can claim it didn't have to be this way -- there must be another compatible syntax. Maybe there is. But deep down you and I know it is fate.<br>
-<br>
-The world's first universal scripting language:
-- The language no programmer can truly escape.
+The truth is the world's first universal script could only ever be one language.
+
+Maybe it is dawning on you what language I am about to mention. We can claim it didn't have to be this way -- there must be another compatible syntax. Maybe there is. But deep down you and I know it is fate. The world's first universal scripting language ...
 - The language destined from birth to rule over all languages.
+- The language no programmer can truly escape.
 - The language that crashes iPhones, CloudFlare, Teslas, and homemade websites alike.
 
 I'm, of course, talking about:<br>
@@ -59,11 +59,19 @@ I'm, of course, talking about:<br>
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ![javascript i love it](https://github.com/user-attachments/assets/1c2779a6-bbce-480e-9abf-ee61c3235403)
 
 
-Not only can one file be, simultaneously, valid JavaScript, valid powershell, valid bash -- but actually, with a bit of escaping, any possible combination JavaScript, powershell, and bash code can be fit all into the same file, all at the same time.
+Not only can one file be, simultaneously, valid JavaScript, valid powershell, valid bash -- but actually, with a bit of escaping, **any possible combination JavaScript, powershell, and bash code can be fit all into the same file, all at the same time.**
 
 ```sh
 #!/usr/bin/env sh
