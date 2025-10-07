@@ -26,8 +26,6 @@ echo "hello world" # powershell
 
 ```
 
-I call this semi-universal.
-
 I would love to dive into the hacky "features" of bash and powershell that make it possible (those details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134)), but let us focus on two points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
 
