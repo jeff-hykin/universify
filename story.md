@@ -100,9 +100,9 @@ Hold on to your seat, because we are still just getting started. There some obvi
 
 # Part 3: The Runtime Problem
 
-The minor issue: the host system might not have a runtime like NodeJS. With a mix of dread, excitement, and guilt please consider: what if the entire NodeJS installer -- both the bash installer and powershell installer -- was embedded into the script? Meaning, when the script tries to run itself, if the system doesn't have NodeJS, the script *just gets NodeJS* and tries to run itself again.
+The minor issue: the host system might not have a runtime like NodeJS. With a mix of dread, excitement, and guilt please consider: what if the entire NodeJS installer -- both the bash installer and powershell installer -- was embedded into the script? Meaning, when the script tries to run itself, and the system doesn't have NodeJS, the script *just gets NodeJS* and tries to run itself again.
 
-Before we consider which clauses of the Geneva Convention that idea violates, lets consider the first of the catastrophic problems. That problem can be summarized as:
+Before we consider which clauses of the Programmer's Geneva Convention that idea violates, lets consider the first of the catastrophic problems. That problem can be summarized as:
 1. The world's first universal script should be reliable.
 2. We just installed NodeJS.
 
@@ -110,7 +110,7 @@ Can those things coexist? Can the entire NodeJS installer(s) be crammed into one
 
 I don't know.
 
-Thankfully (again) we don't need to know. The structure of the world's first universal script may already be a crime, but including NodeJS is simply too far. Instead lets consider using a good JS runtime like Deno.
+Thankfully (again) we don't need to know. This work-in-progress script may already be criminal, but including NodeJS is simply too far. Instead lets consider using a good JS runtime, like Deno.
 
 # Part 4: What about Npm Packages?
 
@@ -118,7 +118,7 @@ This is the second catastrophic problem:
 1. The world's first universal script should not have side effects.
 2. JavaScript is, obviously, completely and utterly useless without modules.
 
-How is a universal script supposed to figure out if a number is even or odd without a module? Well we may never know, because Deno not only supports everyone's favorite supply chain attack vector, but also does so without an `install` command, bundling, or a `node_modules` side effect. For reliability and security -- if you're into that sort of thing -- it can also easily pin versions:
+How is a universal script supposed to figure out if a number is even or odd without a module? We may never know, because Deno not only supports everyone's favorite supply chain attack vector, but also does so without an `install` command, bundling, or a `node_modules` side effect. For reliability and security -- if you're into that sort of thing -- it can also easily pin versions:
 
 ```js
 import malware from "https://esm.sh/chalk"
@@ -139,13 +139,15 @@ import { encodeBase64 } from "https://esm.sh/jsr/@std/encoding@1.0.0/base64"
 // or import JS directly from any cdn/gitlab/git-tea/your own server/etc
 ```
 
+When anyone runs this code, all of the dependencies will be downloaded, imported, and cached automatically without conflict.
+
 # Part 5: Heinous Reliability
 
-Now that the module issue has been addressed, we need to return to the other runtime issue. Can the bash installer and powershell installer for Deno be crammed into a single file? What about installer side effects? What about runtime versioning?
+Now that the module issue has been addressed, we need to return to the previous runtime issue. Can the bash installer and powershell installer for Deno be crammed into a single file? What about installer side effects? What about runtime versioning?
 
 Although it might make some devs uncomfortable, there is a very straightforward solution for versioning. If the script was tested with Deno 2.4.3, simply install Deno 2.4.3 on the host system.
 
-What about side effects? All installers have side effects, most of which are unacceptable for a universal script. Thankfully, when it comes analyzing side effects, Deno's combined installer is 1000 lines shorter than Node's. It is also useful to know Deno can execute code with a single binary, a binary that can be stored anywhere on a system. That means modifying the user's system is not inherently necessary.
+What about side effects? All installers have side effects, most of which are unacceptable for a universal script. Thankfully, when it comes analyzing side effects, Deno's combined installer is 1000 lines shorter than Node's. It is also useful to know Deno can execute code as a standalone binary. This means modifying the user's system is not inherently necessary.
 
 The runtime solution: By editing setting `DENO_INSTALL` and `deno_version` followed by commenting out a few sections of the Deno installer, we can turn it into a mere Deno-version-downloader. The script downloads a specific version of Deno to `$HOME/.deno/$deno_version/`. This gets us versioning, caching, and prevention of all (meaningful) installer side effects. If that path is missing (e.g. not cached), then it is downloaded. Once it exists (either cached or downloaded), the script runs itself using that executable.
 
@@ -156,12 +158,14 @@ Put it all together and voila, the world's first universal script:
 "\"",`$(echo --% ' |out-null)" >$null;function :{};function getDenoVersion{<#${/*'>/dev/null )` 2>/dev/null;getDenoVersion() { #>
 echo "2.5.3";: --% ' |out-null <#';};DENO_INSTALL="$HOME/.deno/$(getDenoVersion)";deno_version="v$(getDenoVersion)";deno="$DENO_INSTALL/bin/deno";target_script="$0";disable_url_run="";if [ -n "$_u" ] && [ -z "$disable_url_run" ];then target_script="$_u";fi;if [ -x "$deno" ];then exec "$deno" run -q -A --no-lock --no-config "$target_script" "$@";elif [ -f "$deno" ];then chmod +x "$deno" && exec "$deno" run -q -A --no-lock --no-config "$target_script" "$@";fi;has () { command -v "$1" >/dev/null;};if ! has curl;then if ! has wget;then curl () { wget --output-document="$5" "$6";};else echo "Sorry this script needs curl or wget, please install one or the other and re-run";exit 1;fi;fi;if [ "$(uname)" = "Darwin" ];then unzip () { /usr/bin/tar xvf "$4" -C "$2" 2>/dev/null 1>/dev/null;};fi;if ! has unzip && ! has 7z;then echo "Either the unzip or 7z command are needed for this script";echo "Should I try to install unzip for you?";read ANSWER;echo;if [ "$ANSWER" =~ ^[Yy] ];then if has nix-shell;then unzip_path="$(NIX_PATH='nixpkgs=https://github.com/NixOS/nixpkgs/archive/release-25.05.tar.gz' nix-shell -p unzip which --run "which unzip")" alias unzip="$unzip_path" else;if has apt-get;then _install="apt-get install unzip -y";elif has dnf;then _install="dnf install unzip -y";elif has pacman;then _install="pacman -S --noconfirm unzip";else echo "Sorry, I don't know how to install unzip on this system";echo "Please install unzip manually and re-run this script";exit 1;fi;if [ "$(whoami)" = "root" ];then "$_install";elif has sudo;then sudo "$_install";elif has doas;then doas "$_install";else "$_install";fi;fi;fi;if ! has unzip;then echo "";echo "So I couldn't find an 'unzip' or '7z' command";echo "And I tried to auto install unzip, but it seems that failed";echo "Please install the unzip or 7z command manually then re-run this script";exit 1;fi;fi;if ! command -v unzip >/dev/null && ! command -v 7z >/dev/null;then echo "Error: either unzip or 7z is required to install Deno (see: https://github.com/denoland/deno_install#either-unzip-or-7z-is-required )." 1>&2;exit 1;fi;if [ "$OS" = "Windows_NT" ];then target="x86_64-pc-windows-msvc";else case $(uname -sm) in "Darwin x86_64") target="x86_64-apple-darwin" ;;"Darwin arm64") target="aarch64-apple-darwin" ;;"Linux aarch64") target="aarch64-unknown-linux-gnu" ;;*) target="x86_64-unknown-linux-gnu" ;;esac fi;deno_uri="https://dl.deno.land/release/${deno_version}/deno-${target}.zip";deno_install="${DENO_INSTALL:-$HOME/.deno}";bin_dir="$deno_install/bin";exe="$bin_dir/deno";if [ ! -d "$bin_dir" ];then mkdir -p "$bin_dir";fi;curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri";if command -v unzip >/dev/null;then unzip -d "$bin_dir" -o "$exe.zip";else 7z x -o"$bin_dir" -y "$exe.zip";fi;chmod +x "$exe";rm "$exe.zip";exec "$deno" run -q -A --no-lock --no-config "$0" "$@";#>};$DenoInstall = "${HOME}/.deno/$(getDenoVersion)";$BinDir = "$DenoInstall/bin";$DenoExe = "$BinDir/deno.exe";$TargetScript = "$PSCommandPath";$DisableUrlRun = "";if ($Env:_u -and $DisableUrlRun) { $TargetScript = "$Env:_u";};if (-not(Test-Path -Path "$DenoExe" -PathType Leaf)) { $DenoZip = "$BinDir/deno.zip";$DenoUri = "https://github.com/denoland/deno/releases/download/v$(getDenoVersion)/deno-x86_64-pc-windows-msvc.zip";[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;if (!(Test-Path $BinDir)) { New-Item $BinDir -ItemType Directory | Out-Null;};curl.exe --ssl-revoke-best-effort -Lo $DenoZip $DenoUri;tar.exe xf $DenoZip -C $BinDir;Remove-Item $DenoZip;};& "$DenoExe" run -q -A --no-lock --no-config "$TargetScript" @args;Exit $LastExitCode;<#  
 # */0}`;
-console.log("Hello World") // dont get rid of this -> #>
+console.log("Hello World") // dont get rid of this comment -> #>
 ```
+
+However, we are not quite done yet. There are some lingering issues.
 
 Any JavaScript that does not contain `#>` can be safely added to that script. The installer/setup code is 5 lines (~3800 characters). If someone really wanted to, I bet a hand-crafted code-golfed version would be under 1000 characters.<br>
 
-If we expand it for readability though, it looks like this:
+If it is expanded for readability it would look like this:
 
 ```js
 #!/usr/bin/env sh
@@ -374,17 +378,18 @@ If we expand it for readability though, it looks like this:
 // #>
 ```
 
-# Part 6: Going Beyond: Remote Scripts
+# Part 6: Going Beyond Universal: Remote Scripts
 
-It may have become clear that the first universal script needs internet. However, don't be too disappointed.
-1. Just wait till Deno is compiled with the incredible [cosmopolitan libc](https://github.com/jart/cosmopolitan) and embedded into the script as a base64 string.
-2. Universal scripts are most useful as installers, and installers are going to need internet anyway. There isn't too many use-cases for making them work offline.
-
-Speaking of remote code, what is the point of a universal script if we need two separate commands to run it remotely?  For example the Deno installer says:
+What is the point of a universal installer if we need two separate commands to run it remotely?
+For example the Deno installer says: 
 1. Windows users run `irm https://deno.land/install.ps1 | iex`
 2. Linux/MacOS users run `curl -fsSL https://deno.land/install.sh | sh`
 
-What if we could just have a single ~120 char line that ran on all operating systems?
+<!-- While the script needs internet, don't be too disappointed.
+1. Universal scripts are most useful as installers, and installers are going to need internet anyway. There isn't too many use-cases for making them work offline.
+2. Just wait till I get my hands on Deno+[cosmopolitan libc](https://github.com/jart/cosmopolitan) and embed it as a base64 string. -->
+
+For a universal script, this is unacceptable. What if we could just have a single ~120 char line that ran on all operating systems?
 
 <!-- function iex { alias irm='curl -fsSL $_u | sh ;: ';iex(){ cat;};eval "${1#?}";};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/072ee86790581669ea91be01bbc7ab381b619020/run/hello_world.js";irm $_u|iex' -->
 
@@ -394,8 +399,10 @@ function iex { alias irm='curl -fsSL $url_|sh;:';t=${1#?};eval export ${t%|*};};
 # https://raw.githubusercontent.com/jeff-hykin/universify/591b27031eb0ad3337a2c2bdb7464710cf9dbe85/run/hello_world.js
 ```
 
-Look, I know its not the most beautiful, but consider the existential beauty of 129 chars achieving what many senior devs would casually claim to be impossible.
- <!-- More elegant solutions will be possible as soon as Powershell 7 (instead of 5.1) becomes the out-of-the-box version on Windows.  -->
+Look, I know it might not be the most beautiful code, but consider the existential beauty of 129 chars achieving what many senior devs would casually claim to be impossible.
+
+We're almost done, there's one last thing I need to share with you.
+<!-- More elegant solutions will be possible as soon as Powershell 7 (instead of 5.1) becomes the out-of-the-box version on Windows.  -->
 
 <!-- function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; }
 function iex { irm() { curl -fsSL $_u|sh;};t=${1#?};eval export ${t%|*};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/150bc93afb82fb418dd818b7bfdf3a4948317cbf/run/hello_world.js";irm $_u|iex'
@@ -464,11 +471,11 @@ To make it run anywhere:
 
 1. Install Universify<br>
 ```sh
-# install deno (command works on all OS's)
+# install deno (command works on all OS's - of course)
 function iex { curl -fsSL https://deno.land/install.sh|sh;};iex 'irm https://deno.land/install.ps1|iex'
 
 # install universify
-deno install -n uni -Afgr https://raw.githubusercontent.com/jeff-hykin/universify/master/main/universify.js
+deno install -n uni -Afgr 'https://raw.githubusercontent.com/jeff-hykin/universify/master/main/universify.js'
 ```
 
 2. Convert your script<br>
@@ -487,11 +494,11 @@ function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};
 
 # Part 8: More To The Story
 
-I left a lot of details out to make sure everyone could see the good parts. If you have your own cursed projects, enjoyed this post, or want to know what got left out don't hesitate to say hello. I'm an AI Robotics PhD Student at Texas A&M. You can find me on [Lemmy](https://lemmy.world/u/jeff_hykin), [Telegram](https://t.me/jeff_hykin),  [Discord](discordapp.com/users/266399494793330689), [Email](mailto:jeff.hykin+uni@gmail.com), or [Github](https://github.com/jeff-hykin/universify).
+As you may have noticed, I left a lot of details out in order to make sure everyone could see the good parts. If you have your own cursed projects, enjoyed this post, or want to know what got left out, don't hesitate to say hello. I'm an AI Robotics PhD Student at Texas A&M. You can find me on [Lemmy](https://lemmy.world/u/jeff_hykin), [Telegram](https://t.me/jeff_hykin),  [Discord](discordapp.com/users/266399494793330689), [Email](mailto:jeff.hykin+uni@gmail.com), or [Github](https://github.com/jeff-hykin/universify).
 
 # Part 9: Everything Else: Security & Caveats
 
-Oh yeah, security. You should really stop running code from internet strangers. Checkout the relatively-detailed [how do I verify this isn't malicious](https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-verify-this-isnt-malicious) section on the universify repo.
+Oh yeah, security. You should really stop running code from strangers on the internet. Checkout the relatively-detailed [how do I verify this isn't malicious](https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-verify-this-isnt-malicious) section on the universify repo.
 
 Technicalities. Alright trolls, lets get this over with. This is the section I get to link to in reply to all the inevitable "umm actually" comments. 
 1. Side effects / Reliability / Isolation
