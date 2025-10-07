@@ -62,7 +62,7 @@ I'm, of course, talking about:<br>
 
 Not only can one file be, simultaneously, valid JavaScript, valid powershell, valid bash -- but actually, with a bit of escaping, any possible combination JavaScript, powershell, and bash code can be fit all into the same file, all at the same time.
 
-```
+```sh
 #!/usr/bin/env sh
 "\"",`$(echo --% ' |out-null)" >$null; <#${/*'>/dev/null )` 2>/dev/null;
 
@@ -79,7 +79,9 @@ exit #>
 // #>
 ```
 
-We are about to start moving fast, so hold on tight. There some obvious and less-obvious problems with the script above.
+*Yes, the bash syntax highlighting on Github is a bit off. My bad, I'm supposed to be [maintaining that](https://github.com/jeff-hykin/better-shell-syntax) (its hard).*
+
+Procrastination aside, we are about to start moving fast, so hold on tight. There some obvious and less-obvious problems with the script above.
 
 1. There are new escaping caveats. Soon these caveats won't matter, but just FYI pasting powershell, bash, or JS may not work 100% as-is.
 2. The main issue: the JavaScript code exists, but is not executed. This is where things get fun. The script can just run itself. Both bash and powershell have a way to get the filepath of the currently-being-executed script. So, yes, the world's first universal script involves cross-language recursion, albeit shallow recursion.
@@ -478,7 +480,7 @@ I left a lot of details out to make sure everyone could see the good parts. If y
 
 # Part 9: Everything Else: Security & Caveats
 
-Oh yeah, security. You should really stop running code from internet strangers. Checkout the extensive [how do I verify this isn't malicious](https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-verify-this-isnt-malicious) section on the universify repo.
+Oh yeah, security. You should really stop running code from internet strangers. Checkout the relatively-detailed [how do I verify this isn't malicious](https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-verify-this-isnt-malicious) section on the universify repo.
 
 Technicalities. Alright trolls, lets get this over with. This is the section I get to link to in reply to all the inevitable "umm actually" comments. 
 1. Side effects / Reliability / Isolation
