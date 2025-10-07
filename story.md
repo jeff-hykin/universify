@@ -7,7 +7,7 @@
 <br>
 Windows comes with Powershell/CMD. Minimal Linux and MacOS come with bash/zsh/dash/sh. So there is no unified script that runs out-of-the-box all major systems... right?
 <br><br>
-Allow me to guide you down a wonderful rabbit hole. Not only are universal scripts possible, they're practical.
+Allow me to be a guide down this wonderful rabbit hole. Not only are universal scripts possible, they're practically practical.
 
 # Part 1: Semi-Universal Scripts
 
