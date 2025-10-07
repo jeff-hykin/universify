@@ -153,7 +153,7 @@ If we expand it for readability though, it looks like this:
 ```js
 #!/usr/bin/env sh
 "\"",`$(echo --% ' |out-null)" >$null;function :{};function getDenoVersion{<#${/*'>/dev/null )` 2>/dev/null;getDenoVersion() { #>
-        echo "DENO_VERSION_HERE"; : --% ' |out-null <#';
+        echo "2.5.3"; : --% ' |out-null <#';
     };
     # getDenoVersion (above) exists as both a bash and powershell function so that DENO_VERSION_HERE is only mentioned in one place (easy to hand-edit)
     # NOTE: semicolons at the end of lines are important for when this script is automatically crushed into a few lines
@@ -161,12 +161,28 @@ If we expand it for readability though, it looks like this:
     deno_version="v$(getDenoVersion)";
     deno="$DENO_INSTALL/bin/deno";
     target_script="$0";
+    disable_url_run="";
+    
+    # read "Part 6: Going Beyond: Remote Scripts" before trying to understand this block
+    # if using the universal one-liner runner, e.g. 
+    #         function iex { alias irm='curl -fsSL $url_|sh;:';t=${1#?};eval export ${t%|*};};iex '$url_="URL_TO_THAT_FILE";irm $url_|iex'
+    # then the u env var will be set, and we NEED that env var because
+    # $0 will NOT be the path to this script, because there is no path to this script in that case 
+    # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
+    # so if that var is set, that becomes the new target_script
+    if [ -n "$url_" ] && [ -z "$disable_url_run" ];then
+        # if no http, then add https://
+        if [ "${url_#http}" = "$url_" ]; then
+            url_="https://$url_";
+        fi;
+        target_script="$url_";
+    fi;
     
     # 
     # try to run immediately
     # 
     if [ -x "$deno" ];then 
-        exec "$deno" run DENO_UNIX_ARGS_HERE "$target_script" "$@"; 
+        exec "$deno" run -A -q --no-lock --no-config "$target_script" "$@"; 
     fi;
     
     #
@@ -279,7 +295,7 @@ If we expand it for readability though, it looks like this:
     #
     
     # run self with deno (exec takes over, so no need to Exit)
-    exec "$deno" run DENO_UNIX_ARGS_HERE "$0" "$@";
+    exec "$deno" run -A -q --no-lock --no-config "$0" "$@";
 
     # 
     # powershell portion
@@ -289,16 +305,20 @@ If we expand it for readability though, it looks like this:
     $BinDir = "$DenoInstall/bin";
     $DenoExe = "$BinDir/deno.exe";
     $TargetScript = "$PSCommandPath";
-    $DisableUrlRun = "DISABLE_URL_RUN_HERE";
+    $DisableUrlRun = "";
     
     # if using the universal one-liner runner, e.g. 
-    #           function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THAT_FILE";irm $_u|iex'
+    #          function iex { alias irm='curl -fsSL $url_|sh;:';t=${1#?};eval export ${t%|*};};iex '$url_="URL_TO_THAT_FILE";irm $url_|iex'
     # then the u env var will be set, and we NEED that env var because
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
     # so if that var is set, that becomes the new target_script
-    if ($Env:_u -and $DisableUrlRun) {
-        $TargetScript = "$Env:_u";
+    if ($url_ -and -not($DisableUrlRun)) {
+        # if no http, then add https://
+        if (-not($url -match '^http')) {
+            $url_="https://$url_";
+        }
+        $TargetScript = "$url_";
     };
     
     # if this deno version doesn't exist, get it
@@ -333,7 +353,7 @@ If we expand it for readability though, it looks like this:
         # Write-Output "Stuck? Join our Discord https://discord.gg/deno"
     
     # run self with deno
-    }; & "$DenoExe" run DENO_WINDOWS_ARGS_HERE "$TargetScript" @args; Exit $LastExitCode; <#
+    }; & "$DenoExe" run -A -q --no-lock --no-config "$TargetScript" @args; Exit $LastExitCode; <#
 # */0}`;
 
     console.log("Hello World")
@@ -351,17 +371,18 @@ Speaking of remote code, what is the point of a universal script if we need two 
 1. Windows users run `irm https://deno.land/install.ps1 | iex`
 2. Linux/MacOS users run `curl -fsSL https://deno.land/install.sh | sh`
 
-What if we could just have one command that ran on both operating systems?
+What if we could just have a single ~120 char line that ran on all operating systems?
 
 <!-- function iex { alias irm='curl -fsSL $_u | sh ;: ';iex(){ cat;};eval "${1#?}";};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/072ee86790581669ea91be01bbc7ab381b619020/run/hello_world.js";irm $_u|iex' -->
 
 ```sh
-function iex { alias irm='curl -fsSL $_u|sh;:';t=${1#?};eval export ${t%|*};};iex '$_u="tinyurl.com/jprntjbb";irm $url|iex'
+function iex { alias irm='curl -fsSL $url_|sh;:';t=${1#?};eval export ${t%|*};};iex '$url_="tinyurl.com/2rc5e9jk";irm $url_|iex'
 # note the url is a shorted version of:
-# https://raw.githubusercontent.com/jeff-hykin/universify/150bc93afb82fb418dd818b7bfdf3a4948317cbf/run/hello_world.js
+# https://raw.githubusercontent.com/jeff-hykin/universify/591b27031eb0ad3337a2c2bdb7464710cf9dbe85/run/hello_world.js
 ```
 
-Look, I know its not the most beautiful, and I accept PR's BTW. More elegant solutions will be possible as soon as Powershell 7 (instead of 5.1) becomes the out-of-the-box version on Windows. 
+Look, I know its not the most beautiful, but consider the existential beauty of 129 chars achieving what many senior devs would casually claim to be impossible.
+ <!-- More elegant solutions will be possible as soon as Powershell 7 (instead of 5.1) becomes the out-of-the-box version on Windows.  -->
 
 <!-- function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; }
 function iex { irm() { curl -fsSL $_u|sh;};t=${1#?};eval export ${t%|*};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/150bc93afb82fb418dd818b7bfdf3a4948317cbf/run/hello_world.js";irm $_u|iex'
