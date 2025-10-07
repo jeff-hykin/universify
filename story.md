@@ -34,7 +34,9 @@ I would love to dive into the hacky "features" of bash and powershell that make 
 
 <!-- While cute, this script is only semi-universal because it is merely two platform-specific scripts in one file. I wouldn't be writing this post if the true universal script was anything less than a unified (one language), practical, editable (not compiled/mangled), standalone (no side-effects), reliable (version-pinned spec-based), general-purpose script with support for packages/modules. -->
 
-How does this party trick help us get to a true universal script? The next logical step would be to try bootstrapping either bash or powershell, making one of those run on the other system(s), thereby making it (bash or powershell) the world's first universal scripting language. Yes... that would be the next logical step. After all, it would be completely impractical to introduce a third language. Right? Every line of the script would need to be valid bash, valid powershell, and valid as some third language, and there is no *practical* way to do that. Right?
+How does this party trick help us get to a true universal script? The next logical step would be to try bootstrapping either bash or powershell, making one of those run on the other system(s), thereby making it (bash or powershell) the world's first universal scripting language. Yes... that would be the next logical step. After all, it would be completely impractical to introduce a third language. Right? Every line of the script would need to be valid bash, valid powershell, and valid as some third language, and there is no *practical* way to do that. 
+
+Right?
 
 # Part 2: Cramming in a 3rd Language
 
