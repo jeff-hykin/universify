@@ -95,7 +95,7 @@ exit #>
 Hold on to your seat, because we are still just getting started. There some obvious and less-obvious problems with the script above.
 
 1. There are new escaping caveats. Soon these caveats won't matter, but just FYI pasting powershell, bash, or JS may not work 100% as-is.
-2. The main issue: the JavaScript code exists, but is not executed. This is where things get fun. The script can just run itself. Both bash and powershell have a way to get the filepath of the currently-being-executed script. So, yes, the world's first universal script involves cross-language recursion, albeit shallow recursion.
+2. The main issue: the JavaScript code exists, but is not executed. This is where things get fun. The script can just run itself. Both bash and powershell have a way to get the filepath of the currently-being-executed script. This means the world's first universal script involves cross-language recursion, albeit shallow recursion.
 3. While the script can easily run itself, there is a minor problem and two catastrophic problems. These are, respectively, the JavaScript runtime, the JavaScript runtime, and finally the JavaScript runtime.
 
 # Part 3: The Runtime Problem
