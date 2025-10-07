@@ -11,17 +11,17 @@
     disable_url_run="";
     
     # if using the universal one-liner runner, e.g. 
-    #         function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THAT_FILE";irm $_u|iex'
+    #         function iex { alias irm='curl -fsSL $url_|sh;:';t=${1#?};eval export ${t%|*};};iex '$url_="URL_TO_THAT_FILE";irm $url_|iex'
     # then the u env var will be set, and we NEED that env var because
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
     # so if that var is set, that becomes the new target_script
-    if [ -n "$_u" ] && [ -z "$disable_url_run" ];then
+    if [ -n "$url_" ] && [ -z "$disable_url_run" ];then
         # if no http, then add https://
-        if [ "${_u#http}" = "$_u" ]; then
-            _u="https://$_u";
+        if [ "${url_#http}" = "$url_" ]; then
+            url_="https://$url_";
         fi;
-        target_script="$_u";
+        target_script="$url_";
     fi;
     
     # 
@@ -154,17 +154,17 @@
     $DisableUrlRun = "";
     
     # if using the universal one-liner runner, e.g. 
-    #          function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};iex '$_u="URL_TO_THAT_FILE";irm $_u|iex'
+    #          function iex { alias irm='curl -fsSL $url_|sh;:';t=${1#?};eval export ${t%|*};};iex '$url_="URL_TO_THAT_FILE";irm $url_|iex'
     # then the u env var will be set, and we NEED that env var because
     # $0 will NOT be the path to this script, because there is no path to this script in that case 
     # (the script wouldn't be a downloaded file, its just running inline as the output of curl)
     # so if that var is set, that becomes the new target_script
-    if ($_u -and -not($DisableUrlRun)) {
+    if ($url_ -and -not($DisableUrlRun)) {
         # if no http, then add https://
         if (-not($url -match '^http')) {
-            $_u="https://$_u";
+            $url_="https://$url_";
         }
-        $TargetScript = "$_u";
+        $TargetScript = "$url_";
     };
     
     # if this deno version doesn't exist, get it
