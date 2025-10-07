@@ -1,8 +1,7 @@
 # The World's First Universal Script
-#### By Jeff Hykin ([Github](https://github.com/jeff-hykin), [Telegram](https://t.me/jeff_hykin), [Discord](discordapp.com/users/266399494793330689), [Email](mailto:jeff.hykin+uni@gmail.com))
+#### By Jeff Hykin ([Github](https://github.com/jeff-hykin), [Email](mailto:jeff.hykin+uni@gmail.com))
 
-
-If you end up enjoying this post, consider starring the [repo](https://github.com/jeff-hykin/universify).
+*If you end up enjoying this post, consider starring the [repo](https://github.com/jeff-hykin/universify).*
 <br>
 <br>
 <br>
