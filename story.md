@@ -6,8 +6,8 @@
 <br>
 <br>
 Windows comes with Powershell/CMD. Minimal Linux and MacOS come with bash/zsh/dash/sh. So there is no unified script that runs out-of-the-box all major systems... right?
-<br><br>
-Allow me to be a guide down this wonderful rabbit hole. Not only are universal scripts possible, they're practically practical.
+<!-- <br><br>
+Allow me to be a guide down this wonderful rabbit hole. Not only are universal scripts possible, they're practically practical. -->
 
 # Part 1: Semi-Universal Scripts
 
@@ -26,29 +26,29 @@ echo "hello world" # powershell
 
 ```
 
-I would love to dive into the hacky "features" of bash and powershell that make it possible (those details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134)), but let us focus on two points:
+Lets focus on a few points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
 
 1. The "hello world" program above is general purpose. Pasting any (legitimately any) valid powershell code in there will cause the script to work (or not-work) as it normally would on Windows. The same is true for almost any (99.9%) bash code. And, with escaping, even the remaining 0.1% of bash programs work too.
-2. How is this possible? Well the idea is very straightforward. Every line in that file is simultaneously valid bash and valid powershell syntax (a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE)). The execution of that file is where there are a few quirks. At runtime, Windows only cares about the file extension (.ps1), which tells Windows to run the file as powershell. On Linux and MacOS, the file extension doesn't matter. Instead the shebang at the top (which is a normal comment in powershell) tells the OS to run the script with sh.
+2. How is this possible? Every line in that file is simultaneously valid bash and valid powershell syntax (a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE)). The polyglot details they can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134). The execution of that file is where there are a few quirks. At runtime, Windows only cares about the file extension (.ps1), which tells Windows to run the file as powershell. On Linux and MacOS, the file extension doesn't matter. Instead the shebang at the top (which is a normal comment in powershell) tells the OS to run the script with sh.
 
 <!-- While cute, this script is only semi-universal because it is merely two platform-specific scripts in one file. I wouldn't be writing this post if the true universal script was anything less than a unified (one language), practical, editable (not compiled/mangled), standalone (no side-effects), reliable (version-pinned spec-based), general-purpose script with support for packages/modules. -->
 
-How does this party trick help us get to a true universal script? The next logical step would be to try bootstrapping either bash or powershell, making one of those run on the other system(s), thereby making it (bash or powershell) the world's first universal scripting language. Yes... that would be the next logical step. After all, it would be completely impractical to introduce a third language. Right? Every line of the script would need to be valid bash, valid powershell, and valid as some third language, and there is no *practical* way to do that. 
+However, this is not a universal script.
 
-Right?
+When I say universal script, I mean one language not two. I mean a reliable, general purpose, no side effects, editable (not mangled/compiled) script that is practial.
+
+The next logical step to reach that point would be to try bootstrapping either bash or powershell to work on the foreign systemlanguag(s). This would make either bash or powershell the world's first universal scripting language. The only other option would be insane: introducing a third language and making the script simultaniously valid bash, valid powershell and valid as that third language.
 
 # Part 2: Cramming in a 3rd Language
 
-When it comes to programming syntax, we as programmers have a lot of choice: indent-based Python, end-based Ruby, C-style languages, ~~Haskell~~ Elixir. For a universal script we could even use Zig, Go, or Rust by simply running the code immediately after compiling ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)). How many of those languages have a syntax that is compatible with bash and powershell?
+When it comes to programming syntax, we as programmers have a lot of choice: indent-based Python, end-based Ruby, C-style languages, ~~Haskell~~ Elixir. We could even try to use Rust ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)). How many languages have a syntax that is compatible with bash and powershell?
 
-I don't know. Thankfully it doesn't matter. The universal script only needs one more language. 
+I don't know. 
 
-So why I am beating around the bush?
+We don't need to know, we just need one compatible language.
 
-The truth is the world's first universal script could only ever be one language.
-
-Maybe it is dawning on you what language I am about to mention. We can claim it didn't have to be this way -- there must be another compatible syntax. Maybe there is. But deep down you and I know it is fate. The world's first universal scripting language ...
+Some people will object to what I am about to say. They will say "it didn't have to be this way, there must be another syntax". Maybe they are right. But deep down, you and I both know it was fate. The truth is the world's first universal script could only ever be one language: 
 - The language destined from birth to rule over all languages.
 - The language no programmer can truly escape.
 - The language that crashes iPhones, CloudFlare, Teslas, and homemade websites alike.
@@ -90,35 +90,39 @@ exit #>
 // #>
 ```
 
-*Yes, the bash syntax highlighting on Github is a bit off. My bad, I'm supposed to be [maintaining that](https://github.com/jeff-hykin/better-shell-syntax) (its hard).*
+*The bash syntax highlighting on Github is a bit off. My bad, I'm supposed to be [maintaining that](https://github.com/jeff-hykin/better-shell-syntax) (its hard).*
 
-Hold on to your seat, because we are still just getting started. There some obvious and less-obvious problems with the script above.
+If that is painful to look at, you had better leave now because we are just getting started. 
 
-1. There are new escaping caveats. Soon these caveats won't matter, but just FYI pasting powershell, bash, or JS may not work 100% as-is.
-2. The main issue: the JavaScript code exists, but is not executed. This is where things get fun. The script can just run itself. Both bash and powershell have a way to get the filepath of the currently-being-executed script. This means the world's first universal script involves cross-language recursion, albeit shallow recursion.
-3. While the script can easily run itself, there is a minor problem and two catastrophic problems. These are, respectively, the JavaScript runtime, the JavaScript runtime, and finally the JavaScript runtime.
+Lets go over the new problems with this script:
+
+1. There are new escaping caveats. Soon these caveats will not matter. Just know that pasting powershell, bash, or JS may not work 100% as-is.
+2.Th The main issue: the JavaScript code exists, but is not executed. This is where the fun begins. We can simply have the script run itself! Both bash and powershell have a way to get the filepath of the currently-being-executed script. In other words, the world's first universal script is going to involve cross-language recursion, albeit shallow recursion.
+3. While the script can run itself, there is one minor problem and two catastrophic problems. These are, respectively, the JavaScript runtime, the JavaScript runtime, and finally the JavaScript runtime.
 
 # Part 3: The Runtime Problem
 
-The minor issue: the host system might not have a runtime like NodeJS. With a mix of dread, excitement, and guilt please consider: what if the entire NodeJS installer -- both the bash installer and powershell installer -- was embedded into the script? Meaning, when the script tries to run itself, and the system doesn't have NodeJS, the script *just gets NodeJS* and tries to run itself again.
+The minor issue: the host system might not have a runtime like NodeJS. So, with a mix of dread, excitement, and guilt please consider: what if we took the NodeJS installers -- both the NodeJS bash installer script and powershell script -- and embedded it into this hello world? Meaning, when the script tries to run itself, and the host system doesn't have NodeJS, the script *just installs NodeJS* and then runs itself? 
 
-Before we consider which clauses of the Programmer's Geneva Convention that idea violates, lets consider the first of the catastrophic problems. That problem can be summarized as:
+Before we consider which ring of Dante's inferno such an abomination belongs to, lets consider the first of the two catastrophic problems. This problem can be sussinctly described in two points:
 1. The world's first universal script should be reliable.
 2. We just installed NodeJS.
 
-Can those things coexist? Can the entire NodeJS installer(s) be crammed into one file?
+Can those things coexist? Can both NodeJS installers be crammed into one file?
 
 I don't know.
 
-Thankfully (again) we don't need to know. This work-in-progress script may already be criminal, but including NodeJS is simply too far. Instead lets consider using a good JS runtime, like Deno.
+Thankfully (again) we don't need to know. This work-in-progress script may already be criminal, but even criminals have standards. NodeJS is too far. Instead lets consider a good JS runtime, like Deno.
 
 # Part 4: What about Npm Packages?
 
-This is the second catastrophic problem:
+This is the second of the catastrophic problems:
 1. The world's first universal script should not have side effects.
-2. JavaScript is, obviously, completely and utterly useless without modules.
+2. JavaScript doesn't work without modules.
 
-How is a universal script supposed to figure out if a number is even or odd without a module? We may never know, because Deno not only supports everyone's favorite supply chain attack vector, but also does so without an `install` command, bundling, or a `node_modules` side effect. For reliability and security -- if you're into that sort of thing -- it can also easily pin versions:
+Without help from a 3rd party, how could a universal script know if a number is even or odd? We may never know, because Deno not only supports everyone's favorite supply chain attack vector, it also provides that support without a `node_modules` side effect, bundling, or even a clunky `npm install` command. 
+
+For security and reliability -- if you're into that sort of thing -- versions can also be pinned quite easily:
 
 ```js
 import malware from "https://esm.sh/chalk"
@@ -127,31 +131,40 @@ import isEven from "https://esm.sh/is-even@1.0.0"
 console.log(isEven(2)) // true
 ```
 
-For importing your own code, you can (and arguably should) bypass npm entirely.
+All dependencies will be automatically downloaded, imported, and cached without conflict.
+
+<!--
+If the code is not availble on NPM, no problem. The guys at Esm.sh have found a way to dynamically purify your dirty Nodejs code directly from Github.
 
 ```js
-// import your nodejs-style typescript from github thanks to our friends at esm.sh
 import thing from "https://esm.sh/gh/YOUR_GITHUB_USERNAME/REPO@BRANCH_OR_TAG/path/to/your/code.ts"
-// import your JS from github directly:
+```
+
+Of course, if the code is well written TS/JS, it can be imported normally with relative path or directly from Github. 
+
+```js
+import thing from "./thing.js"
+
 import thing from "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/path/to/your/code.ts"
-// and generally use https://jsr.io/ if you want package management
-import { encodeBase64 } from "https://esm.sh/jsr/@std/encoding@1.0.0/base64"
+
+// if you have "sloppy" (nodejs-style) typescript imports, use esm.sh
+
 // or import JS directly from any cdn/gitlab/git-tea/your own server/etc
 ```
 
-When anyone runs this code, all of the dependencies will be downloaded, imported, and cached automatically without conflict.
+Without a node_modules directory what is a developer supposed to `rm -rf` when the packages randomly stop working? It can be a challenging idea for many Node devs to grasp, but Deno introduces the idea of packages that don't randomly stop working. -->
 
-# Part 5: Heinous Reliability
+# Part 5: Extreme Reliability
 
-Now that the module issue has been addressed, we need to return to the previous runtime issue. Can the bash installer and powershell installer for Deno be crammed into a single file? What about installer side effects? What about runtime versioning?
+Now that even numbers can be detected, we need to return to the previous runtime issue. Can the bash installer and powershell installer for Deno be crammed into the 3-way hello world? What side effects? What about versioning?
 
-Although it might make some devs uncomfortable, there is a very straightforward solution for versioning. If the script was tested with Deno 2.4.3, simply install Deno 2.4.3 on the host system.
+Although it might make some uncomfortable, there is a very straightforward solution for versioning. If the script was tested with Deno 2.4.3, simply have the script install exactly Deno 2.4.3 on the host system.
 
-What about side effects? All installers have side effects, most of which are unacceptable for a universal script. Thankfully, when it comes analyzing side effects, Deno's combined installer is 1000 lines shorter than Node's. It is also useful to know Deno can execute code as a standalone binary. This means modifying the user's system is not inherently necessary.
+What about side effects? The Deno installer, like all installers, has side effects. Thankfully the Deno installers are 1000 lines shorter than Node's. Even better, Deno can execute code as a standalone binary. Meaning it is not necessary to modify the user's system.
 
-The runtime solution: By editing setting `DENO_INSTALL` and `deno_version` followed by commenting out a few sections of the Deno installer, we can turn it into a mere Deno-version-downloader. The script downloads a specific version of Deno to `$HOME/.deno/$deno_version/`. This gets us versioning, caching, and prevention of all (meaningful) installer side effects. If that path is missing (e.g. not cached), then it is downloaded. Once it exists (either cached or downloaded), the script runs itself using that executable.
+By setting `DENO_INSTALL` and `deno_version` followed by commenting out a few sections, we can turn the installer into a mere Deno-version-downloader. By having the hello world script download a specific version of Deno to `$HOME/.deno/$deno_version/` we get the benefits of versioning, caching, and prevention of all meaningful side effects (the user's PATH and default Deno version remain untouched). If there is an executable at `$HOME/.deno/$deno_version/` then the script runs itself with that executable. If that path is empty, the script downloads the correct version of Deno and tries again.
 
-Put it all together and voila, the world's first universal script:
+Put all together, here is the world's first universal script:
 
 ```js
 #!/usr/bin/env sh
@@ -161,9 +174,14 @@ echo "2.5.3";: --% ' |out-null <#';};DENO_INSTALL="$HOME/.deno/$(getDenoVersion)
 console.log("Hello World") // dont get rid of this comment -> #>
 ```
 
-However, we are not quite done yet. There are some lingering issues.
+However, we are not done yet.
 
-Any JavaScript that does not contain `#>` can be safely added to that script. The installer/setup code is 5 lines (~3800 characters). If someone really wanted to, I bet a hand-crafted code-golfed version would be under 1000 characters.<br>
+The good news is, the program above is highly generic. Any JavaScript code that does not contain `#>` can be safely added to that script.
+
+The problem is universal scripts are most useful as a bootstrapping installers. But installers are usually run remotely, not locally. E.g. there is no "path to itself" if the script is being run dynamically. 
+
+
+The installer/setup code is 5 lines (~3800 characters). If someone really wanted to, I bet a hand-crafted code-golfed version would be under 1000 characters.<br>
 
 If it is expanded for readability it would look like this:
 
