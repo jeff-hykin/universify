@@ -35,17 +35,17 @@ echo "hello world" # powershell
 
 Lets focus on a few points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
-
-1. The "hello world" program above is general purpose. Pasting any (legitimately any) valid powershell code in there will cause the script to work (or not-work) as it normally would on Windows. The same is true for almost any (99.9%) bash code. And, with escaping, even the remaining 0.1% of bash programs work too.
-2. How is this possible? Well every line in that file is simultaneously valid bash and valid powershell syntax (a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE)). The polyglot details they can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134). The execution of that file is where there are a few quirks. At runtime, Windows only cares about the file extension (.ps1), which tells Windows to run the file as powershell. On Linux and MacOS, the file extension doesn't matter. Instead the shebang at the top (which is a normal comment in powershell) tells the OS to run the script with sh.
+1. This is 1 of 7 interesting things. If a section gets boring, try skipping to the next one. Part 6 is the apex.
+2. The "hello world" program above is general purpose. Pasting any (legitimately any) valid powershell code in there will cause the script to work (or not-work) as it normally would on Windows. The same is true for almost any (99.9%) bash code. And, with escaping, even the remaining 0.1% of bash programs work too.
+3. How is this possible? Well every line in that file is simultaneously valid bash and valid powershell syntax (a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE)). The polyglot details they can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134). The execution of that file is where there are a few quirks. At runtime, Windows only cares about the file extension (.ps1), which tells Windows to run the file as powershell. On Linux and MacOS, the file extension doesn't matter. Instead the shebang at the top (which is a normal comment in powershell) tells the OS to run the script with sh.
 
 <!-- While cute, this script is only semi-universal because it is merely two platform-specific scripts in one file. I wouldn't be writing this post if the true universal script was anything less than a unified (one language), practical, editable (not compiled/mangled), standalone (no side-effects), reliable (version-pinned spec-based), general-purpose script with support for packages/modules. -->
 
 However, this is ***not*** a universal script.
 
-A universal script would have logic in one language, not two. It would need to be a reliable, general purpose, side-effect free, editable (not mangled/compiled) script that is practial to use. Or at least that is what is needs to be for me to write a post about it.
+A universal script would have logic in one language, not two. It would be a reliable, general purpose, side-effect free, editable (not mangled/compiled) and practical. Or at least it would need to be those things for me to write a post about it.
 
-The next logical step to reach that point would be to try bootstrapping either bash or powershell to work on the foreign systemlanguag(s). This would make either bash or powershell the world's first universal scripting language. The only other option would be insane: introducing a third language and making the script simultaniously valid bash, valid powershell and valid as that third language.
+The next logical step towards all those goals would be to try bootstrapping either bash or powershell to work on their respective foreign system(s). This would make either bash or powershell the world's first universal scripting language. The only other option would be absurd: introducing a third language thereby requiring the script to simultaniously be valid bash, valid powershell and valid as some third language.
 
 ## Part 2: Cramming in a 3rd Language
 
@@ -403,7 +403,7 @@ If it is expanded for readability it would look like this:
 // #>
 ```
 
-## Part 6: Going Beyond Universal: Remote Scripts
+## Part 6: The Apex: Remote Scripts
 
 What is the point of a universal installer if we need two separate commands to run it remotely?
 For example the Deno installer says: 
@@ -449,7 +449,7 @@ $Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
 function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
 ``` -->
 
-## Part 7: Universify Your Scripts
+## Part 7: Auto-Universify Your Scripts
 
 Wouldn't it be great if anyone could:
 1. Write a Deno script (including lots of bash-like tooling/syntax)
