@@ -1,9 +1,7 @@
 <br>
-<br>
+
 #### By Jeff Hykin ([Github](https://github.com/jeff-hykin), [Email](mailto:jeff.hykin+uni@gmail.com)) If you end up enjoying this post, consider starring the [repo](https://github.com/jeff-hykin/universify).
 
-<br>
-<br>
 <br>
 <br>
 
@@ -15,7 +13,7 @@ Windows comes with Powershell/CMD. Minimal Linux and MacOS come with bash/zsh/da
 <!-- <br><br>
 Allow me to be a guide down this wonderful rabbit hole. Not only are universal scripts possible, they're practically practical. -->
 
-# Part 1: Semi-Universal Scripts
+## Part 1: Semi-Universal Scripts
 
 Save the following as `hello_world.ps1`, add the execute permission, and run it.<br>Doesn't matter what OS.
 
@@ -46,7 +44,7 @@ When I say universal script, I mean one language not two. I mean a reliable, gen
 
 The next logical step to reach that point would be to try bootstrapping either bash or powershell to work on the foreign systemlanguag(s). This would make either bash or powershell the world's first universal scripting language. The only other option would be insane: introducing a third language and making the script simultaniously valid bash, valid powershell and valid as that third language.
 
-# Part 2: Cramming in a 3rd Language
+## Part 2: Cramming in a 3rd Language
 
 When it comes to programming syntax, we as programmers have a lot of choice: indent-based Python, end-based Ruby, C-style languages, ~~Haskell~~ Elixir. We could even try to use Rust ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)). How many languages have a syntax that is compatible with bash and powershell?
 
@@ -106,7 +104,7 @@ Lets go over the new problems with this script:
 2.Th The main issue: the JavaScript code exists, but is not executed. This is where the fun begins. We can simply have the script run itself! Both bash and powershell have a way to get the filepath of the currently-being-executed script. In other words, the world's first universal script is going to involve cross-language recursion, albeit shallow recursion.
 3. While the script can run itself, there is one minor problem and two catastrophic problems. These are, respectively, the JavaScript runtime, the JavaScript runtime, and finally the JavaScript runtime.
 
-# Part 3: The Runtime Problem
+## Part 3: The Runtime Problem
 
 The minor issue: the host system might not have a runtime like NodeJS. So, with a mix of dread, excitement, and guilt please consider: what if we took the NodeJS installers -- both the NodeJS bash installer script and powershell script -- and embedded it into this hello world? Meaning, when the script tries to run itself, and the host system doesn't have NodeJS, the script *just installs NodeJS* and then runs itself? 
 
@@ -120,7 +118,7 @@ I don't know.
 
 Thankfully (again) we don't need to know. This work-in-progress script may already be criminal, but even criminals have standards. NodeJS is too far. Instead lets consider a good JS runtime, like Deno.
 
-# Part 4: What about Npm Packages?
+## Part 4: What about Npm Packages?
 
 This is the second of the catastrophic problems:
 1. The world's first universal script should not have side effects.
@@ -160,7 +158,7 @@ import thing from "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/REPO_N
 
 Without a node_modules directory what is a developer supposed to `rm -rf` when the packages randomly stop working? It can be a challenging idea for many Node devs to grasp, but Deno introduces the idea of packages that don't randomly stop working. -->
 
-# Part 5: Extreme Reliability
+## Part 5: Extreme Reliability
 
 Now that even numbers can be detected, we need to return to the previous runtime issue. Can the bash installer and powershell installer for Deno be crammed into the 3-way hello world? What side effects? What about versioning?
 
@@ -402,7 +400,7 @@ If it is expanded for readability it would look like this:
 // #>
 ```
 
-# Part 6: Going Beyond Universal: Remote Scripts
+## Part 6: Going Beyond Universal: Remote Scripts
 
 What is the point of a universal installer if we need two separate commands to run it remotely?
 For example the Deno installer says: 
@@ -448,7 +446,7 @@ $Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
 function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
 ``` -->
 
-# Part 7: Universify Your Scripts
+## Part 7: Universify Your Scripts
 
 Wouldn't it be great if anyone could:
 1. Write a Deno script (including lots of bash-like tooling/syntax)
@@ -516,11 +514,11 @@ uni ./your_script.ts --deno-version 2.4.3
 function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};iex '$_u="https://raw.githubusercontent.com/GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT";irm $_u|iex'
 ```
 
-# Part 8: More To The Story
+## Part 8: More To The Story
 
 As you may have noticed, I left a lot of details out in order to make sure everyone could see the good parts. If you have your own cursed projects, enjoyed this post, or want to know what got left out, don't hesitate to say hello. I'm an AI Robotics PhD Student at Texas A&M. You can find me on [Lemmy](https://lemmy.world/u/jeff_hykin), [Telegram](https://t.me/jeff_hykin),  [Discord](discordapp.com/users/266399494793330689), [Email](mailto:jeff.hykin+uni@gmail.com), or [Github](https://github.com/jeff-hykin/universify).
 
-# Part 9: Everything Else: Security & Caveats
+## Part 9: Everything Else: Security & Caveats
 
 Oh yeah, security. You should really stop running code from strangers on the internet. Checkout the relatively-detailed [how do I verify this isn't malicious](https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-verify-this-isnt-malicious) section on the universify repo.
 
