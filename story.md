@@ -41,9 +41,9 @@ Lets focus on a few points:
 
 <!-- While cute, this script is only semi-universal because it is merely two platform-specific scripts in one file. I wouldn't be writing this post if the true universal script was anything less than a unified (one language), practical, editable (not compiled/mangled), standalone (no side-effects), reliable (version-pinned spec-based), general-purpose script with support for packages/modules. -->
 
-However, this is not a universal script.
+However, this is ***not*** a universal script.
 
-When I say universal script, I mean one language not two. I mean a reliable, general purpose, no side effects, editable (not mangled/compiled) script that is practial.
+A universal script would have logic in one language, not two. It would need to be a reliable, general purpose, side-effect free, editable (not mangled/compiled) script that is practial to use. Or at least that is what is needs to be for me to write a post about it.
 
 The next logical step to reach that point would be to try bootstrapping either bash or powershell to work on the foreign systemlanguag(s). This would make either bash or powershell the world's first universal scripting language. The only other option would be insane: introducing a third language and making the script simultaniously valid bash, valid powershell and valid as that third language.
 
