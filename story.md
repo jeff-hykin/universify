@@ -51,11 +51,13 @@ The only other option would be absurd: introducing a third language thereby requ
 
 ## Part 2: Cramming in a 3rd Language
 
-Some will object to what I am about to reveal. They will say "Jeff, it didn't have to be this way. There must be another syntax". Maybe they are right. We as programmers have a lot of choices in syntax: indent-based Python, end-based Ruby, C-style languages, ~~Haskell~~ Elixir. We could even try to use Zig, Go, or Rust ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)). How many are compatible with bash and powershell?
+Some will object to what I am about to reveal. They will say "Jeff, it didn't have to be this way". It is true, we as programmers have a lot of choices in syntax: indent-based Python, end-based Ruby, C-style languages, ~~Haskell~~ Elixir. We could even try to use Zig, Go, or Rust ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)). How many have sytax compatible with bash and powershell?
 
-I don't know.
+I don't know. I just know there is at least one compatible syntax.
 
-I just know there is at least one. Deep down, you and I both know it was fate. The world's first universal script could only ever be one language: 
+Some will say "There must be another". Maybe they are right. But deep down, you and I both know it was fate. 
+
+The world's first universal script could only ever be one language: 
 - The language destined from birth to rule over all languages.
 - The language no programmer can truly escape.
 - The language that crashes iPhones, CloudFlare, Teslas, and homemade websites alike.
@@ -74,11 +76,31 @@ I'm, of course, talking about:<br>
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ![javascript i love it](https://github.com/user-attachments/assets/1c2779a6-bbce-480e-9abf-ee61c3235403)
+<br>([*mandatory context*](https://www.youtube.com/watch?v=Uo3cL4nrGOk))
 
+<br>
+<br>
 
-Not only can one file be, simultaneously, valid JavaScript, valid powershell, and valid bash -- but actually, with a bit of escaping, **any possible combination JavaScript, powershell, and bash code can be fit all into the same file, all at the same time.**
+Not only can one file be valid JavaScript, valid powershell, and valid bash simultaneously -- but actually, with a bit of escaping, **any possible combination JavaScript, powershell, and bash code can be fit all into the same file, all at the same time.**
+
+<br>
+<br>
+
+`hello_world.js.sh.ps1`
 
 ```sh
 #!/usr/bin/env sh
@@ -97,21 +119,33 @@ exit #>
 // #>
 ```
 
-*The bash syntax highlighting on Github is a bit off. My bad, I'm supposed to be [maintaining that](https://github.com/jeff-hykin/better-shell-syntax) (its hard).*
+*The bash syntax highlighting on Github is a bit off. [Sorry I haven't fixed that or the other issues in a while. PR's are welcome](https://github.com/jeff-hykin/better-shell-syntax).*
 
-If that is painful to look at, you had better leave now because we are just getting started. 
+<br>
+<br>
 
-Lets go over the new problems with this script:
+If the script above is painful, you had better leave now because we are just getting started.
 
-1. There are new escaping caveats. Soon these caveats will not matter. Just know that pasting powershell, bash, or JS may not work 100% as-is.
-2.Th The main issue: the JavaScript code exists, but is not executed. This is where the fun begins. We can simply have the script run itself! Both bash and powershell have a way to get the filepath of the currently-being-executed script. In other words, the world's first universal script is going to involve cross-language recursion, albeit shallow recursion.
-3. While the script can run itself, there is one minor problem and two catastrophic problems. These are, respectively, the JavaScript runtime, the JavaScript runtime, and finally the JavaScript runtime.
+<br>
+
+Lets go over the new problems:
+
+1. There are new escaping caveats.
+      - Soon these caveats will not matter. Just know that pasting powershell, bash, or JS may not work 100% as-is.
+2. JavaScript code exists but is not executed.
+      - This is the main issue, and is where the fun begins. We can simply have the script run itself! Both bash and powershell have a way to get the filepath of the currently-being-executed script. In other words, the world's first universal script is going to involve cross-language recursion, albeit shallow recursion.
+3. While the script can run itself, there is one minor problem and two catastrophic problems with running the script as JavaScript.
+      - These are, respectively, the JavaScript runtime, the JavaScript runtime, and finally the JavaScript runtime.
+
+<br><br>
 
 ## Part 3: The Runtime Problem
 
-The minor issue: the host system might not have a runtime like NodeJS. So, with a mix of dread, excitement, and guilt please consider: what if we took the NodeJS installers -- both the NodeJS bash installer script and powershell script -- and embedded it into this hello world? Meaning, when the script tries to run itself, and the host system doesn't have NodeJS, the script *just installs NodeJS* and then runs itself? 
+Lets start with the minor issue: the host system might not have a JavaScript runtime (e.g. NodeJS not installed).
 
-Before we consider which ring of Dante's inferno such an abomination belongs to, lets consider the first of the two catastrophic problems. This problem can be sussinctly described in two points:
+With a mix of dread, excitement, and guilt please consider: what if the NodeJS installers -- both the NodeJS bash installer and NodeJS powershell installer -- were simply embedded into the top of our work-in-progress script? Meaning, when the script tries to run itself, and the host system doesn't have NodeJS, the script *just installs NodeJS* and then runs itself.
+
+Before we consider which ring of Dante's inferno such an abomination belongs in, lets consider the first of the two catastrophic problems. The first catastrophic can be succinctly described with two points:
 1. The world's first universal script should be reliable.
 2. We just installed NodeJS.
 
@@ -119,15 +153,16 @@ Can those things coexist? Can both NodeJS installers be crammed into one file?
 
 I don't know.
 
-Thankfully (again) we don't need to know. This work-in-progress script may already be criminal, but even criminals have standards. NodeJS is too far. Instead lets consider a good JS runtime, like Deno.
+Thankfully we don't need to know. This work-in-progress may already be criminal, but going so far as using NodeJS? Well, even criminals have standards. Instead lets consider a good JS runtime, like Deno.
+<br><br>
 
-## Part 4: What about Npm Packages?
+## Part 4: What about NPM Packages?
 
-This is the second of the catastrophic problems:
+The second of the catastrophic problems can be described as:
 1. The world's first universal script should not have side effects.
-2. JavaScript doesn't work without modules.
+2. JavaScript doesn't work without NPM packages (obviously).
 
-Without help from a 3rd party, how could a universal script know if a number is even or odd? We may never know, because Deno not only supports everyone's favorite supply chain attack vector, it also provides that support without a `node_modules` side effect, bundling, or even a clunky `npm install` command. 
+How could a universal script know if a number is even or odd without help from a 3rd party? We may never know, because Deno not only supports everyone's favorite supply chain attack vector, it also provides that support without a `node_modules` folder, bundling, or even a clunky `npm install` command. 
 
 For security and reliability -- if you're into that sort of thing -- versions can also be pinned quite easily:
 
@@ -138,7 +173,7 @@ import isEven from "https://esm.sh/is-even@1.0.0"
 console.log(isEven(2)) // true
 ```
 
-All dependencies will be automatically downloaded, imported, and cached without conflict.
+All dependencies are downloaded, imported, and cached automatically.
 
 <!--
 If the code is not availble on NPM, no problem. The guys at Esm.sh have found a way to dynamically purify your dirty Nodejs code directly from Github.
@@ -160,16 +195,17 @@ import thing from "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/REPO_N
 ```
 
 Without a node_modules directory what is a developer supposed to `rm -rf` when the packages randomly stop working? It can be a challenging idea for many Node devs to grasp, but Deno introduces the idea of packages that don't randomly stop working. -->
+<br><br>
 
 ## Part 5: Extreme Reliability
 
-Now that even numbers can be detected, we need to return to the previous runtime issue. Can the bash installer and powershell installer for Deno be crammed into the 3-way hello world? What side effects? What about versioning?
+Now that one of the catestrophic issues is resolved, we need to return to the other. Can the bash installer and powershell installer for Deno be crammed into the 3-way hello world? What about side effects? What about versioning?
 
-Although it might make some uncomfortable, there is a very straightforward solution for versioning. If the script was tested with Deno 2.4.3, simply have the script install exactly Deno 2.4.3 on the host system.
+There is a very straightforward solution for versioning, even if it makes some uncomfortable. If the script was tested with Deno 2.4.3, simply have the script install exactly Deno 2.4.3 on the host system.
 
 What about side effects? The Deno installer, like all installers, has side effects. Thankfully the Deno installers are 1000 lines shorter than Node's. Even better, Deno can execute code as a standalone binary. Meaning it is not necessary to modify the user's system.
 
-By setting `DENO_INSTALL` and `deno_version` followed by commenting out a few sections, we can turn the installer into a mere Deno-version-downloader. By having the hello world script download a specific version of Deno to `$HOME/.deno/$deno_version/` we get the benefits of versioning, caching, and prevention of all meaningful side effects (the user's PATH and default Deno version remain untouched). If there is an executable at `$HOME/.deno/$deno_version/` then the script runs itself with that executable. If that path is empty, the script downloads the correct version of Deno and tries again.
+By setting `DENO_INSTALL` and `deno_version` followed by commenting out a few sections, we can turn the installer into a mere Deno-version-downloader. By having the work-in-progress script download a specific version of Deno to `$HOME/.deno/$deno_version/` we get the benefits of versioning, caching, and prevention of all meaningful side effects (the user's PATH and default Deno version remain untouched). If there is an executable at `$HOME/.deno/$deno_version/` then the script runs itself with that executable. If that path is empty, the script downloads the correct version of Deno and then runs itself.
 
 Put all together, here is the world's first universal script:
 
@@ -180,17 +216,13 @@ echo "2.5.3";: --% ' |out-null <#';};DENO_INSTALL="$HOME/.deno/$(getDenoVersion)
 # */0}`;
 console.log("Hello World") // dont get rid of this comment -> #>
 ```
+<details>
+  <summary>Click for details</summary>
+ <br>
+The installer/setup code is ~3800 characters or ~40 meaninful lines of code. Many parts are optional, so customization could compress it quite a lot. If someone really wanted to, I bet a hand-crafted code-golfed version would be under 300 characters.<br>
 
-However, we are not done yet.
-
-The good news is, the program above is highly generic. Any JavaScript code that does not contain `#>` can be safely added to that script.
-
-The problem is universal scripts are most useful as a bootstrapping installers. But installers are usually run remotely, not locally. E.g. there is no "path to itself" if the script is being run dynamically. 
-
-
-The installer/setup code is 5 lines (~3800 characters). If someone really wanted to, I bet a hand-crafted code-golfed version would be under 1000 characters.<br>
-
-If it is expanded for readability it would look like this:
+<br>
+Expanded the script for readability it looks like this:
 
 ```js
 #!/usr/bin/env sh
@@ -403,6 +435,17 @@ If it is expanded for readability it would look like this:
 // #>
 ```
 
+</details>
+
+However, we are not done yet.
+
+The good news is the program above is highly generic. Any JavaScript code that does not contain `#>` can be safely added to that script.
+
+The problem is how the user would run the script. Universal scripts are most useful as a bootstrapping installers, but installers are usually run remotely, not locally. E.g. there is no "path to itself" if the script is being run dynamically. 
+
+<br>
+<br>
+
 ## Part 6: The Apex: Remote Scripts
 
 What is the point of a universal installer if we need two separate commands to run it remotely?
@@ -414,7 +457,7 @@ For example the Deno installer says:
 1. Universal scripts are most useful as installers, and installers are going to need internet anyway. There isn't too many use-cases for making them work offline.
 2. Just wait till I get my hands on Deno+[cosmopolitan libc](https://github.com/jart/cosmopolitan) and embed it as a base64 string. -->
 
-For a universal script, this is unacceptable. What if we could just have a single ~120 char line that ran on all operating systems?
+The answer is codebase maintaince, but lets ignore that reason. For the worlds first universal script, this is unacceptable. We need single ~120 char line that runs on basically all operating systems. Maybe something like:
 
 <!-- function iex { alias irm='curl -fsSL $_u | sh ;: ';iex(){ cat;};eval "${1#?}";};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/072ee86790581669ea91be01bbc7ab381b619020/run/hello_world.js";irm $_u|iex' -->
 
@@ -424,9 +467,9 @@ function iex { alias irm='curl -fsSL $url_|sh;:';t=${1#?};eval export ${t%|*};};
 # https://raw.githubusercontent.com/jeff-hykin/universify/591b27031eb0ad3337a2c2bdb7464710cf9dbe85/run/hello_world.js
 ```
 
-Look, I know it might not be the most beautiful code, but consider the existential beauty of 129 chars achieving what many senior devs would casually claim to be impossible.
+Look, I know. It might not be the most beautiful code, but consider the existential beauty of 129 chars achieving what should be impossible.
 
-We're almost done, there's one last thing I need to share with you.
+We're almost done, there's one last thing I want to share with you.
 <!-- More elegant solutions will be possible as soon as Powershell 7 (instead of 5.1) becomes the out-of-the-box version on Windows.  -->
 
 <!-- function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; }
@@ -449,9 +492,12 @@ $Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
 function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
 ``` -->
 
+<br>
+<br>
+
 ## Part 7: Auto-Universify Your Scripts
 
-Wouldn't it be great if anyone could:
+Wouldn't it be great if there was a tool that made it easy to make scripts run everywhere? The workflow could be:
 1. Write a Deno script (including lots of bash-like tooling/syntax)
 2. Run a CLI command with preferences (Deno version, stability flags, permissions for npm modules, etc)
 3. Get both a universal .ps1 file and (if in a github repo) a command for running the file remotely.
