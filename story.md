@@ -18,7 +18,7 @@ Allow me to be a guide down this wonderful rabbit hole. Not only are universal s
 
 ## Part 1: Semi-Universal Scripts
 
-Save the following as `hello_world.ps1`, add the execute permission, and run it.<br>Doesn't matter what OS.
+Save the following as `hello_world.ps1`, add the execute permission, and run it as `./hello_world.ps1`.<br>Doesn't matter what OS.
 
 ```sh
 #!/usr/bin/env sh
@@ -36,8 +36,8 @@ echo "hello world" # powershell
 Lets focus on a few points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
 1. This is 1 of 7 interesting things. If a section gets boring, skip to the next. Part 6 is the apex.
-2. The "hello world" program above is general purpose. Pasting any (legitimately any) valid powershell code in there will cause the script to work (or not-work) as it normally would on Windows. The same is true for almost any (99.9%) bash code. And, with escaping, even the remaining 0.1% of bash programs work too.
-3. How is this possible? Well every line in that file is simultaneously valid bash and valid powershell syntax (a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE)). The polyglot details they can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134). The execution of that file is where there are a few quirks. At runtime, Windows only cares about the file extension (.ps1), which tells Windows to run the file as powershell. On Linux and MacOS, the file extension doesn't matter. Instead the shebang at the top (which is a normal comment in powershell) tells the OS to run the script with sh.
+2. The "hello world" above is general purpose. Any, legitimately any, powershell code added to the bottom of that script and it will work (or not work) as it normally would on Windows. Any bash/zsh/sh program can also be safely embedded into that script, with `#>` being the only (extremely rare) text that needs to be escaped.
+3. How is this possible? Well every line in that file is simultaneously valid as bash and valid as powershell (a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE)). The polyglot details they can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134). The execution of that file is where there are a few quirks. At runtime, Windows only cares about the file extension (.ps1), which tells Windows to run the file as powershell. On Linux and MacOS, the file extension doesn't matter. Instead the shebang at the top (which is a normal comment in powershell) tells the OS to run the script with sh.
 
 <!-- While cute, this script is only semi-universal because it is merely two platform-specific scripts in one file. I wouldn't be writing this post if the true universal script was anything less than a unified (one language), practical, editable (not compiled/mangled), standalone (no side-effects), reliable (version-pinned spec-based), general-purpose script with support for packages/modules. -->
 
@@ -519,16 +519,25 @@ function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};
 
 ## Part 8: More To The Story
 
-As you may have noticed, I left a lot of details out in order to make sure everyone could see the good parts. If you have your own cursed projects, enjoyed this post, or want to know what got left out, don't hesitate to say hello. I'm an AI Robotics PhD Student at Texas A&M. You can find me on [Lemmy](https://lemmy.world/u/jeff_hykin), [Telegram](https://t.me/jeff_hykin),  [Discord](discordapp.com/users/266399494793330689), [Email](mailto:jeff.hykin+uni@gmail.com), or [Github](https://github.com/jeff-hykin/universify).
+As you may have noticed, many details were left out to keep the story moving. If you want to know what got left out, have your own cursed projects, or a startup with a cool idea don't hesitate to say hello. I'm an AI Robotics PhD Student working with Boston Dynamic's Spot at Texas A&M. You can find me on [Telegram](https://t.me/jeff_hykin), [Lemmy](https://lemmy.world/u/jeff_hykin), [Discord](discordapp.com/users/266399494793330689), [Email](mailto:jeff.hykin+uni@gmail.com), or [Github](https://github.com/jeff-hykin/universify).
 
-## Part 9: Everything Else: Security & Caveats
+## Part 9: Trust / Security / Auditing
 
-Oh yeah, security. You should really stop running code from strangers on the internet. Checkout the relatively-detailed [how do I verify this isn't malicious](https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-verify-this-isnt-malicious) section on the universify repo.
+If you care about confirming that `universify`-ed scripts are non-malicous, and confirming that they will stay that way, I have some good news. As much as I joke about security, I did keep auditing as a design goal when creating universify:
+- All the urls in the final output are controlled by the Deno team.
+- Extra files exist in the codebase showing every step of the transformation process.
+- There is a step by step ["how do I verify this isn't malicious" guide](https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-verify-this-isnt-malicious) in the readme.
 
-Technicalities. Alright trolls, lets get this over with. This is the section I get to link to in reply to all the inevitable "umm actually" comments. 
-1. Side effects / Reliability / Isolation
+## Part 10: Technicalities
+
+Alright trolls, this is for you.
+1. "Doesn't matter what OS"
+    1. I only said that for the semi-universal script. And sure, you're right, the semi-universal script fails on TempleOS, Windows Vista, and probably a bunch of other super super old and/or quirky systems.
+    2. Technically yes the universal script doesn't run everywhere, because the Deno runtime doesn't run literally everywhere. But that is only in practice. In theory, you can always adapt the script to more universal without changing anything about the not-yet-supported system. Compile the Deno executable (or some other JS runtime) for that target system, and add that download option to the current script. The only truly unsupported systems are those that are both extremely non-posix and also happen to not execute .ps1 scripts with powershell ≥3.0.
+    3. Okay there is one more technicality. Windows doesn't allow execution of remote scripts by default in the name of security. For it to truly run out-of-the-box either you will need to get your script [certified by Microsoft](https://www.microsoft.com/en-us/wdsi/filesubmission) or the user will need to disable that policy in an Admin terminal, then run the one-liner.
+2. Side effects / Reliability / Isolation
     1. Okay, there is actually a relevant side effect that has come to bite me, but not for the reason one might think (and I've also already mitigated by default in `universify`). If running a script deno will check for a lock file in parent directories. If in a project that is using a newer version of Deno, the lock file version could be higher, and the script would be unable to parse it. I hit this a few times coming from Deno 1.x to Deno 2.x, but its fully mitigated with the `--no-lock` flag which is added by default anytime someone uses universify. Similar story for config files, which is why `--no-config` is also included by default. You can include your own lock/config with `--lock=` and `--config`. There can be similar issues with `node_modules` and `package.json` files, set `DENO_NO_PACKAGE_JSON=true` in the powershell/bash environment to avoid those entirely.
     2. Deno defaults to a shared cache for https modules `$HOME/.cache/deno` (or `$XDG_CACHE_HOME/deno` or `$HOME/Library/Caches/deno` or `C:\Users\USERNAME\AppData\Local\deno\ `). This cache isn't anything nearly as problematic as a python or ruby cache because its done in a nice address-based way. However, there can be problems in two ways. First is a very rare issue. Deno does integrity checks. Sometimes these checks fail, I believe (possibly) because of different ways the checks were calculated across versions. Adding `--no-code-cache` is one way to get around this problem, adding `--reload` is another way, however I don't recommend either. If you really want to avoid conflict, set `DENO_DIR` env var to where ever you'd like to keep a cache. The second issue is also rare and probably only because of the Deno 1.x to 2.x change. Deno keeps track of caches with a big (I think) sql lite file. When using a really large range of deno versions on the same cache, there can be incompatibilities on that database. Again, set `DENO_DIR` to avoid this issue.
     3. Technically Deno is not a standalone executable because it depends on libc. **And this actually matters** because it is why the Deno executable fails on Alpine Linux, and MacOS Mojave (and older). I'm waiting for a statically linked libc version, maybe one day we'll get it.
     4. Yeah, putting something in the user's home directory (e.g. universify's choice of `$HOME/.deno/$deno_version`) is a side effect. Storing everything in a tmp folder is completely possible. You're welcome to bug me about adding a CLI option if you really want there to be no side effects. It will very inefficient, as you will probably also want to use `--no-code-cache`, `--no-lock`, `--no-config`, `--quiet`, `--no-npm`, set `DENO_DIR` to a tmp folder, and set `DENO_NO_PACKAGE_JSON=true` for absolute stand-alone-ness.
-2. Running local scripts. There's technically two files generated, not just a .ps1 file. I explain why at the [bottom of this section](https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-make-my-own-universal-installer-script) in the readme.
+3. Running local scripts. There's technically two files generated, not just a .ps1 file. I explain why at the [bottom of this section](https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-make-my-own-universal-installer-script) in the readme.
