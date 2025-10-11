@@ -45,7 +45,7 @@ Lets focus on a few points:
 
 However, this is ***not*** a universal script.
 
-A universal script would have logic in one language, not two. It would be a reliable, general purpose, side-effect free, editable (not mangled/compiled) and practical. Or at least it would need to be those things for me to write a post about it.
+A universal script would have the logic in one language, it would be a reliable, general purpose, side-effect free, editable (not mangled/compiled) and practical. Or at least it would need to be those things for me to write a post about it.
 
 The next logical step towards all those goals would be to try bootstrapping either bash or powershell to work on their respective foreign system(s). This would make either bash or powershell the world's first universal scripting language. The only other option would be absurd: introducing a third language thereby requiring the script to simultaniously be valid bash, valid powershell and valid as some third language.
 
