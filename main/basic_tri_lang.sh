@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-"\"",`$(echo --% ' |out-null)" >$null; <#${/*'>/dev/null )` 2>/dev/null;
+"\"",`: '">$null;<#${/*'` 2>&-
 
     echo "hi bash/sh"
 
