@@ -51,13 +51,11 @@ The only other option would be absurd: introducing a third language thereby requ
 
 ## Part 2: Cramming in a 3rd Language
 
-When it comes to programming syntax, we as programmers have a lot of choice: indent-based Python, end-based Ruby, C-style languages, ~~Haskell~~ Elixir. We could even try to use Rust ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)). How many languages have a syntax that is compatible with bash and powershell?
+Some will object to what I am about to reveal. They will say "Jeff, it didn't have to be this way. There must be another syntax". Maybe they are right. We as programmers have a lot of choices in syntax: indent-based Python, end-based Ruby, C-style languages, ~~Haskell~~ Elixir. We could even try to use Zig, Go, or Rust ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)). How many are compatible with bash and powershell?
 
-I don't know. 
+I don't know.
 
-We don't need to know, we just need one compatible language.
-
-Some people will object to what I am about to say. They will say "it didn't have to be this way, there must be another syntax". Maybe they are right. But deep down, you and I both know it was fate. The truth is the world's first universal script could only ever be one language: 
+I just know there is at least one. Deep down, you and I both know it was fate. The world's first universal script could only ever be one language: 
 - The language destined from birth to rule over all languages.
 - The language no programmer can truly escape.
 - The language that crashes iPhones, CloudFlare, Teslas, and homemade websites alike.
