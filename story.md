@@ -35,7 +35,7 @@ echo "hello world" # powershell
 
 Lets focus on a few points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
-1. The script above doesn't merely work for hello world. Any (legitimately any) powershell code added to the bottom of that script and it will work (or not work) as it normally would on Windows. Any bash/zsh/sh program can also be safely embedded into that script, with `#>` being the only (extremely rare) text that needs to be escaped.
+1. The script above doesn't merely work for hello world. Powershell code added to the bottom of that script will work (or not work) as it normally would on Windows. Any bash/zsh/sh program can also be safely embedded into that script, with `#>` being the only text that would need to be escaped.
 2. This script is only 1 of 7 interesting things. If a section gets boring, skip to the next. Part 6 is the apex of the journey.
 3. How is this possible? Well every line in that file is simultaneously valid as bash and valid as powershell (a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE)). The polyglot details they can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134). The execution of that file is where there are a few quirks. At runtime, Windows only cares about the file extension (.ps1), which tells Windows to run the file as powershell. On Linux and MacOS, the file extension doesn't matter. Instead the shebang at the top (which is a normal comment in powershell) tells the OS to run the script with sh.
 
