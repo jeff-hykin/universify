@@ -563,9 +563,15 @@ uni ./your_script.ts --deno-version 2.4.3
 function iex { alias irm='curl -fsSL $_u|sh;:';t=\${1#?};eval export \${t%|*};};iex '$_u="https://raw.githubusercontent.com/GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT";irm $_u|iex'
 ```
 
+<br>
+<br>
+
 ## Part 8: More To The Story
 
 As you may have noticed, many details were left out to keep the story moving. If you want to know what got left out, have your own cursed projects, or a startup with a cool idea don't hesitate to say hello. I'm an AI Robotics PhD Student working with Boston Dynamic's Spot at Texas A&M. You can find me on [Telegram](https://t.me/jeff_hykin), [Lemmy](https://lemmy.world/u/jeff_hykin), [Discord](discordapp.com/users/266399494793330689), [Email](mailto:jeff.hykin+uni@gmail.com), or [Github](https://github.com/jeff-hykin/universify).
+
+<br>
+<br>
 
 ## Part 9: Trust / Security / Auditing
 
@@ -573,6 +579,9 @@ If you care about confirming that `universify`-ed scripts are non-malicous, and 
 - All the urls in the final output are controlled by the Deno team.
 - Extra files exist in the codebase showing every step of the transformation process.
 - There is a step by step ["how do I verify this isn't malicious" guide](https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-verify-this-isnt-malicious) in the readme.
+
+<br>
+<br>
 
 ## Part 10: Technicalities
 
