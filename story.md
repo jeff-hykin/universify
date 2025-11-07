@@ -46,12 +46,19 @@ Lets focus on a few points:
 
 <!-- While cute, this script is only semi-universal because it is merely two platform-specific scripts in one file. I wouldn't be writing this post if the true universal script was anything less than a unified (one language), practical, editable (not compiled/mangled), standalone (no side-effects), reliable (version-pinned spec-based), general-purpose script with support for packages/modules. -->
 
-Why isn't this enough to be a universal script? In my opinion a universal script would have **the logic** in one language, it would be reliable, general purpose, side-effect free, and editable (not mangled/compiled). Or at least it would need to be those things for me to write a post about it. If I didn't care about the program being mangled, I would just use Justine's [αcτµαlly pδrταblε εxεcµταblε](https://justine.lol/ape.html) AKA [Cosmopolitan](https://github.com/jart/cosmopolitan). 
+### Why isn't this enough to be a universal script? 
 
+In my opinion a universal script would have **the logic** in one language, it would be reliable, general purpose, side-effect free, and editable (not mangled/compiled). Or at least it would need to be those things for me to write a post about it. If I didn't care about the program being mangled, I would just use Justine's [αcτµαlly pδrταblε εxεcµταblε](https://justine.lol/ape.html) AKA [Cosmopolitan](https://github.com/jart/cosmopolitan). 
 
-To make The next logical step is to try bootstrapping either bash or powershell to work on their respective foreign system(s). This would make either bash or powershell the world's first universal scripting language.
+### Semi-to-Full Universality
 
-The only other option would be absurd: introducing a third language thereby requiring the script to simultaniously be valid bash, valid powershell and valid as some third language.
+To make one language handle all important logic, the next logical step would be to try bootstrapping either bash or powershell to work on the opposite system. This means bash or powershell would be the world's first universal scripting language, which would make sense. 
+
+<br>
+
+... In fact the only other option would be absurd: introducing a third language thereby requiring the script to simultaniously be valid bash, valid powershell and valid as some third language.
+
+<br><br>
 
 ## Part 2: Cramming in a 3rd Language
 
@@ -123,7 +130,7 @@ exit #>
 // #>
 ```
 
-*The bash syntax highlighting on Github is a bit off. [Sorry I haven't fixed that or the other issues in a while. PR's are welcome](https://github.com/jeff-hykin/better-shell-syntax).*
+*The bash syntax highlighting on Github is a bit off. [Sorry I haven't fixed that or the other issues in a while.](https://github.com/jeff-hykin/better-shell-syntax).*
 
 <br>
 <br>
