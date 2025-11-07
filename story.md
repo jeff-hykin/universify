@@ -158,7 +158,7 @@ Lets start with the minor issue: the host system might not have a JavaScript run
 
 With a mix of dread, excitement, and guilt please consider: what if the NodeJS installers -- both the NodeJS bash installer and NodeJS powershell installer -- were simply embedded into the top of our work-in-progress script? Meaning, when the script tries to run itself, and the host system doesn't have NodeJS, the script *just installs NodeJS* and then runs itself.
 
-Before we consider which ring of Dante's inferno such an abomination belongs in, lets consider the first of the two catastrophic problems. The first catastrophic can be succinctly described with two points:
+But, before committing such a heinous crime, lets consider the first catastrophic problem. The first catastrophic can be succinctly described with two points:
 1. The world's first universal script should be reliable.
 2. We just installed NodeJS.
 
