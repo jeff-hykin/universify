@@ -145,8 +145,10 @@ Lets go over the new problems:
       - Soon these caveats will not matter. Just know that pasting powershell, bash, or JS may not work 100% as-is.
 2. JavaScript code exists but is not executed.
       - This is the main issue, and is where the fun begins. We can simply have the script run itself! Both bash and powershell have a way to get the filepath of the currently-being-executed script. In other words, the world's first universal script is going to involve cross-language recursion, albeit shallow recursion.
-3. While the script can run itself, there is one minor problem and two catastrophic problems with running the script as JavaScript.
-      - These are, respectively, the JavaScript runtime, the JavaScript runtime, and finally the JavaScript runtime.
+3. While the script can run itself, there is one minor problem and two catastrophic problems:
+      - the JavaScript runtime
+      - the JavaScript runtime
+      - and the JavaScript runtime (respectively)
 
 <br><br>
 
