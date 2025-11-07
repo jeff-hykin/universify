@@ -34,6 +34,8 @@ echo "hello world" # powershell
 
 ```
 
+Note: this is still ***not*** a universal script by my definition.
+
 Lets focus on a few points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
 1. The script above doesn't merely work for hello world. Powershell code added to the bottom of that script will work (or not work) as it normally would on Windows. Any bash/zsh/sh program can also be safely embedded into that script, with `#>` being the only text that would need to be escaped.
@@ -44,9 +46,10 @@ Lets focus on a few points:
 
 <!-- While cute, this script is only semi-universal because it is merely two platform-specific scripts in one file. I wouldn't be writing this post if the true universal script was anything less than a unified (one language), practical, editable (not compiled/mangled), standalone (no side-effects), reliable (version-pinned spec-based), general-purpose script with support for packages/modules. -->
 
-However, this is ***not*** a universal script.
+Why isn't this enough to be a universal script? In my opinion a universal script would have **the logic** in one language, it would be reliable, general purpose, side-effect free, and editable (not mangled/compiled). Or at least it would need to be those things for me to write a post about it. If I didn't care about the program being mangled, I would just use Justine's [αcτµαlly pδrταblε εxεcµταblε](https://justine.lol/ape.html) AKA [Cosmopolitan](https://github.com/jart/cosmopolitan). 
 
-A universal script would have the logic in one language, it would be reliable, general purpose, side-effect free, editable (not mangled/compiled) and practical. Or at least it would need to be those things for me to write a post about it. The next logical step is to try bootstrapping either bash or powershell to work on their respective foreign system(s). This would make either bash or powershell the world's first universal scripting language.
+
+To make The next logical step is to try bootstrapping either bash or powershell to work on their respective foreign system(s). This would make either bash or powershell the world's first universal scripting language.
 
 The only other option would be absurd: introducing a third language thereby requiring the script to simultaniously be valid bash, valid powershell and valid as some third language.
 
