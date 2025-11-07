@@ -518,14 +518,16 @@ function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d6
 <br>
 <br>
 
-## Part 7: Auto-Universify Your Scripts
+## Part 7: Auto-Universify Your Bash/Node/Deno Scripts
 
-Wouldn't it be great if there was a tool that made it easy to make scripts run everywhere? The workflow could be:
-1. Write a Deno script (including lots of bash-like tooling/syntax)
-2. Run a CLI command with preferences (Deno version, stability flags, permissions for npm modules, etc)
-3. Get both a universal .ps1 file and (if in a github repo) a command for running the file remotely.
+<!-- TODO: make to-esm default to esm.sh instead of npm: or jsr: -->
 
-Well that's exactly what [universify](https://github.com/jeff-hykin/universify) does, including escaping any coincidental `#>` usage.
+No deno code? No problem:
+- If you've got bash code, use my bash2deno converter either [online](https://jeff-hykin.github.io/bash2deno/) or get the [CLI](https://github.com/jeff-hykin/bash2deno)
+- If you've got NodeJS code, use my [to-esm](https://github.com/jeff-hykin/to-esm) cli tool to convert those imports to proper ESM inputs.
+- If you're writing a script from scratch, dsherret's [Dax](https://github.com/dsherret/dax) to make it easy on yourself
+
+Once you have a deno script, there's only one step left. Use the [universify](https://github.com/jeff-hykin/universify) cli to make it run anywhere including a remote install URL snippet if you run it inside of a github project.
 
 Example `your_script.ts`:
 
