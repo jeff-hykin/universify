@@ -187,7 +187,7 @@ import isEven from "https://esm.sh/is-even@1.0.0"
 console.log(isEven(2)) // true
 ```
 
-All dependencies are downloaded, imported, and cached automatically.
+All dependencies are downloaded, imported, and cached automatically (thanks @[Ry](https://en.wikipedia.org/wiki/Ryan_Dahl)!).
 
 <!--
 If the code is not availble on NPM, no problem. The guys at Esm.sh have found a way to dynamically purify your dirty Nodejs code directly from Github.
@@ -213,15 +213,18 @@ Without a node_modules directory what is a developer supposed to `rm -rf` when t
 
 ## Part 5: Extreme Reliability
 
-Now that one of the catestrophic issues is resolved, we need to return to the other. Can the bash installer and powershell installer for Deno be crammed into the 3-way hello world? What about side effects? What about versioning?
+Catestrophic problem #1 was never fixed so lets return to that. 
+- Can the bash installer and powershell installer for Deno be crammed into our 3-way hello world script?
+- What about installer side effects?
+- What about runtime versioning?
 
-There is a very straightforward solution for versioning, even if it makes some uncomfortable. If the script was tested with Deno 2.4.3, simply have the script install exactly Deno 2.4.3 on the host system.
+If the script was tested with Deno 2.4.3, then we install exactly Deno 2.4.3. Versioning solved. Next!
 
-What about side effects? The Deno installer, like all installers, has side effects. Thankfully the Deno installers are 1000 lines shorter than Node's. Even better, Deno can execute code as a standalone binary. Meaning it is not necessary to modify the user's system.
+The Deno installer, like all installers, has side effects. Thankfully the Deno installers are 1000 lines shorter than Node's. Even better, Deno can execute code as a standalone binary. Meaning it is not necessary to modify the user's system.
 
-By setting `DENO_INSTALL` and `deno_version` followed by commenting out a few sections, we can turn the installer into a mere Deno-version-downloader. By having the work-in-progress script download a specific version of Deno to `$HOME/.deno/$deno_version/` we get the benefits of versioning, caching, and prevention of all meaningful side effects (the user's PATH and default Deno version remain untouched). If there is an executable at `$HOME/.deno/$deno_version/` then the script runs itself with that executable. If that path is empty, the script downloads the correct version of Deno and then runs itself.
+We can turn the installer into a mere Deno-version-downloader by simply setting `DENO_INSTALL` and `deno_version`. By having our work-in-progress script download a specific deno executable to `$HOME/.deno/$deno_version/$HERE` we get the benefits of versioning, caching, and prevention of all meaningful side effects (the user's already-installed deno, if any, remains untouched). If there is already an executable at `$HOME/.deno/$deno_version/` then the script runs itself with that executable. If that path is empty, the script downloads the correct version of Deno and then runs itself.
 
-Put all together, here is the world's first universal script:
+Put all together, here is the world's first universal hello world script:
 
 ```js
 #!/usr/bin/env sh
