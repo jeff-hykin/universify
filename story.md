@@ -172,7 +172,7 @@ Thankfully we don't need to know. This work-in-progress may already be criminal,
 
 ## Part 4: What about NPM Packages?
 
-The second of the catastrophic problems can be described as:
+Catastrophic problem #2 can be described as:
 1. The world's first universal script should not have side effects.
 2. JavaScript doesn't work without NPM packages (obviously).
 
