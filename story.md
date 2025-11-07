@@ -18,7 +18,7 @@ Allow me to be a guide down this wonderful rabbit hole. Not only are universal s
 
 ## Part 1: Semi-Universal Scripts
 
-Windows comes with Powershell/CMD. Minimal Linux and MacOS come with bash/zsh/dash/sh. So there is no unified script that runs out-of-the-box all major systems... right?
+Windows comes with Powershell/CMD. Minimal Linux and MacOS come with some kind of bash/zsh/dash/sh. So there is no unified script that runs out-of-the-box all major systems... right?
 
 Save the following as `hello_world.ps1`, add the execute permission, and run it as `./hello_world.ps1`.<br>Doesn't matter what OS.
 
@@ -458,7 +458,7 @@ Expanded the script for readability it looks like this:
 
 The good: that program above is highly generic. Any JavaScript code that does not contain `#>` can be safely added to that script.
 
-The problem: getting the script to the user. These universal scripts are most useful as a bootstrapping installers. But installer scripts are usually run via curl or something similar `curl https:thing | sh`. Thats a problem because there is no "path to itself" for running the javascript if the script is being run dynamically. 
+The problem: getting the script to the user. These universal scripts are most useful as a bootstrapping installers. But installer scripts are usually run via curl, e.g. `curl https://thing | sh`. Thats a problem because there is no "path to itself" for running the javascript if the script is being run dynamically.
 
 <br>
 <br>
