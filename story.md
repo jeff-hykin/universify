@@ -1,6 +1,7 @@
 <br>
 
-#### By Jeff Hykin ([Github](https://github.com/jeff-hykin), [Email](mailto:jeff.hykin+uni@gmail.com)) If you end up enjoying this post, consider starring the [repo](https://github.com/jeff-hykin/universify).
+#### By Jeff Hykin ([Github](https://github.com/jeff-hykin), [Email](mailto:jeff.hykin+uni@gmail.com))
+If you end up enjoying this post, consider starring the [repo](https://github.com/jeff-hykin/universify).
 
 <br>
 <br>
@@ -446,7 +447,7 @@ The problem is how the user would run the script. Universal scripts are most use
 <br>
 <br>
 
-## Part 6: The Apex: Remote Scripts
+## Part 6: Remote Execution
 
 What is the point of a universal installer if we need two separate commands to run it remotely?
 For example the Deno installer says: 
