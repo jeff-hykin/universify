@@ -176,9 +176,9 @@ Catastrophic problem #2 can be described as:
 1. The world's first universal script should not have side effects.
 2. JavaScript doesn't work without NPM packages (obviously).
 
-How could a universal script know if a number is even or odd without help from a 3rd party? We may never know, because Deno not only supports everyone's favorite supply chain attack vector, it also provides that support without a `node_modules` folder, bundling, or even a clunky `npm install` command. 
+How could a universal script know if a number is even or odd without help from a 3rd party? We may never know, because Deno not only supports everyone's favorite supply chain attack vector, it does it without a `node_modules` folder, without bundling, and without needing to a clunky `npm install` command. 
 
-For security and reliability -- if you're into that sort of thing -- versions can also be pinned quite easily:
+And for security and reliability -- if you're into that sort of thing -- versions can also be pinned quite easily:
 
 ```js
 import malware from "https://esm.sh/chalk"
