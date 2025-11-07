@@ -454,18 +454,19 @@ Expanded the script for readability it looks like this:
 
 </details>
 
-However, we are not done yet.
 
-The good news is the program above is highly generic. Any JavaScript code that does not contain `#>` can be safely added to that script.
+### But we're not done yet!
 
-The problem is how the user would run the script. Universal scripts are most useful as a bootstrapping installers, but installers are usually run remotely, not locally. E.g. there is no "path to itself" if the script is being run dynamically. 
+The good: that program above is highly generic. Any JavaScript code that does not contain `#>` can be safely added to that script.
+
+The problem: getting the script to the user. These universal scripts are most useful as a bootstrapping installers. But installer scripts are usually run via curl or something similar `curl https:thing | sh`. Thats a problem because there is no "path to itself" for running the javascript if the script is being run dynamically. 
 
 <br>
 <br>
 
 ## Part 6: Remote Execution
 
-What is the point of a universal installer if we need two separate commands to run it remotely?
+What is the point of a *universal* installer if we need different *OS-spectific* commands to run it remotely? (The answer is codebase maintaince, but lets ignore that reason.)
 For example the Deno installer says: 
 1. Windows users run `irm https://deno.land/install.ps1 | iex`
 2. Linux/MacOS users run `curl -fsSL https://deno.land/install.sh | sh`
@@ -474,7 +475,7 @@ For example the Deno installer says:
 1. Universal scripts are most useful as installers, and installers are going to need internet anyway. There isn't too many use-cases for making them work offline.
 2. Just wait till I get my hands on Deno+[cosmopolitan libc](https://github.com/jart/cosmopolitan) and embed it as a base64 string. -->
 
-The answer is codebase maintaince, but lets ignore that reason. For the worlds first universal script, this is unacceptable. We need single ~120 char line that runs on basically all operating systems. Maybe something like:
+Two commands? More like too many commands. This is unacceptable. We need single lets say ~120 char line that runs on basically all operating systems. Maybe something like:
 
 <!-- function iex { alias irm='curl -fsSL $_u | sh ;: ';iex(){ cat;};eval "${1#?}";};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/072ee86790581669ea91be01bbc7ab381b619020/run/hello_world.js";irm $_u|iex' -->
 
