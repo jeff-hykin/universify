@@ -39,8 +39,8 @@ Note: this is ***not*** the universal script.
 
 Lets focus on a few points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
-1. The script above doesn't merely work for hello world. Powershell code added to the bottom of that script will work (or not work) as it normally would on Windows. Any bash/zsh/sh program can also be safely embedded into that script, with `#>` being the only text that would need to be escaped.
-2. This script is only 1 of 7 interesting things. If a section gets boring, skip to the next. Part 6 is the apex of the journey.
+1. This script is only 1 of 7 interesting things. If a section gets boring, skip to the next. Part 6 is the apex of the journey.
+2. The script above doesn't merely work for hello world. Powershell code added to the bottom of that script will work (or not work) as it normally would on Windows. Any bash/zsh/sh program can also be safely embedded into that script, with `#>` being the only text that would need to be escaped.
 3. How is this little script possible?
   - At runtime, Windows only cares about the file extension (.ps1). That extension tells Windows to run the file as powershell. On Linux and MacOS, the file extension doesn't matter. They use the shebang `#!/usr/bin/env sh` to know how to execute it. But this only explains half of what is going on.
   - The other part is: why doesn't the script error on one system or the other? The answer is simple. Every line of that file is simultaneously valid bash and valid powershell (a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE)). Bash and powershell have a lot of syntax overlap, and we can use the overlap/non-overlap to our advantage. Those details are quite fun, but this post is already long so those who are curious will need to read [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134).
