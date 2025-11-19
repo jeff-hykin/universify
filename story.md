@@ -6,8 +6,9 @@
 
 # The World's First Universal Script
 
+
+If you end up enjoying this post, consider starring the [repo](https://github.com/jeff-hykin/universify).<br>
 **By Jeff Hykin ([Github](https://github.com/jeff-hykin), [Email](mailto:jeff.hykin+uni@gmail.com))**
-<br>If you end up enjoying this post, consider starring the [repo](https://github.com/jeff-hykin/universify).
 
 <br>
 <br>
@@ -16,11 +17,11 @@
 <!-- <br><br>
 Allow me to be a guide down this wonderful rabbit hole. Not only are universal scripts possible, they're practically practical. -->
 
-## Part 1: Code That Runs Anywhere
+## Part 1: Code That Runs Anywhere (But isn't Universal)
 
 <!-- Windows comes with Powershell/CMD. Minimal Linux and MacOS come with some kind of bash/zsh/dash/sh. So there is no unified script that runs out-of-the-box all major systems... right? -->
 
-Save the following as `hello_world.ps1`, add the execute permission, and run it as `./hello_world.ps1`.<br>Doesn't matter what OS.
+Doesn't matter what OS. Save the following as `hello_world.ps1`, add the execute permission, and put `./hello_world.ps1` in your terminal/console/cmd.<br>
 
 ```sh
 #!/usr/bin/env sh
@@ -35,33 +36,35 @@ echo "hello world" # powershell
 
 ```
 
-Note: this is ***not*** the universal script.
+<!-- Note: this is ***not*** the universal script. -->
 
 Lets focus on a few points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
-1. This script is only 1 of 7 interesting things. If a section gets boring, skip to the next. Part 6 is the apex of the journey.
+1. This is 1 of 7 (hopefully) interesting things. If a section gets boring, skip to the next. Part 6 is the apex of the journey.
 2. The script above doesn't merely work for hello world. Powershell code added to the bottom of that script will work (or not work) as it normally would on Windows. Any bash/zsh/sh program can also be safely embedded into that script, with `#>` being the only text that would need to be escaped.
 3. How is this little script possible?
-  - At runtime, Windows only cares about the file extension (.ps1). That extension tells Windows to run the file as powershell. On Linux and MacOS, the file extension doesn't matter. They use the shebang `#!/usr/bin/env sh` to know how to execute it. But this only explains half of what is going on.
-  - The other part is: why doesn't the script error on one system or the other? The answer is simple. Every line of that file is simultaneously valid bash and valid powershell (a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE)). Bash and powershell have a lot of syntax overlap, and we can use the overlap/non-overlap to our advantage. Those details are quite fun, but this post is already long so those who are curious will need to read [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134).
+   - At runtime, Windows only cares about the file extension (.ps1). That extension tells Windows to run the file as powershell. On Linux and MacOS, the file extension doesn't matter. They use the shebang `#!/usr/bin/env sh` to know how to execute it. But this only explains half of what is going on.
+   - The other part is: why doesn't the script error on one system or the other? The answer is simple. Every line of that file is simultaneously valid bash and valid powershell (a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE)). Bash and powershell have a lot of syntax overlap, and we can use the overlap/non-overlap to our advantage. Those details are quite fun, but this post is already long so those who are curious will need to read [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134).
 
 <!-- While cute, this script is only semi-universal because it is merely two platform-specific scripts in one file. I wouldn't be writing this post if the true universal script was anything less than a unified (one language), practical, editable (not compiled/mangled), standalone (no side-effects), reliable (version-pinned spec-based), general-purpose script with support for packages/modules. -->
 
-### Why doesn't that hello world count as a universal script? 
+### Why is the code not "universal"?
 
-In my opinion a universal script would have **the logic** in one language, it would be reliable, general purpose, side-effect free, and editable (not mangled/compiled). Or at least, it would need to be those things for me to write a post about it. If I didn't care about the program being mangled, I would just use Justine's much more impressive [αcτµαlly pδrταblε εxεcµταblε](https://justine.lol/ape.html) AKA [Cosmopolitan](https://github.com/jart/cosmopolitan).
+In my opinion a universal script would have **the logic** in one language, editable (not mangled/compiled), reliable, general purpose, and side-effect free. If I didn't care about the program being mangled/compiled, I would just use Justine's much more impressive [αcτµαlly pδrταblε εxεcµταblε](https://justine.lol/ape.html) AKA [Cosmopolitan](https://github.com/jart/cosmopolitan). If you have not heard of the project, it is a must-read.
 
-### Semi-to-Full Universality
+### The Next Step
 
-To make a hello world worthy of being called "universal" the next logical step would be to get bash or powershell running on the opposite system (e.g. bash on Windows or powershell on Linux/Mac). This would cause bash or powershell to become the world's first universal scripting language. 
+To make this hello world worthy of being called "universal" the next logical step would be to get bash or powershell running on the opposite system (e.g. bash on Windows or powershell on Linux/Mac). This would cause bash or powershell to become the world's first universal scripting language. 
 
-That would make sense. Maybe too much sense. The only other option would be absurd -- introducing a third language thereby requiring the script to simultaniously be valid bash, valid powershell and valid as some third language.
+That would make sense. 
+
+Maybe too much sense. The only other option would be absurd -- introducing a third language thereby requiring the script's syntax to simultaniously be valid bash, valid powershell and valid as that third language.
 
 <br><br>
 
 ## Part 2: Cramming in a 3rd Language
 
-Some will object to what I am about to reveal. They will say "Jeff, it didn't have to be this way". It is true, we as programmers have a lot of choices in syntax: indent-based Python, end-based Ruby, C-style languages, ~~Haskell~~ Elixir. We could even try to use Zig, Go, or Rust ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)). How many have sytax compatible with bash and powershell?
+Some will object to this. They will say "Jeff, it didn't have to be this way". We, as programmers, have a lot of choices in syntax: indent-based Python, end-based Ruby, C-style languages, ~~Haskell~~ Elixir. Thanks to some hacks, we could even try to use Zig, Go, or Rust for this "script" ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)). So, how many have a sytax compatible with bash and powershell?
 
 I don't know. I just know there is at least one.
 
