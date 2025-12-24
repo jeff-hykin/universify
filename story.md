@@ -41,7 +41,7 @@ echo "hello world" # powershell
 Lets focus on a few points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
 1. This is 1 of 7 (hopefully) interesting things. If a section gets boring, skip to the next.
-2. This does't just work for a hello world. All powershell code will work (or not work) as it normally would on Windows. 99.999% of bash/zsh/sh will also "just work" if you paste it in the right place. The only exception for bash is that `#>` needs to be escaped (even if it appears in a bash comment).
+2. This doesn't just work for a hello world. All powershell code will work (or not work) as it normally would on Windows. 99.999% of bash/zsh/sh will also "just work" if you paste it in the right place. The only exception for bash is that `#>` needs to be escaped (even if it appears in a bash comment).
 3. How is this possible?
    - At runtime, Windows only cares about the file extension (.ps1). That extension tells Windows to run the file as powershell. On good operating systems like Linux and MacOS, the file extension happens to not matter. They use the shebang (`#!/usr/bin/env sh`) to know how to run the script.
    - That explains why the execution is different and possible, but why doesn't the execution fail/error on one system or the other? Simple. Every line of that file is valid bash and valid powershell ... at the same time. Its a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE). Bash and powershell have a lot of overlap in their syntax. We use that overlap/non-overlap to our advantage. [The details are really fun](https://stackoverflow.com/a/67292076/4367134), but lets stay focused: I want a universal script not two scripts in one file.
@@ -56,27 +56,39 @@ I like opening up the hood of my car, and replacing or removing any part I don't
 If compilation was okay, I would use Justine's **much more impressive** [αcτµαlly pδrταblε εxεcµταblε](https://justine.lol/ape.html) AKA [Cosmopolitan](https://github.com/jart/cosmopolitan). If you have not heard of the project, it is a must-read!
 
 This post is about human readable/editable scripts that:
-- Work out of the box on every major operating system
-- Have **the logic** in one language
-- Extemely reliable, with no system side effects
-- And have instant access to massive ecosystem of 3rd party libraries.
+- Work on a fresh install of every major operating system
+- Have **the logic** in one language (not an OS specific language)
+- Extremely reliable, with no system side effects or collisions
+- And the scripts have access to massive ecosystem of 3rd party libraries.
 
-### The Next Step
+## Part 2: One Language - all Operating Systems
 
-To make this hello world worthy of being called "universal" the next logical step would be to get bash or powershell running on the opposite system (e.g. bash on Windows or powershell on Linux/Mac). This would cause bash or powershell to become the world's first universal scripting language. 
-file bash or powershell to become the world's first universal scripting language.  absurd -- introducing a third language thereby requiring the script's syntax to simultaniously be valid bash, valid powershell and valid as that third language.
+Lets adapt our hello world. We want at least the "hello world" part to be in one language. 
+
+The next logical step would be to get either bash or powershell running on the opposite system (e.g. bash on Windows or powershell on Linux/Mac).
+
+Yes, that *would* be the next logical step... maybe a little too logical.
+
+The only other option would be absurd. Why? Because it would require our script to simultaniously be valid bash, valid powershell and valid in some third language. Two languages is hard as it is, doing only "hello world" in three languages simultaneously would be masochist territory, but finding a way for all general-purpose programs to fit into a three way polyglot without compilation? You'd need some kind of mental disorder to even try that option.
 
 <br><br>
 
-## Part 2: Cramming in a 3rd Language
+### Cramming in a 3rd Language
 
-Some will object to this. They will say "Jeff, it didn't have to be this way". We, as programmers, have a lot of choices in syntax: indent-based Python, end-based Ruby, C-style languages, ~~Haskell~~ Elixir. Thanks to some hacks, we could even try to use Zig, Go, or Rust for this "script" ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)). So, how many have a sytax compatible with bash and powershell?
+So what is the worlds first universal scripting language?
 
-I don't know. I just know there is at least one.
+Some will object to my answer.
 
-Some will say "There must be another". Maybe they are right. But deep down, you and I both know it is fate. 
+They will say "Jeff, it didn't have to be this way". There are many syntaxes available to us as programmers: indent-based Python, end-based Ruby, C-style languages, Elixir, ~~Haskell~~ (I don't have that kind of disorder). Thanks to some hacks (later), we could even try Zig, Go, or Rust for this "script" ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)).
 
-The world's first universal script could only ever be one language: 
+How many have a sytax compatible with bash and powershell?
+
+At least one 😁.
+
+"There must be another", some will say. Maybe they are right. 
+
+
+But deep down, you and I both know it was fate. It could only ever be one language:
 - The language destined from birth to rule over all languages.
 - The language no programmer can truly escape.
 - The language that crashes iPhones, CloudFlare, Teslas, and homemade websites alike.
