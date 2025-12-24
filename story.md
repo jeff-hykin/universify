@@ -65,11 +65,9 @@ I'm making the massive claim of a human readable/editable scripts that:
 
 We want at least the "hello world" part to be in one language. 
 
-The next logical step would be to get either bash or powershell running on the opposite system (e.g. bash on Windows or powershell on Linux/Mac).
+Getting either bash or powershell running on the opposite system (e.g. bash on Windows or powershell on Linux/Mac) would be the next logical step... maybe a little too logical.
 
-Yes, that *would* be the next logical step... maybe a little too logical.
-
-The only other option would be absurd. Why? Because it would require our script to simultaniously be valid bash, valid powershell and valid in some third language. Two languages is hard as it is, doing only "hello world" in three languages simultaneously would be masochist territory, but finding a way for all general-purpose programs to fit into a three way polyglot without compilation? You'd need some kind of mental disorder to even try.
+The only other option would be absurd. Why? Because it would require our script to simultaniously be valid bash, valid powershell and valid in some third language. Two languages is hard, "hello world" in a three language polyglot would be masochist territory, but unknown general-purpose programs in a three way polyglot without compilation? You'd need some kind of mental disorder to even try.
 
 <br><br>
 
@@ -83,13 +81,12 @@ Some will object - "Jeff, it didn't have to be this way!".
 
 Yes, there are many syntaxes: indent-based Python, end-based Ruby, C-style languages, Elixir, ~~Haskell~~ (I don't have that kind of disorder). We could even use Zig, Go, or Rust for this "script" thanks to some hacks later ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)).
 
-But, how many are syntactically compatible?
+How many are syntactically compatible?
 
 Idk, at least one 😁.
 
-Some will say "There must be another", but deep down you and I both know its destiny. 
 
-The world's first universal programming language could only ever be one language:
+Deep down you and I both know it is fate.
 - The language destined from birth to rule over all languages.
 - The language no programmer can truly escape.
 - The language that crashes iPhones, CloudFlare, Teslas, and homemade websites alike.
