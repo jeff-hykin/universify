@@ -21,7 +21,7 @@ Allow me to be a guide down this wonderful rabbit hole. Not only are universal s
 
 <!-- Windows comes with Powershell/CMD. Minimal Linux and MacOS come with some kind of bash/zsh/dash/sh. So there is no unified script that runs out-of-the-box all major systems... right? -->
 
-Save the following as `hello_world.ps1`. Doesn't matter what OS, just add the execute permission, and type `./hello_world.ps1`cm in your cmd/terminal/console.<br>
+Save the following as `hello_world.ps1`. Doesn't matter what OS, just add the execute permission, and type `./hello_world.ps1` in your cmd/terminal/console.<br>
 
 ```sh
 #!/usr/bin/env sh
