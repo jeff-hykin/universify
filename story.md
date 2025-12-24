@@ -67,7 +67,7 @@ We want at least the "hello world" part to be in one language.
 
 Getting either bash or powershell running on the opposite system (e.g. bash on Windows or powershell on Linux/Mac) would be the next logical step... maybe a little too logical.
 
-The only other option would be absurd. Why? Because it would require our script to simultaniously be valid bash, valid powershell and valid in some third language. Two languages is hard, "hello world" in a three language polyglot would be masochist territory, but unknown general-purpose programs in a three way polyglot without compilation? You'd need some kind of mental disorder to even try.
+The only other option would be absurd though. Why? Because it would require our script to simultaniously be valid bash, valid powershell and valid in some third language. Two languages is hard, "hello world" in a three language polyglot would be masochist territory, but unknown general-purpose programs in a three way polyglot without compilation? You'd need some kind of mental disorder to even try.
 
 <br><br>
 
