@@ -51,44 +51,45 @@ Lets focus on a few points:
 
 ### Hasn't someone made a universal executable? (Cosmopolitan)
 
-I like opening up the hood of my car, and replacing or removing any part I don't like. And I like my scripts the same way: customizable (not compiled).
+I like opening up the hood of my car, and replacing/removing whatever I feel like. And I like my scripts the same way: customizable (not compiled).
 
 If compilation was okay, I would use Justine's **much more impressive** [αcτµαlly pδrταblε εxεcµταblε](https://justine.lol/ape.html) AKA [Cosmopolitan](https://github.com/jart/cosmopolitan). If you have not heard of the project, it is a must-read!
 
-This post is about human readable/editable scripts that:
-- Work on a fresh install of every major operating system
-- Have **the logic** in one language (not an OS specific language)
+I'm making the massive claim of a human readable/editable scripts that:
+- Works on a fresh install of every major operating system
+- Has **the logic** in one language (not an OS specific language)
 - Extremely reliable, with no system side effects or collisions
 - And the scripts have access to massive ecosystem of 3rd party libraries.
 
 ## Part 2: One Language - all Operating Systems
 
-Lets adapt our hello world. We want at least the "hello world" part to be in one language. 
+We want at least the "hello world" part to be in one language. 
 
 The next logical step would be to get either bash or powershell running on the opposite system (e.g. bash on Windows or powershell on Linux/Mac).
 
 Yes, that *would* be the next logical step... maybe a little too logical.
 
-The only other option would be absurd. Why? Because it would require our script to simultaniously be valid bash, valid powershell and valid in some third language. Two languages is hard as it is, doing only "hello world" in three languages simultaneously would be masochist territory, but finding a way for all general-purpose programs to fit into a three way polyglot without compilation? You'd need some kind of mental disorder to even try that option.
+The only other option would be absurd. Why? Because it would require our script to simultaniously be valid bash, valid powershell and valid in some third language. Two languages is hard as it is, doing only "hello world" in three languages simultaneously would be masochist territory, but finding a way for all general-purpose programs to fit into a three way polyglot without compilation? You'd need some kind of mental disorder to even try.
 
 <br><br>
 
 ### Cramming in a 3rd Language
 
-So what is the worlds first universal scripting language?
+(Thankfully I've come prepared)
 
-Some will object to my answer.
+So what's the 3rd language? The worlds first universal scripting language?
 
-They will say "Jeff, it didn't have to be this way". There are many syntaxes available to us as programmers: indent-based Python, end-based Ruby, C-style languages, Elixir, ~~Haskell~~ (I don't have that kind of disorder). Thanks to some hacks (later), we could even try Zig, Go, or Rust for this "script" ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)).
+Some will object - "Jeff, it didn't have to be this way!".
 
-How many have a sytax compatible with bash and powershell?
+Yes, there are many syntaxes: indent-based Python, end-based Ruby, C-style languages, Elixir, ~~Haskell~~ (I don't have that kind of disorder). We could even use Zig, Go, or Rust for this "script" thanks to some hacks later ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)).
 
-At least one 😁.
+But, how many are syntactically compatible?
 
-"There must be another", some will say. Maybe they are right. 
+Idk, at least one 😁.
 
+Some will say "There must be another", but deep down you and I both know its destiny. 
 
-But deep down, you and I both know it was fate. It could only ever be one language:
+The world's first universal programming language could only ever be one language:
 - The language destined from birth to rule over all languages.
 - The language no programmer can truly escape.
 - The language that crashes iPhones, CloudFlare, Teslas, and homemade websites alike.
