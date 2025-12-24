@@ -40,16 +40,26 @@ echo "hello world" # powershell
 
 Lets focus on a few points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
-1. This is 1 of 7 (hopefully) in1. This is 1 of 7 (hopefully) interesting things. If a section gets boring, skip to the next.ely work for hello world. All powershell code will work (or not work) as it normally would on Windows. 99.999% of bash/zsh/sh will also work without modification (just paste it in there). The only exception for bash is that the sequence `#>` needs to be escaped (even if it appears in a bash comment).
-3. How is this little script possible?
+1. This is 1 of 7 (hopefully) interesting things. If a section gets boring, skip to the next.
+2. This does't just work for a hello world. All powershell code will work (or not work) as it normally would on Windows. 99.999% of bash/zsh/sh will also "just work" if you paste it in the right place. The only exception for bash is that `#>` needs to be escaped (even if it appears in a bash comment).
+3. How is this possible?
    - At runtime, Windows only cares about the file extension (.ps1). That extension tells Windows to run the file as powershell. On good operating systems like Linux and MacOS, the file extension happens to not matter. They use the shebang (`#!/usr/bin/env sh`) to know how to run the script.
-   - That explains the execution, but why doesn't the script error on one system or the other? Simple. Every line of that file is valid bash and valid powershell at the same time. Its a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE). Bash and powershell have a lot of overlap in their syntax. We use the overlap/non-overlap to our advantage. [The details are really fun](https://stackoverflow.com/a/67292076/4367134), but lets stay focused: I want a universal script not two scripts in one file.
+   - That explains why the execution is different and possible, but why doesn't the execution fail/error on one system or the other? Simple. Every line of that file is valid bash and valid powershell ... at the same time. Its a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE). Bash and powershell have a lot of overlap in their syntax. We use that overlap/non-overlap to our advantage. [The details are really fun](https://stackoverflow.com/a/67292076/4367134), but lets stay focused: I want a universal script not two scripts in one file.
 
 <!-- While cute, this script is only semi-universal because it is merely two platform-specific scripts in one file. I wouldn't be writing this post if the true universal script was anything less than a unified (one language), practical, editable (not compiled/mangled), standalone (no side-effects), reliable (version-pinned spec-based), general-purpose script with support for packages/modules. -->
 
-### Why is the code not "universal"?
 
-In my opinion a universal script would have **the logic** in one language, editable (not mangled/compiled), reliable, general purpose, and side-effect free. If I didn't care about the program being mangled/compiled, I would just use Justine's much more impressive [αcτµαlly pδrταblε εxεcµταblε](https://justine.lol/ape.html) AKA [Cosmopolitan](https://github.com/jart/cosmopolitan). If you have not heard of the project, it is a must-read.
+### Hasn't someone made a universal executable? (Cosmopolitan)
+
+I like opening up the hood of my car, and replacing or removing any part I don't like. And I like my scripts the same way: customizable (not compiled).
+
+If compilation was okay, I would use Justine's **much more impressive** [αcτµαlly pδrταblε εxεcµταblε](https://justine.lol/ape.html) AKA [Cosmopolitan](https://github.com/jart/cosmopolitan). If you have not heard of the project, it is a must-read!
+
+This post is about human readable/editable scripts that:
+- Work out of the box on every major operating system
+- Have **the logic** in one language
+- Extemely reliable, with no system side effects
+- And have instant access to massive ecosystem of 3rd party libraries.
 
 ### The Next Step
 
