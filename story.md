@@ -75,23 +75,27 @@ The only other option would be absurd though. Why? Because it would require our 
 
 (Thankfully I've come prepared)
 
-So what's the 3rd language? The worlds first universal scripting language?
+So what's the 3rd language?
 
-Some will object - "Jeff, it didn't have to be this way!".
+
+<!--
+Well, some will object to my answer - "Jeff, it didn't have to be this way!".
 
 Yes, there are many syntaxes: indent-based Python, end-based Ruby, C-style languages, Elixir, ~~Haskell~~ (I don't have that kind of disorder). We could even use Zig, Go, or Rust for this "script" thanks to some hacks later ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)).
 
-How many are syntactically compatible?
+But how many are syntactically compatible?
 
 Idk, at least one 😁.
+--> 
 
-
-Deep down you and I both know it is fate.
+Some may object, but deep down you and I both know it is fate. The world's first universal scripting language could only ever be one language.
 - The language destined from birth to rule over all languages.
 - The language no programmer can truly escape.
 - The language that crashes iPhones, CloudFlare, Teslas, and homemade websites alike.
 
-I'm, of course, talking about:<br>
+I'm, of course, talking about:
+
+<br>
 
 <br>
 <br>
@@ -119,12 +123,12 @@ I'm, of course, talking about:<br>
 <br>
 
 ![javascript i love it](https://github.com/user-attachments/assets/1c2779a6-bbce-480e-9abf-ee61c3235403)
-<br>([*mandatory context*](https://www.youtube.com/watch?v=Uo3cL4nrGOk))
+<br>([*context*](https://www.youtube.com/watch?v=Uo3cL4nrGOk))
 
 <br>
 <br>
 
-Not only can one file be valid JavaScript, valid powershell, and valid bash simultaneously -- but actually, with a bit of escaping, **any possible combination of JavaScript, powershell, and bash code can be fit all into the same file, all at the same time.**
+Not only can one file be valid JavaScript, valid powershell, and valid bash simultaneously -- but actually, **any possible combination of JavaScript, powershell, and bash code can be fit all into the same file, all at the same time.**
 
 <br>
 <br>
@@ -148,64 +152,64 @@ exit #>
 // #>
 ```
 
-*The bash syntax highlighting on Github is a bit off. [Sorry I haven't fixed that or the other issues in a while](https://github.com/jeff-hykin/better-shell-syntax).*
+*The bash syntax highlighting on Github is a bit off. [Sorry about that](https://github.com/jeff-hykin/better-shell-syntax).*
 
 <br>
 <br>
 
-If the script above is painful, you had better leave now because we are just getting started.
+If that's painful, you'd better leave. I'm just getting warmed up.
 
 <br>
 
-Lets go over the new problems:
+This is where is gets fun - the javascript above still isn't being executed, but its so easy to fix. We can just have the script execute itself! You might even call it a case of cross-language shallow recursion.
 
-1. There are new escaping caveats.
-      - Soon these caveats will not matter. Just know that pasting powershell, bash, or JS may not work 100% as-is.
-2. JavaScript code exists but is not executed.
-      - This is the main issue, and is where the fun begins. We can simply have the script run itself! Both bash and powershell have a way to get the filepath of the currently-being-executed script. In other words, the world's first universal script is going to involve cross-language recursion, albeit shallow recursion.
-3. While the script can run itself, there is one minor problem and two catastrophic problems:
-      - the JavaScript runtime
-      - the JavaScript runtime
-      - and the JavaScript runtime (respectively)
+But there's 2 catestrophic and 1 minor issue with that: 
+   1. the JavaScript runtime
+   2. the JavaScript runtime
+   3. and the JavaScript runtime (respectively)
 
 <br><br>
 
 ## Part 3: The Runtime Problem
 
-Lets start with the minor issue: the host system might not have a JavaScript runtime (e.g. NodeJS not installed).
+Most OS's don't ship with a JavaScript runtime installed.
 
-With a mix of dread, excitement, and guilt please consider: what if the NodeJS installers -- both the NodeJS bash installer and NodeJS powershell installer -- were simply embedded into the top of our work-in-progress script? Meaning, when the script tries to run itself, and the host system doesn't have NodeJS, the script *just installs NodeJS* and then runs itself.
+But, do you know what the NodeJS installer scripts happen to be written in? 😁 Thats right, powershell and shell. If there isn't a JS runtime, the script could just install NodeJS and then run itself. (That solves the minor issue).
 
-But, before committing such a heinous crime, lets consider the first catastrophic problem. The first catastrophic can be succinctly described with two points:
+There's a catastrophic issue though:
 1. The world's first universal script should be reliable.
 2. We just installed NodeJS.
 
-Can those things coexist? Can both NodeJS installers be crammed into one file?
+Our script may already be criminal, but automatically installing NodeJS? Even criminals have standards.
 
-I don't know.
-
-Thankfully we don't need to know. This work-in-progress may already be criminal, but going so far as using NodeJS? Well, even criminals have standards. Instead lets consider a good JS runtime, like Deno.
+Instead we're going to solve the reliability problem by using a good JS runtime, like Deno.
 
 <br><br>
 
-## Part 4: What about NPM Packages?
+## Part 4: Modules 👏 Modules 👏 Modules 👏
 
-Catastrophic problem #2 can be described as:
-1. The world's first universal script should not have side effects.
-2. JavaScript doesn't work without NPM packages (obviously).
+Catastrophic problem #2:
+1. JavaScript doesn't work without NPM packages (obviously). 
+2. The world's first universal script should not have side effects. (no `node_modules` companion folder or install side effects)
 
-How could we possibly compute if a number is even or odd without NPM? We may never know, because Deno not only supports everyone's favorite supply chain attack vector, it does so without the `node_modules` folder side effect, without bundling, and without needing to run a clunky `npm install` command. 
+Deno not only supports everyone's favorite supply chain attack vector, without `node_modules`, bundling, or a clunky `npm install` command.
 
 And for security and reliability -- if you're into that sort of thing -- versions can also be pinned quite easily:
 
 ```js
-import malware from "https://esm.sh/chalk"
+import malware from "https://esm.sh/chalk@^5.6.2"
 import chalk from "https://esm.sh/chalk@5.6.2"
 import isEven from "https://esm.sh/is-even@1.0.0"
 console.log(isEven(2)) // true
 ```
 
-All dependencies are downloaded, imported, and cached automatically (thanks @[Ry](https://en.wikipedia.org/wiki/Ryan_Dahl)!).
+You can even import code straight from your github repo:
+
+```js
+import thing from "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/path/to/your/code.ts"
+```
+
+All modules are downloaded, imported, and cached automatically without interfering with an existing Deno installation (thanks @[Ry](https://en.wikipedia.org/wiki/Ryan_Dahl)!).
 
 <!--
 If the code is not availble on NPM, no problem. The guys at Esm.sh have found a way to dynamically purify your dirty Nodejs code directly from Github.
