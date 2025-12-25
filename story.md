@@ -8,7 +8,7 @@
 
 
 If you end up enjoying this, consider starring the [repo](https://github.com/jeff-hykin/universify).<br>
-**By Jeff Hykin ([Github](https://github.com/jeff-hykin), [Email](mailto:jeff.hykin+uni@gmail.com))**
+**By Jeff Hykin (CodeChefJeff [Github](https://github.com/jeff-hykin), [Email](mailto:jeff.hykin+uni@gmail.com))**
 
 <br>
 <br>
