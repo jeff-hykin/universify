@@ -17,7 +17,7 @@ If you end up enjoying this, consider starring the [repo](https://github.com/jef
 <!-- <br><br>
 Allow me to be a guide down this wonderful rabbit hole. Not only are universal scripts possible, they're practically practical. -->
 
-Windows comes with Powershell/CMD. Minimal Linux and MacOS come with some kind of bash/zsh/dash/sh. So there is no way to write a script in one language and have it run out-of-the-box all major systems... right?
+Windows comes with Powershell/CMD. MacOS and minimal Linux come with some kind of bash/zsh/dash/sh. So there is no way to write a script in one language and have it run out-of-the-box all major systems... right?
 
 
 Well if you read till the end you'll be able to write in one language and make a human readable/editable script that:
