@@ -24,7 +24,7 @@ Well if you read till the end you'll be able to:
 - Write (in one language)
 - A human readable/editable script
 - Works on a fresh install of every major operating system
-- Has access to massive ecosystem of 3rd party libraries
+- That has access to massive ecosystem of 3rd party libraries
 - And is excessively reliable (no system side effects)
 
 <br><br>
