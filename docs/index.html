@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Universify</title>
+        <style>
+            /* 
+                Usage:
+                    <article class="md"> ... rendered markdown ... </article>
+
+                Notes:
+                - Uses system fonts by default (modern + fast). Swap --md-font-* if you want.
+                - Colors are neutral and work well on light backgrounds.
+            */
+
+            :root{
+                --md-bg: #ffffff;
+                --md-fg: #111827;              /* near-slate-900 */
+                --md-muted: #6b7280;           /* slate-500 */
+                --md-border: rgba(17,24,39,.12);
+                --md-soft: rgba(17,24,39,.06);
+                --md-soft-2: rgba(17,24,39,.08);
+
+                --md-link: #2563eb;            /* blue-600 */
+                --md-link-hover: #1d4ed8;      /* blue-700 */
+
+                --md-code-bg: rgba(17,24,39,.06);
+                --md-code-fg: #0f172a;         /* slate-900 */
+                --md-pre-bg: #0b1220;          /* deep navy */
+                --md-pre-fg: #e5e7eb;          /* slate-200 */
+                --md-pre-border: rgba(255,255,255,.08);
+
+                --md-accent: #7c3aed;          /* violet-600 */
+                --md-accent-soft: rgba(124,58,237,.10);
+
+                --md-radius: 14px;
+                --md-radius-sm: 10px;
+
+                --md-font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+                --md-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+
+                --md-leading: 1.75;
+                --md-max-width: 72ch;
+            }
+
+            /* container */
+            .md{
+                color: var(--md-fg);
+                background: var(--md-bg);
+                font-family: var(--md-font);
+                line-height: var(--md-leading);
+                font-size: 16px;
+
+                /* optional: centered reading column */
+                max-width: var(--md-max-width);
+                margin: 0 auto;
+                padding: 24px;
+            }
+
+            /* common spacing rhythm */
+            .md :where(p, ul, ol, blockquote, pre, table, hr){
+                margin: 1em 0;
+            }
+
+            .md :where(h1, h2, h3, h4, h5, h6){
+                margin: 1.25em 0 .6em;
+                line-height: 1.2;
+                letter-spacing: -0.015em;
+                scroll-margin-top: 96px; /* nicer anchor jumps */
+            }
+
+            /* headings (Milkdown-ish: strong, not huge) */
+            .md h1{ font-size: 2.05rem; font-weight: 760; }
+            .md h2{ font-size: 1.55rem; font-weight: 720; }
+            .md h3{ font-size: 1.25rem; font-weight: 680; }
+            .md h4{ font-size: 1.10rem; font-weight: 650; }
+            .md h5{ font-size: 1.00rem; font-weight: 650; color: var(--md-fg); }
+            .md h6{ font-size: 0.95rem; font-weight: 650; color: var(--md-muted); }
+
+            /* subtle heading dividers */
+            .md h2{
+                padding-bottom: .35em;
+                border-bottom: 1px solid var(--md-border);
+            }
+
+            /* links */
+            .md a{
+                color: var(--md-link);
+                text-decoration: none;
+                text-underline-offset: 3px;
+            }
+            .md a:hover{
+                color: var(--md-link-hover);
+                text-decoration: underline;
+            }
+
+            /* emphasis */
+            .md strong{ font-weight: 700; }
+            .md em{ font-style: italic; }
+
+            /* lists */
+            .md :where(ul, ol){
+                padding-left: 1.25em;
+            }
+            .md li{
+                margin: .35em 0;
+            }
+            .md li::marker{
+                color: color-mix(in srgb, var(--md-muted) 85%, var(--md-fg));
+            }
+            .md :where(ul ul, ul ol, ol ol, ol ul){
+                margin: .5em 0;
+            }
+
+            /* blockquote */
+            .md blockquote{
+                border-left: 4px solid var(--md-accent);
+                background: linear-gradient(90deg, var(--md-accent-soft), transparent 65%);
+                padding: .75em 1em;
+                border-radius: var(--md-radius-sm);
+                color: color-mix(in srgb, var(--md-fg) 88%, var(--md-muted));
+            }
+            .md blockquote > :first-child{ margin-top: 0; }
+            .md blockquote > :last-child{ margin-bottom: 0; }
+
+            /* inline code */
+            .md code{
+                font-family: var(--md-font-mono);
+                font-size: .95em;
+                background: var(--md-code-bg);
+                color: var(--md-code-fg);
+                padding: .18em .38em;
+                border-radius: .45em;
+                border: 1px solid var(--md-border);
+            }
+
+            /* code blocks */
+            .md pre{
+                background: var(--md-pre-bg);
+                color: var(--md-pre-fg);
+                border: 1px solid var(--md-pre-border);
+                border-radius: var(--md-radius);
+                padding: 14px 16px;
+                overflow: auto;
+                box-shadow:
+                    0 1px 0 rgba(17,24,39,.06),
+                    0 10px 30px rgba(17,24,39,.10);
+            }
+            .md pre code{
+                background: transparent;
+                border: 0;
+                padding: 0;
+                color: inherit;
+                font-size: .93em;
+                line-height: 1.6;
+            }
+
+            /* make long code blocks scroll nicely on mac */
+            .md pre::-webkit-scrollbar{ height: 10px; width: 10px; }
+            .md pre::-webkit-scrollbar-thumb{
+                background: rgba(255,255,255,.18);
+                border-radius: 999px;
+            }
+            .md pre::-webkit-scrollbar-track{
+                background: rgba(255,255,255,.06);
+                border-radius: 999px;
+            }
+
+            /* horizontal rule */
+            .md hr{
+                border: 0;
+                height: 1px;
+                background: var(--md-border);
+                margin: 1.75em 0;
+            }
+
+            /* images */
+            .md img{
+                max-width: 100%;
+                height: auto;
+                border-radius: var(--md-radius);
+                border: 1px solid var(--md-border);
+                background: var(--md-soft);
+            }
+            .md figure{ margin: 1.25em 0; }
+            .md figcaption{
+                margin-top: .5em;
+                font-size: .92em;
+                color: var(--md-muted);
+            }
+
+            /* tables */
+            .md table{
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                border: 1px solid var(--md-border);
+                border-radius: var(--md-radius);
+                overflow: hidden;
+                background: #fff;
+            }
+            .md th, .md td{
+                padding: .65em .75em;
+                border-bottom: 1px solid var(--md-border);
+                vertical-align: top;
+            }
+            .md th{
+                text-align: left;
+                font-weight: 650;
+                background: color-mix(in srgb, var(--md-soft) 70%, #fff);
+            }
+            .md tr:last-child :where(th, td){ border-bottom: 0; }
+            .md tbody tr:hover{
+                background: color-mix(in srgb, var(--md-soft) 65%, #fff);
+            }
+
+            /* callouts / “note” style (if you emit <div class="callout ...">) */
+            .md .callout{
+                border: 1px solid var(--md-border);
+                background: var(--md-soft);
+                border-radius: var(--md-radius);
+                padding: 12px 14px;
+            }
+            .md .callout[data-variant="info"]{
+                border-color: color-mix(in srgb, var(--md-link) 35%, var(--md-border));
+                background: color-mix(in srgb, var(--md-link) 10%, #fff);
+            }
+            .md .callout[data-variant="warn"]{
+                border-color: rgba(234,179,8,.35);
+                background: rgba(234,179,8,.10);
+            }
+            .md .callout[data-variant="danger"]{
+                border-color: rgba(239,68,68,.35);
+                background: rgba(239,68,68,.10);
+            }
+
+            /* task lists (GitHub-style markdown) */
+            .md input[type="checkbox"]{
+                accent-color: var(--md-accent);
+                transform: translateY(1px);
+            }
+            .md li.task-list-item{
+                list-style: none;
+                margin-left: -1.25em;
+            }
+            .md li.task-list-item > input{
+                margin: 0 .5em 0 0;
+            }
+
+            /* footnotes / small text */
+            .md small, .md .footnotes{
+                color: var(--md-muted);
+                font-size: .92em;
+            }
+
+            /* selection highlight */
+            .md ::selection{
+                background: rgba(124,58,237,.22);
+            }
+
+            /* nicer focus rings if you have links/buttons inside markdown */
+            .md :where(a, button, summary, input, textarea):focus-visible{
+                outline: 3px solid rgba(124,58,237,.35);
+                outline-offset: 2px;
+                border-radius: 10px;
+            }
+
+            /* optional: tighter first heading at top */
+            .md > :where(h1, h2, h3):first-child{ margin-top: 0; }
+        </style>
+    </head>
+    <body>
+        <h1 id="the-world-s-first-universal-script-afaik-">The World&#39;s First Universal Script (AFAIK)</h1>
+        <p>
+            If you end up enjoying this, consider starring the <a href="https://github.com/jeff-hykin/universify">repo</a>.<br />
+            <strong>By Jeff Hykin (<a href="https://github.com/jeff-hykin">Github</a>, <a href="mailto:jeff.hykin+uni@gmail.com">Email</a>)</strong>
+        </p>
+        <p>
+            <br />
+            <br />
+            <br />
+        </p>
+        <!-- <br><br>
+    Allow me to be a guide down this wonderful rabbit hole. Not only are universal scripts possible, they're practically practical. -->
+        <p>Windows comes with Powershell/CMD. MacOS and minimal Linux come with some kind of bash/zsh/dash/sh. So there is no way to write a script in one language and have it run out-of-the-box all major systems... right?</p>
+        <p>Well if you read till the end you&#39;ll be able to write in one language and make a human readable/editable script that:</p>
+        <ul>
+            <li>Works on a fresh install of every major operating system</li>
+            <li>Has access to massive ecosystem of 3rd party libraries</li>
+            <li>And is excessively reliable (no system side effects)</li>
+        </ul>
+        <p><br /><br /></p>
+        <h2 id="part-1-code-that-runs-anywhere-but-isn-t-one-language">Part 1: Code That Runs Anywhere But isn&#39;t One Language</h2>
+        <!-- Windows comes with Powershell/CMD. Minimal Linux and MacOS come with some kind of bash/zsh/dash/sh. So there is no unified script that runs out-of-the-box all major systems... right? -->
+        <p>Save the following as <code>hello_world.ps1</code>. <br />Doesn&#39;t matter what OS, just add the execute permission, and type <code>./hello_world.ps1</code> in your cmd/terminal/console.<br /></p>
+        <pre><code class="lang-sh"><span class="hljs-meta">#!/usr/bin/env sh</span>
+    <span class="hljs-built_in">echo</span> --% &gt;/dev/null;: <span class="hljs-string">' | out-null
+    &lt;#'</span>
+
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"hello world"</span> <span class="hljs-comment"># sh</span>
+
+    <span class="hljs-built_in">exit</span> <span class="hljs-comment">#&gt;</span>
+
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"hello world"</span> <span class="hljs-comment"># powershell</span>
+    </code></pre>
+        <!-- Note: this is ***not*** the universal script. -->
+        <p>
+            Lets focus on a few points:
+            <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
+        </p>
+        <ol>
+            <li>The example above doesn&#39;t just work for hello world. All powershell code will work (or not work) as it normally would on Windows. 99.999% of bash/zsh/sh will also &quot;just work&quot; if you paste it in the right place. The only exception for shell code is that <code>#&gt;</code> needs to be escaped (even if it appears in a shell comment).</li>
+            <li>
+                How is the example above possible?
+                <ul>
+                    <li>At runtime, Windows only cares about the file extension (.ps1). That extension tells Windows to run the file as powershell. On good operating systems like Linux and MacOS, the file extension happens to not matter. They use the shebang (<code>#!/usr/bin/env sh</code>) to know how to run the script.</li>
+                    <li>That explains why the execution is different and possible, but why doesn&#39;t the execution fail/error on one system or the other? Simple. Every line of that file is valid bash and valid powershell ... at the same time. Its a <a href="https://www.youtube.com/watch?v=2L6EE6ZgURE">polyglot program</a>. Bash and powershell have a lot of overlap in their syntax. We use that overlap/non-overlap to our advantage. <a href="https://stackoverflow.com/a/67292076/4367134">The details are really fun (see my stackoverflow answere</a>, but lets stay focused: we want a universal script not two scripts in one file.</li>
+                </ul>
+            </li>
+        </ol>
+        <!-- While cute, this script is only semi-universal because it is merely two platform-specific scripts in one file. I wouldn't be writing this post if the true universal script was anything less than a unified (one language), practical, editable (not compiled/mangled), standalone (no side-effects), reliable (version-pinned spec-based), general-purpose script with support for packages/modules. -->
+        <h3 id="hasn-t-a-universal-executable-been-done-cosmopolitan-">Hasn&#39;t a universal <em>executable</em> been done? (Cosmopolitan)</h3>
+        <p>Executable != script. I like opening up the hood of my car, and replacing/removing whatever I feel like. And I like my scripts the same way: customizable (not compiled). Justine&#39;s <strong>much more impressive</strong> <a href="https://justine.lol/ape.html">αcτµαlly pδrταblε εxεcµταblε</a> AKA <a href="https://github.com/jart/cosmopolitan">Cosmopolitan</a> is a must-read if you have not heard of their project already.</p>
+        <p><br /><br /></p>
+        <h2 id="part-2-one-language">Part 2: One Language</h2>
+        <p>We want the &quot;hello world&quot; part of our script to be in one language. How can we do this?</p>
+        <p>Getting either bash or powershell running on the opposite system (e.g. bash on Windows or powershell on Linux/Mac) would be the next logical step. Maybe a little too logical.</p>
+        <p>The only other option, a third language, would be absurd. Why? Because it would require our script to simultaniously be valid bash syntax, valid powershell syntax, AND valid in some third language&#39;s syntax. Two languages is hard, &quot;hello world&quot; in a three-language polyglot is masochist territory, but unknown general-purpose programs in a three-language polyglot? It&#39;s basically a non-option. You&#39;d need some kind of mental disorder to even try.</p>
+        <p><br /><br /></p>
+        <h3 id="next-step-cramming-in-a-3rd-language">Next Step: Cramming in a 3rd Language</h3>
+        <p>So what&#39;s the 3rd language?</p>
+        <!--
+    Well, some will object to my answer - "Jeff, it didn't have to be this way!".
+
+    Yes, there are many syntaxes: indent-based Python, end-based Ruby, C-style languages, Elixir, ~~Haskell~~ (I don't have that kind of disorder). We could even use Zig, Go, or Rust for this "script" thanks to some hacks later ([Rust supports shebangs by the way](https://stackoverflow.com/a/41325202/4367134)).
+
+    But how many are syntactically compatible?
+
+    Idk, at least one 😁.
+    -->
+        <p>Some may object to my answer, but deep down you and I both know it was fate.<br />The world&#39;s first universal scripting language could only ever be one language.</p>
+        <ul>
+            <li>The language no programmer can truly escape.</li>
+            <li>The language destined from birth to rule over all languages.</li>
+            <li>The language that crashes iPhones, CloudFlare, Teslas, and homemade websites alike.</li>
+        </ul>
+        <p>I&#39;m, of course, talking about:</p>
+        <p><br /></p>
+        <p>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+        </p>
+        <p>
+            <img src="https://github.com/user-attachments/assets/1c2779a6-bbce-480e-9abf-ee61c3235403" alt="javascript i love it" /> <br />(<a href="https://www.youtube.com/watch?v=Uo3cL4nrGOk"><em>context</em></a
+            >)
+        </p>
+        <p>
+            <br />
+            <br />
+        </p>
+        <p>Not only can one file be valid JavaScript, valid powershell, and valid bash simultaneously -- but actually, <strong>any possible combination of JavaScript, powershell, and bash code can be fit all into the same file, all at the same time.</strong> (with only a little bit of escaping)</p>
+        <p>
+            <br />
+            <br />
+        </p>
+        <p><code>hello_world.js.sh.ps1</code></p>
+        <pre><code class="lang-sh"><span class="hljs-comment">#!/usr/bin/env sh</span>
+    <span class="hljs-string">"\""</span>,`$(echo --% <span class="hljs-string">' |out-null)" &gt;$null; &lt;#${/*'</span>&gt;<span class="hljs-regexp">/dev/</span>null )` <span class="hljs-number">2</span>&gt;<span class="hljs-regexp">/dev/</span>null;
+
+        echo <span class="hljs-string">"Hello bash/sh"</span>
+
+    <span class="hljs-keyword">exit</span> <span class="hljs-comment">#&gt;</span>
+
+        echo <span class="hljs-string">"Hello powershell"</span>
+
+    &lt;<span class="hljs-comment"># */0}`;</span>
+
+        console.log(<span class="hljs-string">"Hello JavaScript"</span>)
+
+    <span class="hljs-regexp">//</span> <span class="hljs-comment">#&gt;</span>
+    </code></pre>
+        <p>
+            <em>The bash syntax highlighting on Github is a bit off. <a href="https://github.com/jeff-hykin/better-shell-syntax">Sorry about that</a>.</em>
+            <br />
+            If that script looks painful, you&#39;d better leave. We&#39;re just getting warmed up.
+            <br />
+            <br />
+        </p>
+        <p>The JavaScript above isn&#39;t being executed, but that is so easy to fix. We can just have the script execute itself! You might even call this a case of cross-language shallow recursion.</p>
+        <pre><code class="lang-sh"><span class="hljs-comment">#!/usr/bin/env sh</span>
+    <span class="hljs-string">"\""</span>,`$(echo --% <span class="hljs-string">' |out-null)" &gt;$null; &lt;#${/*'</span>&gt;<span class="hljs-regexp">/dev/</span>null )` <span class="hljs-number">2</span>&gt;<span class="hljs-regexp">/dev/</span>null;
+
+        js_runtime <span class="hljs-string">"$0"</span>
+
+    <span class="hljs-keyword">exit</span> <span class="hljs-comment">#&gt;</span>
+
+        js_runtime <span class="hljs-string">"$PSCommandPath"</span>
+
+    &lt;<span class="hljs-comment"># */0}`;</span>
+
+        console.log(<span class="hljs-string">"Hello JavaScript"</span>)
+
+    <span class="hljs-regexp">//</span> <span class="hljs-comment">#&gt;</span>
+    </code></pre>
+        <p>There&#39;s 2 catestrophic and 1 minor issue this though:</p>
+        <ol>
+            <li>the JavaScript runtime</li>
+            <li>the JavaScript runtime</li>
+            <li>and the JavaScript runtime (respectively)</li>
+        </ol>
+        <p><br /><br /></p>
+        <h2 id="part-3-the-runtime-problem">Part 3: The Runtime Problem</h2>
+        <p>Most OS&#39;s don&#39;t ship with a JavaScript runtime (the minor problem). But, do you know what the NodeJS installer scripts happen to be written in? Thats right, powershell and sh 😁. If there isn&#39;t a JS runtime, the script could just install NodeJS and then run itself.</p>
+        <p>One issue down. Next issue:</p>
+        <ol>
+            <li>The world&#39;s first universal script should be reliable.</li>
+            <li>We just installed NodeJS.</li>
+        </ol>
+        <p>Our script may already be criminal, but automatically installing NodeJS? Even criminals have standards. We&#39;re going to solve the reliability problem by using a good JS runtime, like Deno.</p>
+        <p>Next issue!</p>
+        <p><br /><br /></p>
+        <h2 id="part-4-modules-modules-modules-">Part 4: Modules 👏 Modules 👏 Modules 👏</h2>
+        <p>Two down, final runtime issue:</p>
+        <ol>
+            <li>JavaScript doesn&#39;t work without NPM packages (obviously).</li>
+            <li>The world&#39;s first universal script should not have side effects. (no <code>node_modules</code> companion folder or install side effects)</li>
+        </ol>
+        <p>Well, not only does Deno support everyone&#39;s favorite supply chain attack vector, but it does it without <code>node_modules</code>, bundling, or a clunky <code>npm install</code> command.</p>
+        <p>And for security and reliability -- if you&#39;re into that sort of thing -- versions can also be pinned quite easily:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">import</span> malware <span class="hljs-keyword">from</span> <span class="hljs-string">"https://esm.sh/chalk@^5.6.2"</span>
+    <span class="hljs-keyword">import</span> chalk <span class="hljs-keyword">from</span> <span class="hljs-string">"https://esm.sh/chalk@5.6.2"</span>
+    <span class="hljs-keyword">import</span> isEven <span class="hljs-keyword">from</span> <span class="hljs-string">"https://esm.sh/is-even@1.0.0"</span>
+    <span class="hljs-built_in">console</span>.log(isEven(<span class="hljs-number">2</span>)) <span class="hljs-comment">// true</span>
+    </code></pre>
+        <p>You can even import code straight from your github:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">import</span> thing from "https:<span class="hljs-comment">//raw.githubusercontent.com/YOUR_GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/path/to/your/code.ts"</span>
+    <span class="hljs-comment">// or use esm.sh to import your disgusting commonjs code from github:</span>
+    <span class="hljs-keyword">import</span> thing from "https:<span class="hljs-comment">//esm.sh/gh/YOUR_GITHUB_USERNAME/REPO@BRANCH_OR_TAG/path/to/your/code.ts"</span>
+    </code></pre>
+        <p>All modules are downloaded, imported, and cached automatically without interfering with an existing Deno installation (thanks @<a href="https://en.wikipedia.org/wiki/Ryan_Dahl">Ry</a>!).</p>
+        <!--
+    If the code is not availble on NPM, no problem. The guys at Esm.sh have found a way to dynamically purify your dirty Nodejs code directly from Github.
+
+    ```js
+    import thing from "https://esm.sh/gh/YOUR_GITHUB_USERNAME/REPO@BRANCH_OR_TAG/path/to/your/code.ts"
+    ```
+
+    Of course, if the code is well written TS/JS, it can be imported normally with relative path or directly from Github. 
+
+    ```js
+    import thing from "./thing.js"
+
+    import thing from "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/path/to/your/code.ts"
+
+    // if you have "sloppy" (nodejs-style) typescript imports, use esm.sh
+
+    // or import JS directly from any cdn/gitlab/git-tea/your own server/etc
+    ```
+
+    Without a node_modules directory what is a developer supposed to `rm -rf` when the packages randomly stop working? It can be a challenging idea for many Node devs to grasp, but Deno introduces the idea of packages that don't randomly stop working. -->
+        <p><br /><br /></p>
+        <!--
+
+    ## Part 5: Extreme Reliability
+
+    Catestrophic problem #1 was never fixed so lets return to that. 
+    - Can the bash installer and powershell installer for Deno be crammed into our 3-way hello world script?
+    - What about installer side effects?
+    - What about runtime versioning?
+
+    If the script was tested with Deno 2.4.3, then we install exactly Deno 2.4.3. Versioning solved. Next!
+
+    The Deno installer, like all installers, has side effects. Thankfully the Deno installers are 1000 lines shorter than Node's. Even better, Deno can execute code as a standalone binary. Meaning it is not necessary to modify the user's system.
+
+    We can turn the installer into a mere Deno-version-downloader by simply setting `DENO_INSTALL` and `deno_version`. By having our work-in-progress script download a specific deno executable to `$HOME/.deno/$deno_version/$HERE` we get the benefits of versioning, caching, and prevention of all meaningful side effects (the user's already-installed deno, if any, remains untouched). If there is already an executable at `$HOME/.deno/$deno_version/` then the script runs itself with that executable. If that path is empty, the script downloads the correct version of Deno and then runs itself.
+
+    -->
+        <h2 id="part-5-put-it-all-together">Part 5: Put It All Together</h2>
+        <p>After cramming the entire Deno installer into the top of the script, tweaking it to not modify the user&#39;s path or have other side effects, and pinning it to the specific Deno version we used for testing (for maximum reliability), turning around three times and signing the contract with the devil, here is the world&#39;s first universal hello world script:</p>
+        <pre><code class="lang-js"><span class="hljs-meta">#!/usr/bin/env sh</span>
+    <span class="hljs-string">"\""</span>,`$(<span class="hljs-built_in">echo</span> --% <span class="hljs-string">' |out-null)" &gt;$null;function :{};function getDenoVersion{&lt;#${/*'</span>&gt;/dev/null )` 2&gt;/dev/null;<span class="hljs-function"><span class="hljs-title">getDenoVersion</span></span>() { <span class="hljs-comment">#&gt;</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"2.5.3"</span>;: --% <span class="hljs-string">' |out-null &lt;#'</span>;};DENO_INSTALL=<span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.deno/<span class="hljs-variable">$(getDenoVersion)</span>"</span>;deno_version=<span class="hljs-string">"v<span class="hljs-variable">$(getDenoVersion)</span>"</span>;deno=<span class="hljs-string">"<span class="hljs-variable">$DENO_INSTALL</span>/bin/deno"</span>;target_script=<span class="hljs-string">"<span class="hljs-variable">$0</span>"</span>;disable_url_run=<span class="hljs-string">""</span>;<span class="hljs-keyword">if</span> [ -n <span class="hljs-string">"<span class="hljs-variable">$_u</span>"</span> ] &amp;&amp; [ -z <span class="hljs-string">"<span class="hljs-variable">$disable_url_run</span>"</span> ];<span class="hljs-keyword">then</span> target_script=<span class="hljs-string">"<span class="hljs-variable">$_u</span>"</span>;<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">if</span> [ -x <span class="hljs-string">"<span class="hljs-variable">$deno</span>"</span> ];<span class="hljs-keyword">then</span> <span class="hljs-built_in">exec</span> <span class="hljs-string">"<span class="hljs-variable">$deno</span>"</span> run -q -A --no-lock --no-config <span class="hljs-string">"<span class="hljs-variable">$target_script</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$@</span>"</span>;<span class="hljs-keyword">elif</span> [ <span class="hljs-_">-f</span> <span class="hljs-string">"<span class="hljs-variable">$deno</span>"</span> ];<span class="hljs-keyword">then</span> chmod +x <span class="hljs-string">"<span class="hljs-variable">$deno</span>"</span> &amp;&amp; <span class="hljs-built_in">exec</span> <span class="hljs-string">"<span class="hljs-variable">$deno</span>"</span> run -q -A --no-lock --no-config <span class="hljs-string">"<span class="hljs-variable">$target_script</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$@</span>"</span>;<span class="hljs-keyword">fi</span>;<span class="hljs-function"><span class="hljs-title">has</span></span> () { <span class="hljs-built_in">command</span> -v <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> &gt;/dev/null;};<span class="hljs-keyword">if</span> ! has curl;<span class="hljs-keyword">then</span> <span class="hljs-keyword">if</span> ! has wget;<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-title">curl</span></span> () { wget --output-document=<span class="hljs-string">"<span class="hljs-variable">$5</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$6</span>"</span>;};<span class="hljs-keyword">else</span> <span class="hljs-built_in">echo</span> <span class="hljs-string">"Sorry this script needs curl or wget, please install one or the other and re-run"</span>;<span class="hljs-built_in">exit</span> 1;<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$(uname)</span>"</span> = <span class="hljs-string">"Darwin"</span> ];<span class="hljs-keyword">then</span> <span class="hljs-function"><span class="hljs-title">unzip</span></span> () { /usr/bin/tar xvf <span class="hljs-string">"<span class="hljs-variable">$4</span>"</span> -C <span class="hljs-string">"<span class="hljs-variable">$2</span>"</span> 2&gt;/dev/null 1&gt;/dev/null;};<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">if</span> ! has unzip &amp;&amp; ! has 7z;<span class="hljs-keyword">then</span> <span class="hljs-built_in">echo</span> <span class="hljs-string">"Either the unzip or 7z command are needed for this script"</span>;<span class="hljs-built_in">echo</span> <span class="hljs-string">"Should I try to install unzip for you?"</span>;<span class="hljs-built_in">read</span> ANSWER;<span class="hljs-built_in">echo</span>;<span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$ANSWER</span>"</span> =~ ^[Yy] ];<span class="hljs-keyword">then</span> <span class="hljs-keyword">if</span> has nix-shell;<span class="hljs-keyword">then</span> unzip_path=<span class="hljs-string">"<span class="hljs-variable">$(NIX_PATH='nixpkgs=https://github.com/NixOS/nixpkgs/archive/release-25.05.tar.gz' nix-shell -p unzip which --run "which unzip")</span>"</span> <span class="hljs-built_in">alias</span> unzip=<span class="hljs-string">"<span class="hljs-variable">$unzip_path</span>"</span> <span class="hljs-keyword">else</span>;<span class="hljs-keyword">if</span> has apt-get;<span class="hljs-keyword">then</span> _install=<span class="hljs-string">"apt-get install unzip -y"</span>;<span class="hljs-keyword">elif</span> has dnf;<span class="hljs-keyword">then</span> _install=<span class="hljs-string">"dnf install unzip -y"</span>;<span class="hljs-keyword">elif</span> has pacman;<span class="hljs-keyword">then</span> _install=<span class="hljs-string">"pacman -S --noconfirm unzip"</span>;<span class="hljs-keyword">else</span> <span class="hljs-built_in">echo</span> <span class="hljs-string">"Sorry, I don't know how to install unzip on this system"</span>;<span class="hljs-built_in">echo</span> <span class="hljs-string">"Please install unzip manually and re-run this script"</span>;<span class="hljs-built_in">exit</span> 1;<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$(whoami)</span>"</span> = <span class="hljs-string">"root"</span> ];<span class="hljs-keyword">then</span> <span class="hljs-string">"<span class="hljs-variable">$_install</span>"</span>;<span class="hljs-keyword">elif</span> has sudo;<span class="hljs-keyword">then</span> sudo <span class="hljs-string">"<span class="hljs-variable">$_install</span>"</span>;<span class="hljs-keyword">elif</span> has doas;<span class="hljs-keyword">then</span> doas <span class="hljs-string">"<span class="hljs-variable">$_install</span>"</span>;<span class="hljs-keyword">else</span> <span class="hljs-string">"<span class="hljs-variable">$_install</span>"</span>;<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">if</span> ! has unzip;<span class="hljs-keyword">then</span> <span class="hljs-built_in">echo</span> <span class="hljs-string">""</span>;<span class="hljs-built_in">echo</span> <span class="hljs-string">"So I couldn't find an 'unzip' or '7z' command"</span>;<span class="hljs-built_in">echo</span> <span class="hljs-string">"And I tried to auto install unzip, but it seems that failed"</span>;<span class="hljs-built_in">echo</span> <span class="hljs-string">"Please install the unzip or 7z command manually then re-run this script"</span>;<span class="hljs-built_in">exit</span> 1;<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">if</span> ! <span class="hljs-built_in">command</span> -v unzip &gt;/dev/null &amp;&amp; ! <span class="hljs-built_in">command</span> -v 7z &gt;/dev/null;<span class="hljs-keyword">then</span> <span class="hljs-built_in">echo</span> <span class="hljs-string">"Error: either unzip or 7z is required to install Deno (see: https://github.com/denoland/deno_install#either-unzip-or-7z-is-required )."</span> 1&gt;&amp;2;<span class="hljs-built_in">exit</span> 1;<span class="hljs-keyword">fi</span>;<span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$OS</span>"</span> = <span class="hljs-string">"Windows_NT"</span> ];<span class="hljs-keyword">then</span> target=<span class="hljs-string">"x86_64-pc-windows-msvc"</span>;<span class="hljs-keyword">else</span> <span class="hljs-keyword">case</span> $(uname -sm) <span class="hljs-keyword">in</span> <span class="hljs-string">"Darwin x86_64"</span>) target=<span class="hljs-string">"x86_64-apple-darwin"</span> ;;<span class="hljs-string">"Darwin arm64"</span>) target=<span class="hljs-string">"aarch64-apple-darwin"</span> ;;<span class="hljs-string">"Linux aarch64"</span>) target=<span class="hljs-string">"aarch64-unknown-linux-gnu"</span> ;;*) target=<span class="hljs-string">"x86_64-unknown-linux-gnu"</span> ;;<span class="hljs-keyword">esac</span> <span class="hljs-keyword">fi</span>;deno_uri=<span class="hljs-string">"https://dl.deno.land/release/<span class="hljs-variable">${deno_version}</span>/deno-<span class="hljs-variable">${target}</span>.zip"</span>;deno_install=<span class="hljs-string">"<span class="hljs-variable">${DENO_INSTALL:-$HOME/.deno}</span>"</span>;bin_dir=<span class="hljs-string">"<span class="hljs-variable">$deno_install</span>/bin"</span>;exe=<span class="hljs-string">"<span class="hljs-variable">$bin_dir</span>/deno"</span>;<span class="hljs-keyword">if</span> [ ! <span class="hljs-_">-d</span> <span class="hljs-string">"<span class="hljs-variable">$bin_dir</span>"</span> ];<span class="hljs-keyword">then</span> mkdir -p <span class="hljs-string">"<span class="hljs-variable">$bin_dir</span>"</span>;<span class="hljs-keyword">fi</span>;curl --fail --location --progress-bar --output <span class="hljs-string">"<span class="hljs-variable">$exe</span>.zip"</span> <span class="hljs-string">"<span class="hljs-variable">$deno_uri</span>"</span>;<span class="hljs-keyword">if</span> <span class="hljs-built_in">command</span> -v unzip &gt;/dev/null;<span class="hljs-keyword">then</span> unzip <span class="hljs-_">-d</span> <span class="hljs-string">"<span class="hljs-variable">$bin_dir</span>"</span> -o <span class="hljs-string">"<span class="hljs-variable">$exe</span>.zip"</span>;<span class="hljs-keyword">else</span> 7z x -o<span class="hljs-string">"<span class="hljs-variable">$bin_dir</span>"</span> -y <span class="hljs-string">"<span class="hljs-variable">$exe</span>.zip"</span>;<span class="hljs-keyword">fi</span>;chmod +x <span class="hljs-string">"<span class="hljs-variable">$exe</span>"</span>;rm <span class="hljs-string">"<span class="hljs-variable">$exe</span>.zip"</span>;<span class="hljs-built_in">exec</span> <span class="hljs-string">"<span class="hljs-variable">$deno</span>"</span> run -q -A --no-lock --no-config <span class="hljs-string">"<span class="hljs-variable">$0</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$@</span>"</span>;<span class="hljs-comment">#&gt;};$DenoInstall = "${HOME}/.deno/$(getDenoVersion)";$BinDir = "$DenoInstall/bin";$DenoExe = "$BinDir/deno.exe";$TargetScript = "$PSCommandPath";$DisableUrlRun = "";if ($Env:_u -and $DisableUrlRun) { $TargetScript = "$Env:_u";};if (-not(Test-Path -Path "$DenoExe" -PathType Leaf)) { $DenoZip = "$BinDir/deno.zip";$DenoUri = "https://github.com/denoland/deno/releases/download/v$(getDenoVersion)/deno-x86_64-pc-windows-msvc.zip";[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;if (!(Test-Path $BinDir)) { New-Item $BinDir -ItemType Directory | Out-Null;};curl.exe --ssl-revoke-best-effort -Lo $DenoZip $DenoUri;tar.exe xf $DenoZip -C $BinDir;Remove-Item $DenoZip;};&amp; "$DenoExe" run -q -A --no-lock --no-config "$TargetScript" @args;Exit $LastExitCode;&lt;#  </span>
+    <span class="hljs-comment"># */0}`;</span>
+    console.log(<span class="hljs-string">"Hello World"</span>) // dont get rid of this comment -&gt; <span class="hljs-comment">#&gt;</span>
+    </code></pre>
+        <details>
+            <summary>If you want the relatively readable version click here</summary>
+            <br />
+            The installer/setup code is ~3800 characters or ~40 meaninful lines of code. Many parts are optional, so customization could compress it quite a lot. If someone really wanted to, I bet a hand-crafted code-golfed version would be under 300 characters.<br />
+
+            <br />
+            Expanded the script for readability it looks like this:
+
+            <code>js #!/usr/bin/env sh &quot;\&quot;&quot;,`$(echo --% &#39; |out-null)&quot; &gt;$null;function :{};function getDenoVersion{&lt;#${/*&#39;&gt;/dev/null )` 2&gt;/dev/null;getDenoVersion() { #&gt; echo &quot;2.5.3&quot;; : --% &#39; |out-null &lt;#&#39;; }; # getDenoVersion (above) exists as both a bash and powershell function so that DENO_VERSION_HERE is only mentioned in one place (easy to hand-edit) # NOTE: semicolons at the end of lines are important for when this script is automatically crushed into a few lines DENO_INSTALL=&quot;$HOME/.deno/$(getDenoVersion)&quot;; deno_version=&quot;v$(getDenoVersion)&quot;; deno=&quot;$DENO_INSTALL/bin/deno&quot;; target_script=&quot;$0&quot;; disable_url_run=&quot;&quot;; # read &quot;Part 6: Going Beyond: Remote Scripts&quot; before trying to understand this block # if using the universal one-liner runner, e.g. # function iex { alias irm=&#39;curl -fsSL $url_|sh;:&#39;;t=${1#?};eval export ${t%|*};};iex &#39;$url_=&quot;URL_TO_THAT_FILE&quot;;irm $url_|iex&#39; # then the u env var will be set, and we NEED that env var because # $0 will NOT be the path to this script, because there is no path to this script in that case # (the script wouldn&#39;t be a downloaded file, its just running inline as the output of curl) # so if that var is set, that becomes the new target_script if [ -n &quot;$url_&quot; ] &amp;&amp; [ -z &quot;$disable_url_run&quot; ];then # if no http, then add https:// if [ &quot;${url_#http}&quot; = &quot;$url_&quot; ]; then url_=&quot;https://$url_&quot;; fi; target_script=&quot;$url_&quot;; fi; # # try to run immediately # if [ -x &quot;$deno&quot; ];then exec &quot;$deno&quot; run -A -q --no-lock --no-config &quot;$target_script&quot; &quot;$@&quot;; fi; # # the official deno installer with parts commented out # set -e; if ! command -v unzip &gt;/dev/null &amp;&amp; ! command -v 7z &gt;/dev/null;then echo &quot;Error: either unzip or 7z is required to install Deno (see: https://github.com/denoland/deno_install#either-unzip-or-7z-is-required ).&quot; 1&gt;&amp;2; exit 1; fi; if [ &quot;$OS&quot; = &quot;Windows_NT&quot; ];then target=&quot;x86_64-pc-windows-msvc&quot;; else case $(uname -sm) in &quot;Darwin x86_64&quot;) target=&quot;x86_64-apple-darwin&quot; ;; &quot;Darwin arm64&quot;) target=&quot;aarch64-apple-darwin&quot; ;; &quot;Linux aarch64&quot;) target=&quot;aarch64-unknown-linux-gnu&quot; ;; *) target=&quot;x86_64-unknown-linux-gnu&quot; ;; esac fi; # Arg-parsing commended out because all args are passed to script (stuff like --help should go to the script) # print_help_and_exit() { # echo &quot;Setup script for installing deno # Options: # -y, --yes # Skip interactive prompts and accept defaults # --no-modify-path # Don&#39;t add deno to the PATH environment variable # -h, --help # Print help # &quot; # echo &quot;Note: Deno was not installed&quot;; # exit 0; # }; # # # Simple arg parsing - look for help flag, otherwise # # ignore args starting with &#39;-&#39; and take the first # # positional arg as the deno version to install # for arg in &quot;$@&quot;; do # case &quot;$arg&quot; in # &quot;-h&quot;) # print_help_and_exit # ;; # &quot;--help&quot;) # print_help_and_exit # ;; # &quot;-&quot;*) ;; # *) # if [ -z &quot;$deno_version&quot; ];then # deno_version=&quot;$arg&quot; # fi # ;; # esac # done # if [ -z &quot;$deno_version&quot; ];then # deno_version=&quot;$(curl -s https://dl.deno.land/release-latest.txt)&quot; # fi deno_uri=&quot;https://dl.deno.land/release/${deno_version}/deno-${target}.zip&quot;; deno_install=&quot;${DENO_INSTALL:-$HOME/.deno}&quot;; bin_dir=&quot;$deno_install/bin&quot;; exe=&quot;$bin_dir/deno&quot;; if [ ! -d &quot;$bin_dir&quot; ];then mkdir -p &quot;$bin_dir&quot;; fi; curl --fail --location --progress-bar --output &quot;$exe.zip&quot; &quot;$deno_uri&quot;; if command -v unzip &gt;/dev/null;then unzip -d &quot;$bin_dir&quot; -o &quot;$exe.zip&quot;; else 7z x -o&quot;$bin_dir&quot; -y &quot;$exe.zip&quot;; fi; chmod +x &quot;$exe&quot;; rm &quot;$exe.zip&quot;; # commented out below because we don&#39;t want to modify the user&#39;s env/path (no side effects) # echo &quot;Deno was installed successfully to $exe&quot; # run_shell_setup() { # $exe run -A --reload jsr:@deno/installer-shell-setup/bundled &quot;$deno_install&quot; &quot;$@&quot; # } # # If stdout is a terminal, see if we can run shell setup script (which includes interactive prompts) # if [ -z &quot;$CI&quot; ] &amp;&amp; [ -t 1 ] &amp;&amp; $exe eval &#39;const [major, minor] = Deno.version.deno.split(&quot;.&quot;); if (major &lt; 2 &amp;&amp; minor &lt; 42) Deno.exit(1)&#39;;then # if [ -t 0 ];then # run_shell_setup &quot;$@&quot; # else # # This script is probably running piped into sh, so we don&#39;t have direct access to stdin. # # Instead, explicitly connect /dev/tty to stdin # run_shell_setup &quot;$@&quot; &lt;/dev/tty # fi # fi # if command -v deno &gt;/dev/null;then # echo &quot;Run &#39;deno --help&#39; to get started&quot; # else # echo &quot;Run &#39;$exe --help&#39; to get started&quot; # fi # echo # echo &quot;Stuck? Join our Discord https://discord.gg/deno&quot; # # end of deno installer # # run self with deno (exec takes over, so no need to Exit) exec &quot;$deno&quot; run -A -q --no-lock --no-config &quot;$0&quot; &quot;$@&quot;; # # powershell portion # #&gt;}; $DenoInstall = &quot;${HOME}/.deno/$(getDenoVersion)&quot;; $BinDir = &quot;$DenoInstall/bin&quot;; $DenoExe = &quot;$BinDir/deno.exe&quot;; $TargetScript = &quot;$PSCommandPath&quot;; $DisableUrlRun = &quot;&quot;; # if using the universal one-liner runner, e.g. # function iex { alias irm=&#39;curl -fsSL $url_|sh;:&#39;;t=${1#?};eval export ${t%|*};};iex &#39;$url_=&quot;URL_TO_THAT_FILE&quot;;irm $url_|iex&#39; # then the u env var will be set, and we NEED that env var because # $0 will NOT be the path to this script, because there is no path to this script in that case # (the script wouldn&#39;t be a downloaded file, its just running inline as the output of curl) # so if that var is set, that becomes the new target_script if ($url_ -and -not($DisableUrlRun)) { # if no http, then add https:// if (-not($url -match &#39;^http&#39;)) { $url_=&quot;https://$url_&quot;; } $TargetScript = &quot;$url_&quot;; }; # if this deno version doesn&#39;t exist, get it if (-not(Test-Path -Path &quot;$DenoExe&quot; -PathType Leaf)) { $DenoZip = &quot;$BinDir/deno.zip&quot;; $DenoUri = &quot;https://github.com/denoland/deno/releases/download/v$(getDenoVersion)/deno-x86_64-pc-windows-msvc.zip&quot;; # GitHub requires TLS 1.2 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; if (!(Test-Path $BinDir)) { New-Item $BinDir -ItemType Directory | Out-Null; }; curl.exe --ssl-revoke-best-effort -Lo $DenoZip $DenoUri; tar.exe xf $DenoZip -C $BinDir; Remove-Item $DenoZip; # commented out below because we don&#39;t want to modify the user&#39;s path (no side effects) # $User = [System.EnvironmentVariableTarget]::User # $Path = [System.Environment]::GetEnvironmentVariable(&#39;Path&#39;, $User) # if (!(&quot;;${Path};&quot;.ToLower() -like &quot;*;${BinDir};*&quot;.ToLower())) { # [System.Environment]::SetEnvironmentVariable(&#39;Path&#39;, &quot;${Path};${BinDir}&quot;, $User) # $Env:Path += &quot;;${BinDir}&quot; # } # Write-Output &quot;Deno was installed successfully to ${DenoExe}&quot; # Write-Output &quot;Run &#39;deno --help&#39; to get started&quot; # Write-Output &quot;Stuck? Join our Discord https://discord.gg/deno&quot; # run self with deno }; &amp; &quot;$DenoExe&quot; run -A -q --no-lock --no-config &quot;$TargetScript&quot; @args; Exit $LastExitCode; &lt;# # */0}`; console.log(&quot;Hello World&quot;) // #&gt;</code>
+
+            <br /><br />
+        </details>
+
+        <h3 id="but-we-re-not-done-yet-">But we&#39;re not done yet!</h3>
+        <details>
+            <summary>click if you&#39;re not tired of reading stuff yet</summary>
+
+            The good: that program above is highly generic. Any JavaScript code that does not contain <code>#&gt;</code> can be safely added to that script. The problem: getting the script to the user. These universal scripts are most useful as a bootstrapping installers. But installer scripts are usually run via curl, e.g. <code>curl https://thing | sh</code>. Thats a problem because there is no &quot;path to itself&quot; for running the javascript if the script is being run dynamically.
+        </details>
+
+        <p>
+            <br />
+            <br />
+        </p>
+        <h2 id="part-6-remote-execution">Part 6: Remote Execution</h2>
+        <p>What is the point of a <em>universal</em> installer if we need different <em>OS-spectific</em> commands to run it remotely? (The answer is codebase maintaince, but lets ignore that reason.) For example the Deno installer says:</p>
+        <ol>
+            <li>Windows users run <code>irm https://deno.land/install.ps1 | iex</code></li>
+            <li>Linux/MacOS users run <code>curl -fsSL https://deno.land/install.sh | sh</code></li>
+        </ol>
+        <!-- While the script needs internet, don't be too disappointed.
+    1. Universal scripts are most useful as installers, and installers are going to need internet anyway. There isn't too many use-cases for making them work offline.
+    2. Just wait till I get my hands on Deno+[cosmopolitan libc](https://github.com/jart/cosmopolitan) and embed it as a base64 string. -->
+        <p>Two commands? More like too many commands. We need single, lets say ~120 char command, that runs on basically all operating systems. Maybe something like:</p>
+        <!-- function iex { alias irm='curl -fsSL $_u | sh ;: ';iex(){ cat;};eval "${1#?}";};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/072ee86790581669ea91be01bbc7ab381b619020/run/hello_world.js";irm $_u|iex' -->
+        <pre><code class="lang-sh"><span class="hljs-keyword">function</span> iex { <span class="hljs-built_in">alias</span> irm=<span class="hljs-string">'curl -fsSL $url_|sh;:'</span>;t=<span class="hljs-variable">${1#?}</span>;<span class="hljs-built_in">eval</span> <span class="hljs-built_in">export</span> <span class="hljs-variable">${t%|*}</span>;};iex <span class="hljs-string">'$url_="tinyurl.com/2rc5e9jk";irm $url_|iex'</span>
+    <span class="hljs-comment"># note the url is a shorted version of:</span>
+    <span class="hljs-comment"># https://raw.githubusercontent.com/jeff-hykin/universify/591b27031eb0ad3337a2c2bdb7464710cf9dbe85/run/hello_world.js</span>
+    </code></pre>
+        <p align="center">
+            <img width="494" height="471" alt="code crammed into rectangle" src="https://github.com/user-attachments/assets/cf5a530b-4bb3-4051-80b9-e9674512c403" />
+        </p>
+        <p align="center">(email <a href="mailto:jeff.hykin+uni_sticker@gmail.com">jeff.hykin+uni_sticker@gmail.com</a> if you want this as a vinyl sticker)</p>
+
+        <p><br /></p>
+        <p>Look, I know.</p>
+        <p>You&#39;re probably thinking &quot;Jeff that is the most BEAUTIFUL and ELEGANT self-documenting 129 chars I&#39;ve ever seen. You&#39;re extremely handsome, and everyone wants to hire you&quot;. To which I say, thank you! You&#39;re beautiful too! And if you read one more section you&#39;ll have the power to make your own beautiful universal one-liners!</p>
+        <!-- We're almost done, there's one last thing I want to share with you. -->
+        <!-- More elegant solutions will be possible as soon as Powershell 7 (instead of 5.1) becomes the out-of-the-box version on Windows.  -->
+        <!-- function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; }
+    function iex { irm() { curl -fsSL $_u|sh;};t=${1#?};eval export ${t%|*};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/150bc93afb82fb418dd818b7bfdf3a4948317cbf/run/hello_world.js";irm $_u|iex'
+    function iex { alias irm='curl -fsSL $_u|sh;:';iex(){ cat;};eval export ${1#?};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/eae24c36f943428640671c54949264a79c71e1f6/run/hello_world.js";irm $_u|iex'
+    function iex { alias irm='curl -fsSL $_u|sh;:';t=${1#?};eval export ${t%|*};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/eae24c36f943428640671c54949264a79c71e1f6/run/hello_world.js";irm $_u|iex'
+    function iex { irm(){ curl -fsSL $_u|sh; } irm=';:';iex(){ cat;};eval export ${1#?};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/eae24c36f943428640671c54949264a79c71e1f6/run/hello_world.js";irm $_u|iex'
+    function iex { alias irm='curl -fsSL $_u|sh;:';iex(){ cat;};eval ${1#?};};iex '$_u="https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js";irm $_u|iex'
+    function irm { alias iex=:;curl -fsSL "$1"|_u="$(u)" sh;};iex "$(irm "$(iex '$_u=')")"
+    function iex { irm () {  }; }; iex "iex ''; $(irm "$(iex '$_u=')")"
+
+    function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; };function iex { curl -fsSL "$1" | _u="$1" sh; };
+    `echo \`echo echo hi\` `
+    : `export _u=$(u);curl -fsSL "$_u" | sh`;
+    '$Env:_u=$(u);irm "$(u)"|iex'
+
+    $Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
+
+    ```sh
+    function u { echo 'https://raw.githubusercontent.com/jeff-hykin/universify/dd7d62280a582db00311e1cacff7460816204a4e/run/hello_world.js'; };$Env:_u=$(u) || export _u=$(u); irm "$(u)"|iex || clear;curl -fsSL "$_u" | sh
+    ``` -->
+        <p>
+            <br />
+            <br />
+        </p>
+        <h2 id="part-7-make-your-own-">Part 7: Make Your Own!</h2>
+        <!-- TODO: make to-esm default to esm.sh instead of npm: or jsr: -->
+        <ul>
+            <li>If you&#39;ve got bash code, use my bash2deno converter (<a href="https://jeff-hykin.github.io/bash2deno/">online</a> or <a href="https://github.com/jeff-hykin/bash2deno">cli</a>)</li>
+            <li>If you&#39;ve got NodeJS code, use my <a href="https://github.com/jeff-hykin/to-esm">to-esm</a> cli tool to convert those imports to proper ESM inputs.</li>
+            <li>If you&#39;re writing a script from scratch, dsherret&#39;s <a href="https://github.com/dsherret/dax">Dax</a> to make it easy on yourself</li>
+        </ul>
+        <p>Once you have a Deno script, there&#39;s only one step left. Use the <a href="https://github.com/jeff-hykin/universify">universify</a> cli to make it run anywhere (and print out a remote install URL snippet if you run it inside of a github project).</p>
+        <p>Example <code>your_script.ts</code>:</p>
+        <pre><code class="lang-ts"><span class="hljs-keyword">import</span> $ <span class="hljs-keyword">from</span> <span class="hljs-string">"https://esm.sh/@jsr/david__dax@0.43.2/mod.ts"</span>
+    <span class="hljs-keyword">import</span> { globSync } <span class="hljs-keyword">from</span> <span class="hljs-string">"node:fs"</span>
+
+    <span class="hljs-keyword">await</span> $<span class="hljs-string">`echo Hello World`</span>
+    <span class="hljs-keyword">await</span> $<span class="hljs-string">`rm -rf dist/`</span>
+    <span class="hljs-keyword">await</span> $<span class="hljs-string">`mkdir -p logs/`</span>
+    <span class="hljs-keyword">await</span> $<span class="hljs-string">`touch logs/log.txt`</span>
+    <span class="hljs-keyword">await</span> $<span class="hljs-string">`cat old_logs/log.txt`</span>;  <span class="hljs-comment">// const content = await $`old_logs/log.txt`.text()</span>
+    <span class="hljs-keyword">await</span> $<span class="hljs-string">`cp old_logs/log.txt logs/log.txt`</span>
+    <span class="hljs-keyword">await</span> $<span class="hljs-string">`sleep 5`</span>
+    <span class="hljs-keyword">await</span> $<span class="hljs-string">`which ffmpeg`</span>
+    <span class="hljs-keyword">await</span> $<span class="hljs-string">`pwd`</span>
+    <span class="hljs-keyword">await</span> $<span class="hljs-string">`exit`</span>
+
+    <span class="hljs-keyword">const</span> color = prompt(<span class="hljs-string">"Whats your favorite color?"</span>)
+
+    <span class="hljs-keyword">if</span> (confirm(<span class="hljs-string">`Run tests?`</span>)) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> each <span class="hljs-keyword">of</span> globSync<span class="hljs-string">`tests/**/*.js`</span>) {
+            <span class="hljs-keyword">await</span> $<span class="hljs-string">`echo Running <span class="hljs-subst">${each}</span>`</span>
+            <span class="hljs-keyword">await</span> $<span class="hljs-string">`deno run -A <span class="hljs-subst">${each}</span>`</span>
+            <span class="hljs-keyword">const</span> outputAsString = <span class="hljs-keyword">await</span> $<span class="hljs-string">`deno run -A <span class="hljs-subst">${each}</span>`</span>.text()
+        }
+    }
+    </code></pre>
+        <p>To make it run anywhere:</p>
+        <ol>
+            <li>Install Universify<br /></li>
+        </ol>
+        <pre><code class="lang-sh"><span class="hljs-comment"># Works on Linux/Windows/MacOS naturally</span>
+    <span class="hljs-keyword">function</span> iex { <span class="hljs-built_in">alias</span> irm=<span class="hljs-string">'curl -fsSL $url_|sh;:'</span>;t=<span class="hljs-variable">${1#?}</span>;<span class="hljs-built_in">eval</span> <span class="hljs-built_in">export</span> <span class="hljs-variable">${t%|*}</span>;};iex <span class="hljs-string">'$url_="https://raw.githubusercontent.com/jeff-hykin/deno-guillotine/refs/heads/master/run/install_uni.js";irm $url_|iex'</span>
+    </code></pre>
+        <details>
+            <summary>Click here if you want the manual install</summary>
+
+            <code>sh # install deno (they haven&#39;t universified their install ... yet) # Linux/Mac curl -fsSL https://deno.land/install.sh | sh # Windows irm https://deno.land/install.ps1 | iex # install universify deno install -n uni -Afgr &#39;https://raw.githubusercontent.com/jeff-hykin/universify/master/main/universify.js&#39;</code>
+        </details>
+
+        <ol>
+            <li>
+                <p>Convert your script<br /></p>
+                <pre><code class="lang-sh">uni ./your_script.ts --deno-version <span class="hljs-number">2.5</span><span class="hljs-number">.3</span>
+    </code></pre>
+            </li>
+            <li>
+                <p>
+                    Run your script<br />
+                    ```sh
+                </p>
+                <h1 id="run-locally">run locally</h1>
+                <p>./your_script</p>
+            </li>
+        </ol>
+        <h1 id="run-remotely-replace-the-url-with-your-own-">run remotely (replace the URL with your own)</h1>
+        <p>function iex { alias irm=&#39;curl -fsSL $_u|sh;:&#39;;t=\${1#?};eval export \${t%|*};};iex &#39;$_u=&quot;<a href='https://raw.githubusercontent.com/GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT";irm'>https://raw.githubusercontent.com/GITHUB_USERNAME/REPO_NAME/BRANCH_NAME_TAG_NAME_OR_COMMIT_HASH/PATH_TO_THIS_SCRIPT&quot;;irm</a> $_u|iex&#39; ```</p>
+        <p>
+            <br />
+            <br />
+        </p>
+        <h2 id="part-8-extras">Part 8: Extras</h2>
+        <p>As you may have noticed, many details were left out to keep the story moving. If you want to know what got left out, have your own cursed projects, or a startup with a cool idea don&#39;t hesitate to say hello. I&#39;m an AI Robotics PhD Student working with Boston Dynamic&#39;s Spot at Texas A&amp;M. You can find me on <a href="https://t.me/jeff_hykin">Telegram</a>, <a href="https://lemmy.world/u/jeff_hykin">Lemmy</a>, <a href="discordapp.com/users/266399494793330689">Discord</a>, <a href="mailto:jeff.hykin+uni@gmail.com">Email</a>, or <a href="https://github.com/jeff-hykin/universify">Github</a>.</p>
+        <p>
+            <br />
+            <br />
+        </p>
+        <h2 id="part-9-trust-security-auditing">Part 9: Trust / Security / Auditing</h2>
+        <p>If you care about confirming that <code>universify</code>-ed scripts are non-malicous, and confirming that they will stay that way, I have some good news. As much as I joke about security, auditability was design goal while creating universify:</p>
+        <ul>
+            <li>All the urls in the final output are controlled by the Deno team.</li>
+            <li>Extra files exist in the codebase showing every step of the transformation process. (You can make your own pretty easy)</li>
+            <li>There is a step by step <a href="https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-verify-this-isnt-malicious">&quot;how do I verify this isn&#39;t malicious&quot; guide</a> in the readme.</li>
+        </ul>
+        <p>
+            <br />
+            <br />
+        </p>
+        <h2 id="part-10-technicalities">Part 10: Technicalities</h2>
+        <p>Alright trolls, this is for you.</p>
+        <ol>
+            <li>
+                &quot;Doesn&#39;t matter what OS&quot;
+                <ol>
+                    <li>I only said that for the semi-universal script. And sure, you&#39;re right, the semi-universal script fails on TempleOS, Windows Vista, and probably a bunch of other super super old and/or quirky systems.</li>
+                    <li>Technically also the universal script doesn&#39;t run everywhere because the Deno runtime doesn&#39;t run on RISC-V (yet). But that is only temporary. In theory, as long as its slightly POSIX this technique still works for that OS, we just need to compile deno for it ourselves. The only truly unsupported systems are those that are both extremely non-posix and also happen to not execute .ps1 scripts with powershell ≥3.0. E.g. TempleOS, Windows Vista, etc.</li>
+                    <li>Okay there is one more technicality. Windows doesn&#39;t allow execution of remote scripts by default in the name of security. For it to truly run out-of-the-box either you will need to get your script <a href="https://www.microsoft.com/en-us/wdsi/filesubmission">certified by Microsoft</a> or the user will need to disable that policy in an Admin terminal, then run the one-liner.</li>
+                </ol>
+            </li>
+            <li>
+                Side effects / Reliability / Isolation
+                <ol>
+                    <li>Okay, there is actually a relevant side effect that has come to bite me, but not for the reason one might think (and I&#39;ve also already mitigated by default in <code>universify</code>). If running a script deno will check for a lock file in parent directories. If in a project that is using a newer version of Deno, the lock file version could be higher, and the script would be unable to parse it. I hit this a few times coming from Deno 1.x to Deno 2.x, but its fully mitigated with the <code>--no-lock</code> flag which is added by default anytime someone uses universify. Similar story for config files, which is why <code>--no-config</code> is also included by default. You can include your own lock/config with <code>--lock=</code> and <code>--config</code>. There can be similar issues with <code>node_modules</code> and <code>package.json</code> files, set <code>DENO_NO_PACKAGE_JSON=true</code> in the powershell/bash environment to avoid those entirely.</li>
+                    <li>Deno defaults to a shared cache for https modules <code>$HOME/.cache/deno</code> (or <code>$XDG_CACHE_HOME/deno</code> or <code>$HOME/Library/Caches/deno</code> or <code>C:\Users\USERNAME\AppData\Local\deno\</code>). This cache isn&#39;t anything nearly as problematic as a python or ruby cache because its done in a nice address-based way. However, there can be problems in two ways. First is a very rare issue. Deno does integrity checks. Sometimes these checks fail, I believe (possibly) because of different ways the checks were calculated across versions. Adding <code>--no-code-cache</code> is one way to get around this problem, adding <code>--reload</code> is another way, however I don&#39;t recommend either. If you really want to avoid conflict, set <code>DENO_DIR</code> env var to where ever you&#39;d like to keep a cache. The second issue is also rare and probably only because of the Deno 1.x to 2.x change. Deno keeps track of caches with a big (I think) sql lite file. When using a really large range of deno versions on the same cache, there can be incompatibilities on that database. Again, set <code>DENO_DIR</code> to avoid this issue.</li>
+                    <li>Technically Deno is not a standalone executable because it depends on libc. <strong>And this actually matters</strong> because it is why the Deno executable fails on Alpine Linux, and MacOS Mojave (and older). I&#39;m waiting for a statically linked libc version, maybe one day we&#39;ll get it.</li>
+                    <li>Yeah, putting something in the user&#39;s home directory (e.g. universify&#39;s choice of <code>$HOME/.deno/$deno_version</code>) is a side effect. Storing everything in a tmp folder is completely possible. You&#39;re welcome to bug me about adding a CLI option if you really want there to be no side effects. It will very inefficient, as you will probably also want to use <code>--no-code-cache</code>, <code>--no-lock</code>, <code>--no-config</code>, <code>--quiet</code>, <code>--no-npm</code>, set <code>DENO_DIR</code> to a tmp folder, and set <code>DENO_NO_PACKAGE_JSON=true</code> for absolute stand-alone-ness.</li>
+                </ol>
+            </li>
+            <li>Running local scripts. There&#39;s technically two files generated, not just a .ps1 file. I explain why at the <a href="https://github.com/jeff-hykin/universify?tab=readme-ov-file#how-do-i-make-my-own-universal-installer-script">bottom of this section</a> in the readme.</li>
+        </ol>
+    </body>
+</html>
