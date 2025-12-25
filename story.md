@@ -540,7 +540,7 @@ function iex { alias irm='curl -fsSL $url_|sh;:';t=${1#?};eval export ${t%|*};};
   <img width="494" height="471" alt="code crammed into rectangle" src="https://github.com/user-attachments/assets/cf5a530b-4bb3-4051-80b9-e9674512c403" />
 </p>
 <p align="center">
-  (email <a href="mailto:jeff.hykin+uni_sticker@gmail.com">jeff.hykin+uni_sticker@gmail.com</a> if you want a vinyl sticker of world's first universal script)
+  (email <a href="mailto:jeff.hykin+uni_sticker@gmail.com">jeff.hykin+uni_sticker@gmail.com</a> if you want this as a vinyl sticker)
 </p>
 
 
