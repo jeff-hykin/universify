@@ -17,7 +17,17 @@ If you end up enjoying this, consider starring the [repo](https://github.com/jef
 <!-- <br><br>
 Allow me to be a guide down this wonderful rabbit hole. Not only are universal scripts possible, they're practically practical. -->
 
-## Part 1: Code That Runs Anywhere (But isn't Universal)
+Windows comes with Powershell/CMD. Minimal Linux and MacOS come with some kind of bash/zsh/dash/sh. So there is no way to write a script in one language and have it run out-of-the-box all major systems... right?
+
+
+Well if you read till the end you'll be able to make your own human readable/editable script that:
+- Works on a fresh install of every major operating system
+- Has all it's **logic** in one language
+- And has access to massive ecosystem of 3rd party libraries
+- Is excessively reliable, no system side effects
+
+
+## Part 1: Code That Runs Anywhere But isn't One Language
 
 <!-- Windows comes with Powershell/CMD. Minimal Linux and MacOS come with some kind of bash/zsh/dash/sh. So there is no unified script that runs out-of-the-box all major systems... right? -->
 
@@ -40,13 +50,8 @@ echo "hello world" # powershell
 
 Lets focus on a few points:
  <!-- like bash not doing any syntax checks or powershell's absurd stop-parsing operator `--%`. And while the gritty details can be found in [my stack overflow answer](https://stackoverflow.com/a/67292076/4367134), lets focus on two important points: -->
-1. The example above is weak. If you read till the end you'll be able to make your own human readable/editable script that:
-- Works on a fresh install of every major operating system
-- Has all it's **logic** in one language
-- And has access to massive ecosystem of 3rd party libraries
-- Is excessively reliable, no system side effects
-2. The example above doesn't just work for hello world. All powershell code will work (or not work) as it normally would on Windows. 99.999% of bash/zsh/sh will also "just work" if you paste it in the right place. The only exception for shell code is that `#>` needs to be escaped (even if it appears in a shell comment).
-3. How is the example above possible?
+1. The example above doesn't just work for hello world. All powershell code will work (or not work) as it normally would on Windows. 99.999% of bash/zsh/sh will also "just work" if you paste it in the right place. The only exception for shell code is that `#>` needs to be escaped (even if it appears in a shell comment).
+2. How is the example above possible?
    - At runtime, Windows only cares about the file extension (.ps1). That extension tells Windows to run the file as powershell. On good operating systems like Linux and MacOS, the file extension happens to not matter. They use the shebang (`#!/usr/bin/env sh`) to know how to run the script.
    - That explains why the execution is different and possible, but why doesn't the execution fail/error on one system or the other? Simple. Every line of that file is valid bash and valid powershell ... at the same time. Its a [polyglot program](https://www.youtube.com/watch?v=2L6EE6ZgURE). Bash and powershell have a lot of overlap in their syntax. We use that overlap/non-overlap to our advantage. [The details are really fun (please upvote the stackoverflow answer)](https://stackoverflow.com/a/67292076/4367134), but lets stay focused: we want a universal script not two scripts in one file.
 
