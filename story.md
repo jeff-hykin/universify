@@ -20,11 +20,10 @@ Allow me to be a guide down this wonderful rabbit hole. Not only are universal s
 Windows comes with Powershell/CMD. Minimal Linux and MacOS come with some kind of bash/zsh/dash/sh. So there is no way to write a script in one language and have it run out-of-the-box all major systems... right?
 
 
-Well if you read till the end you'll be able to make your own human readable/editable script that:
+Well if you read till the end you'll be able to write in one language and make a human readable/editable script that:
 - Works on a fresh install of every major operating system
-- Has all it's **logic** in one language
-- And has access to massive ecosystem of 3rd party libraries
-- Is excessively reliable, no system side effects
+- Has access to massive ecosystem of 3rd party libraries
+- And is excessively reliable (no system side effects)
 
 
 ## Part 1: Code That Runs Anywhere But isn't One Language
