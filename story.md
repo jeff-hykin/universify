@@ -546,7 +546,9 @@ function iex { alias irm='curl -fsSL $url_|sh;:';t=${1#?};eval export ${t%|*};};
 
 <br>
 
-Look, I know. You're probably thinking "Jeff that is the most BEAUTIFUL and ELEGANT self-documenting 129 chars I've ever seen. You're extremely handsome, and everyone wants to hire you". To which I say, thank you! You're beautiful too! And if you read one more section you'll have the power to make your own beautiful universal one-liners!
+Look, I know.
+
+You're probably thinking "Jeff that is the most BEAUTIFUL and ELEGANT self-documenting 129 chars I've ever seen. You're extremely handsome, and everyone wants to hire you". To which I say, thank you! You're beautiful too! And if you read one more section you'll have the power to make your own beautiful universal one-liners!
 
 
 
