@@ -8,7 +8,7 @@
 
 
 If you end up enjoying this, consider starring the [repo](https://github.com/jeff-hykin/universify).<br>
-**By Jeff Hykin ([Github](https://github.com/jeff-hykin), [Email](mailto:jeff.hykin+uni@gmail.com))**
+**By Jeff Hykin (CodeChefJeff [Github](https://github.com/jeff-hykin), [Email](mailto:jeff.hykin+uni@gmail.com))**
 
 <br>
 <br>
@@ -20,9 +20,11 @@ Allow me to be a guide down this wonderful rabbit hole. Not only are universal s
 Windows comes with Powershell/CMD. MacOS and minimal Linux come with some kind of bash/zsh/dash/sh. So there is no way to write a script in one language and have it run out-of-the-box all major systems... right?
 
 
-Well if you read till the end you'll be able to write in one language and make a human readable/editable script that:
+Well if you read till the end you'll be able to:
+- Write (in one language)
+- A human readable/editable script
 - Works on a fresh install of every major operating system
-- Has access to massive ecosystem of 3rd party libraries
+- That has access to massive ecosystem of 3rd party libraries
 - And is excessively reliable (no system side effects)
 
 <br><br>
