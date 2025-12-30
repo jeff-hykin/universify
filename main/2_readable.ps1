@@ -46,7 +46,7 @@
         
         # using wget as curl
         if ! has curl;then
-            if ! has wget;then
+            if has wget;then
                 # we create a fake curl for deno's installer to use
                 curl () {
                     # use $5 and $6 because deno uses curl below as:
